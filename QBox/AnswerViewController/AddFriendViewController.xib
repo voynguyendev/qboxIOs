@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddFriendViewController">
+            <connections>
+                <outlet property="acceptedAnswersButton" destination="h9C-JL-u7q" id="z0v-bM-rMu"/>
+                <outlet property="addFriendButton" destination="IwG-ex-vX6" id="F7H-3m-LNa"/>
+                <outlet property="btfollow" destination="V4p-n1-3Z5" id="RYw-kf-A13"/>
+                <outlet property="btmessage" destination="Ej8-w7-Lzv" id="zza-TE-vAO"/>
+                <outlet property="contentTableView" destination="qNT-j8-wAZ" id="3aq-9k-fQY"/>
+                <outlet property="contentView" destination="URe-c7-ZMF" id="GZZ-80-ChL"/>
+                <outlet property="numberOfFollowLabel" destination="6we-eV-U0X" id="niz-wn-aqb"/>
+                <outlet property="numberOfFollowersLabel" destination="wq5-8v-rHN" id="2WS-xp-YaF"/>
+                <outlet property="postsButton" destination="lH0-06-X8E" id="bj5-AL-7sD"/>
+                <outlet property="userImageView" destination="E0Z-tX-YX9" id="0EK-Z2-zAR"/>
+                <outlet property="userNameLabel" destination="aT8-XJ-1Rx" id="0Pa-15-JYu"/>
+                <outlet property="userStatusLabel" destination="va8-qO-4P0" id="6Bs-Jz-cmd"/>
+                <outlet property="view" destination="iN0-l3-epB" id="0m9-Eb-ncG"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hgu-AK-c01">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="URe-c7-ZMF" userLabel="Content View">
+                            <rect key="frame" x="0.0" y="44" width="320" height="524"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ndW-MQ-NYP" userLabel="Avatar View">
+                                    <rect key="frame" x="10" y="0.0" width="116" height="116"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg_avatar.png" translatesAutoresizingMaskIntoConstraints="NO" id="3qr-Eg-dSc">
+                                            <rect key="frame" x="0.0" y="0.0" width="116" height="116"/>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E0Z-tX-YX9">
+                                            <rect key="frame" x="13" y="13" width="90" height="90"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V4p-n1-3Z5" userLabel="Follow Button">
+                                    <rect key="frame" x="132" y="19" width="65" height="15"/>
+                                    <state key="normal" image="follow_button.png">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="followButtonTapped:" destination="-1" eventType="touchUpInside" id="pk6-K1-DVx"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IwG-ex-vX6" userLabel="Add Friend Button">
+                                    <rect key="frame" x="244" y="19" width="65" height="15"/>
+                                    <state key="normal" image="add_friend_button.png">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="addFriendButtonTapped:" destination="-1" eventType="touchUpInside" id="XFc-vV-Zb9"/>
+                                    </connections>
+                                </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dsF-YG-0Q0" userLabel="Status View">
+                                    <rect key="frame" x="125" y="36" width="184" height="86"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg_status.png" translatesAutoresizingMaskIntoConstraints="NO" id="2Wn-gK-zWg">
+                                            <rect key="frame" x="0.0" y="0.0" width="184" height="86"/>
+                                            <rect key="contentStretch" x="0.10000000000000001" y="0.10000000000000001" width="0.80000000000000004" height="0.80000000000000004"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="164" translatesAutoresizingMaskIntoConstraints="NO" id="va8-qO-4P0">
+                                            <rect key="frame" x="10" y="10" width="164" height="66"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" id="Cy8-U9-xdl"/>
+                                                <constraint firstAttribute="width" constant="164" id="qd4-ni-KwL"/>
+                                            </constraints>
+                                            <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ut iaculis neque, in pulvinar nibh. Quisque quis pellentesque nisl, id placerat mi. Ut lobortis purusid placerat mi. Ut lobortis purusculis neque, in pulvinar nibh. Quisque quis pellentesque nisl, id placerat mi. Ut lobortis purusid placerat mi. Ut lobortis purus.</string>
+                                            <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="8"/>
+                                            <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="184" id="JAy-lx-f1r"/>
+                                        <constraint firstAttribute="trailing" secondItem="va8-qO-4P0" secondAttribute="trailing" constant="10" id="KdP-7h-yV2"/>
+                                        <constraint firstItem="va8-qO-4P0" firstAttribute="top" secondItem="dsF-YG-0Q0" secondAttribute="top" constant="10" id="SSM-8f-PdF"/>
+                                        <constraint firstItem="va8-qO-4P0" firstAttribute="leading" secondItem="dsF-YG-0Q0" secondAttribute="leading" constant="10" id="UCC-l4-DrK"/>
+                                        <constraint firstAttribute="height" constant="86" id="V7P-fv-mGU"/>
+                                        <constraint firstAttribute="bottom" secondItem="va8-qO-4P0" secondAttribute="bottom" constant="10" id="gQ8-7N-6NJ"/>
+                                    </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="KdP-7h-yV2"/>
+                                            <exclude reference="gQ8-7N-6NJ"/>
+                                        </mask>
+                                    </variation>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Mellisa Anders" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aT8-XJ-1Rx">
+                                    <rect key="frame" x="10" y="111" width="116" height="17"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="10"/>
+                                    <color key="textColor" red="0.45882352941176469" green="0.45882352941176469" blue="0.45882352941176469" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg_bar.png" translatesAutoresizingMaskIntoConstraints="NO" id="wCb-3b-hGk">
+                                    <rect key="frame" x="10" y="156" width="300" height="23"/>
+                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lH0-06-X8E" userLabel="Posts Button">
+                                    <rect key="frame" x="10" y="156" width="150" height="23"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="10"/>
+                                    <inset key="contentEdgeInsets" minX="60" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <state key="normal" title="Posts" image="icon_question_active.png">
+                                        <color key="titleColor" red="0.50980392156862742" green="0.50980392156862742" blue="0.50980392156862742" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <state key="selected" image="post_icon.png"/>
+                                    <connections>
+                                        <action selector="postButtonTapped:" destination="-1" eventType="touchUpInside" id="xGh-QH-15W"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h9C-JL-u7q" userLabel="Accepted Answers Button">
+                                    <rect key="frame" x="160" y="156" width="150" height="23"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="10"/>
+                                    <inset key="contentEdgeInsets" minX="27" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <state key="normal" title="Accepted Answers" image="icon_answer_inactive.png">
+                                        <color key="titleColor" red="0.50980392156862742" green="0.50980392156862742" blue="0.50980392156862742" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="acceptedAnswersButtonTapped:" destination="-1" eventType="touchUpInside" id="E6O-ef-cVe"/>
+                                    </connections>
+                                </button>
+                                <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="144" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qNT-j8-wAZ" userLabel="Content Table View">
+                                    <rect key="frame" x="0.0" y="187" width="320" height="314"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-1" id="0jp-yg-FQU"/>
+                                        <outlet property="delegate" destination="-1" id="CTV-Ay-H8u"/>
+                                    </connections>
+                                </tableView>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ej8-w7-Lzv" userLabel="Message Button">
+                                    <rect key="frame" x="36" y="133" width="65" height="15"/>
+                                    <state key="normal" image="message_buttton.png">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="messageButtonTapped:" destination="-1" eventType="touchUpInside" id="A0L-Ty-6Ze"/>
+                                    </connections>
+                                </button>
+                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Cb-Ec-Jf3" userLabel="Count View">
+                                    <rect key="frame" x="125" y="131" width="184" height="17"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg_count.png" translatesAutoresizingMaskIntoConstraints="NO" id="eXw-Lx-yns">
+                                            <rect key="frame" x="0.0" y="0.0" width="184" height="17"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Follow 44" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6we-eV-U0X">
+                                            <rect key="frame" x="0.0" y="0.0" width="92" height="17"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="8"/>
+                                            <color key="textColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Followers 37" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wq5-8v-rHN">
+                                            <rect key="frame" x="92" y="0.0" width="92" height="17"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="8"/>
+                                            <color key="textColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="dsF-YG-0Q0" firstAttribute="top" secondItem="URe-c7-ZMF" secondAttribute="top" constant="36" id="1ic-VN-hFW"/>
+                                <constraint firstItem="qNT-j8-wAZ" firstAttribute="leading" secondItem="URe-c7-ZMF" secondAttribute="leading" id="48J-BC-eu0"/>
+                                <constraint firstItem="dsF-YG-0Q0" firstAttribute="leading" secondItem="URe-c7-ZMF" secondAttribute="leading" constant="125" id="ILQ-ZP-oxX"/>
+                                <constraint firstAttribute="trailing" secondItem="qNT-j8-wAZ" secondAttribute="trailing" id="IQh-KJ-5bS"/>
+                                <constraint firstAttribute="bottom" secondItem="qNT-j8-wAZ" secondAttribute="bottom" constant="50" id="VPe-b3-g34"/>
+                                <constraint firstItem="qNT-j8-wAZ" firstAttribute="top" secondItem="URe-c7-ZMF" secondAttribute="top" constant="190" id="e9O-bN-jRk"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Cb-SF-7KM" userLabel="Top View">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tabbar.png" translatesAutoresizingMaskIntoConstraints="NO" id="fiE-pU-X4V">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Friend Profile" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbb-vj-Wed">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="15"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z8d-jA-nsE">
+                                    <rect key="frame" x="0.0" y="4" width="40" height="35"/>
+                                    <state key="normal" image="back_blue.png">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="backButtonTapped:" destination="-1" eventType="touchUpInside" id="EFg-f9-4Xv"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="iGy-nO-nYs"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="0Cb-SF-7KM" firstAttribute="top" secondItem="hgu-AK-c01" secondAttribute="top" id="9SB-qI-bSz"/>
+                        <constraint firstAttribute="trailing" secondItem="URe-c7-ZMF" secondAttribute="trailing" id="AZz-GF-DfO"/>
+                        <constraint firstItem="URe-c7-ZMF" firstAttribute="leading" secondItem="hgu-AK-c01" secondAttribute="leading" id="G4O-19-gsz"/>
+                        <constraint firstAttribute="bottom" secondItem="URe-c7-ZMF" secondAttribute="bottom" id="IQg-pg-NG1"/>
+                        <constraint firstAttribute="trailing" secondItem="0Cb-SF-7KM" secondAttribute="trailing" id="SLD-ld-8BM"/>
+                        <constraint firstItem="URe-c7-ZMF" firstAttribute="top" secondItem="0Cb-SF-7KM" secondAttribute="bottom" id="oFe-vQ-LzS"/>
+                        <constraint firstItem="0Cb-SF-7KM" firstAttribute="leading" secondItem="hgu-AK-c01" secondAttribute="leading" id="rYK-bF-Vb5"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="hgu-AK-c01" secondAttribute="trailing" id="PgH-Bo-PI8"/>
+                <constraint firstItem="hgu-AK-c01" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="aku-nW-hZl"/>
+                <constraint firstItem="hgu-AK-c01" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="fom-Gh-DP6"/>
+                <constraint firstAttribute="bottom" secondItem="hgu-AK-c01" secondAttribute="bottom" id="zDM-Xv-vpR"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="add_friend_button.png" width="63" height="15"/>
+        <image name="back_blue.png" width="40" height="35"/>
+        <image name="bg_avatar.png" width="116" height="116"/>
+        <image name="bg_bar.png" width="294" height="22"/>
+        <image name="bg_count.png" width="183" height="17"/>
+        <image name="bg_status.png" width="184" height="84"/>
+        <image name="follow_button.png" width="65" height="15"/>
+        <image name="icon_answer_inactive.png" width="11" height="10"/>
+        <image name="icon_question_active.png" width="9" height="11"/>
+        <image name="message_buttton.png" width="62" height="14"/>
+        <image name="post_icon.png" width="13" height="15"/>
+        <image name="tabbar.png" width="320" height="44"/>
+    </resources>
+</document>

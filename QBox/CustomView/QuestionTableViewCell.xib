@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QuestionCellIdentifier" rowHeight="58" id="KGk-i7-Jjw" customClass="QuestionTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_clock.png" translatesAutoresizingMaskIntoConstraints="NO" id="klL-uB-8Wg">
+                        <rect key="frame" x="143" y="42" width="6" height="6"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="6" id="6aX-3d-v1j"/>
+                            <constraint firstAttribute="width" constant="6" id="nHa-zw-p9A"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_calendar.png" translatesAutoresizingMaskIntoConstraints="NO" id="vqb-gG-kUS">
+                        <rect key="frame" x="84" y="43" width="6" height="5"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="5" id="NVn-gd-MN3"/>
+                            <constraint firstAttribute="width" constant="6" id="WuU-B5-LNW"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10/23/2014" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="50" translatesAutoresizingMaskIntoConstraints="NO" id="hmM-w6-vAJ">
+                        <rect key="frame" x="92" y="39" width="42" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="1YM-8x-Bgt"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" id="QiD-yw-gf0"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="8"/>
+                        <color key="textColor" red="0.56862745100000001" green="0.56862745100000001" blue="0.56862745100000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="04:23AM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="50" translatesAutoresizingMaskIntoConstraints="NO" id="t7x-KG-yR8">
+                        <rect key="frame" x="151" y="39" width="33" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="TmF-vE-F2L"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" id="aGL-nr-b4S"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="8"/>
+                        <color key="textColor" red="0.56862745100000001" green="0.56862745100000001" blue="0.56862745100000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Replies" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="50" translatesAutoresizingMaskIntoConstraints="NO" id="w8f-GJ-Kg4">
+                        <rect key="frame" x="200" y="39" width="26" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" id="DOw-S6-rLP"/>
+                            <constraint firstAttribute="height" constant="12" id="ww8-pK-rcV"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="8"/>
+                        <color key="textColor" red="0.56862745100000001" green="0.56862745100000001" blue="0.56862745100000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="50" translatesAutoresizingMaskIntoConstraints="NO" id="qcw-bL-zsf">
+                        <rect key="frame" x="193" y="39" width="5" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="fBm-RJ-4lO"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" id="kU9-Ak-CWG"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="8"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="224" translatesAutoresizingMaskIntoConstraints="NO" id="7gg-vZ-R1V">
+                        <rect key="frame" x="84" y="8" width="224" height="29"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="224" id="6jS-Gj-uZw"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" id="re7-Ww-Cc6"/>
+                        </constraints>
+                        <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ut iaculis neque, in pulvinar nibh. Quisque quis pellentesque nisl, id placerat mi. Ut lobortis purusid placerat mi. Ut lobortis purus.
+</string>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="7"/>
+                        <color key="textColor" red="0.56862745100000001" green="0.56862745100000001" blue="0.56862745100000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="line.png" translatesAutoresizingMaskIntoConstraints="NO" id="3MQ-0K-icA">
+                        <rect key="frame" x="12" y="56" width="296" height="1"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="pil-3O-bZv"/>
+                        </constraints>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CNo-xN-78g" userLabel="Image View">
+                        <rect key="frame" x="10" y="7" width="66" height="44"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg_image_question.png" translatesAutoresizingMaskIntoConstraints="NO" id="VZD-JE-VAm">
+                                <rect key="frame" x="0.0" y="0.0" width="66" height="44"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2u-sv-eOt">
+                                <rect key="frame" x="2" y="2" width="62" height="40"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="ufR-2B-Rwb"/>
+                            <constraint firstAttribute="width" constant="66" id="zdw-2J-CWE"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="3MQ-0K-icA" firstAttribute="top" secondItem="qcw-bL-zsf" secondAttribute="bottom" constant="5" id="2NX-by-tZR"/>
+                    <constraint firstItem="CNo-xN-78g" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="406-Lg-ccw"/>
+                    <constraint firstItem="3MQ-0K-icA" firstAttribute="top" secondItem="t7x-KG-yR8" secondAttribute="bottom" constant="5" id="4Uu-ez-XAS"/>
+                    <constraint firstItem="3MQ-0K-icA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="4ch-xI-xBU"/>
+                    <constraint firstItem="3MQ-0K-icA" firstAttribute="top" secondItem="vqb-gG-kUS" secondAttribute="bottom" constant="8" id="I88-Zb-Xha"/>
+                    <constraint firstItem="klL-uB-8Wg" firstAttribute="leading" secondItem="hmM-w6-vAJ" secondAttribute="trailing" constant="9" id="I8w-AR-var"/>
+                    <constraint firstItem="7gg-vZ-R1V" firstAttribute="leading" secondItem="CNo-xN-78g" secondAttribute="trailing" constant="8" id="MrU-3D-C7G"/>
+                    <constraint firstItem="qcw-bL-zsf" firstAttribute="leading" secondItem="t7x-KG-yR8" secondAttribute="trailing" constant="9" id="OBO-hK-qGf"/>
+                    <constraint firstItem="3MQ-0K-icA" firstAttribute="top" secondItem="w8f-GJ-Kg4" secondAttribute="bottom" constant="5" id="Pz2-jT-znL"/>
+                    <constraint firstItem="t7x-KG-yR8" firstAttribute="leading" secondItem="klL-uB-8Wg" secondAttribute="trailing" constant="2" id="SGr-yB-PQp"/>
+                    <constraint firstItem="3MQ-0K-icA" firstAttribute="top" secondItem="hmM-w6-vAJ" secondAttribute="bottom" constant="5" id="STy-21-j8O"/>
+                    <constraint firstItem="hmM-w6-vAJ" firstAttribute="leading" secondItem="vqb-gG-kUS" secondAttribute="trailing" constant="2" id="W7t-3X-eCY"/>
+                    <constraint firstItem="CNo-xN-78g" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="7" id="gxE-8o-WB0"/>
+                    <constraint firstAttribute="bottom" secondItem="3MQ-0K-icA" secondAttribute="bottom" id="ihK-om-jmW"/>
+                    <constraint firstItem="3MQ-0K-icA" firstAttribute="top" secondItem="klL-uB-8Wg" secondAttribute="bottom" constant="8" id="jXF-Uh-3A7"/>
+                    <constraint firstItem="7gg-vZ-R1V" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="k7m-Op-rAT"/>
+                    <constraint firstItem="w8f-GJ-Kg4" firstAttribute="leading" secondItem="qcw-bL-zsf" secondAttribute="trailing" constant="2" id="kBT-LY-ghD"/>
+                    <constraint firstAttribute="trailing" secondItem="3MQ-0K-icA" secondAttribute="trailing" constant="12" id="yxa-W7-sPs"/>
+                    <constraint firstItem="vqb-gG-kUS" firstAttribute="leading" secondItem="CNo-xN-78g" secondAttribute="trailing" constant="8" id="zyw-7V-Ctg"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="answerCountLabel" destination="qcw-bL-zsf" id="x5n-pn-gvy"/>
+                <outlet property="questionContentLabel" destination="7gg-vZ-R1V" id="viG-t4-pRc"/>
+                <outlet property="questionDateLabel" destination="hmM-w6-vAJ" id="flz-oO-egp"/>
+                <outlet property="questionImageView" destination="o2u-sv-eOt" id="MiL-yM-ksn"/>
+                <outlet property="questionTimeLabel" destination="t7x-KG-yR8" id="EjM-O4-eZl"/>
+                <outlet property="replyLabel" destination="w8f-GJ-Kg4" id="LKT-oS-Z1j"/>
+            </connections>
+            <point key="canvasLocation" x="140" y="149"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="bg_image_question.png" width="64" height="44"/>
+        <image name="icon_calendar.png" width="5" height="5"/>
+        <image name="icon_clock.png" width="6" height="6"/>
+        <image name="line.png" width="296" height="1"/>
+    </resources>
+</document>

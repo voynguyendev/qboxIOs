@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[PostQuestionDetailViewController editquestionBtnAction:]:PostQuestionDetailViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "TabVC.questionId">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[PostQuestionViewController postWebservice]:PostQuestionViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.questionId">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TopicViewController hotTopicsWebservice]:TopicViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "issearchcategory">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TopicViewController globalQuesWebservice]:TopicViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "issearchcategory">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

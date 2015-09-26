@@ -1,0 +1,29 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+
+//#define webserviceBaseUrl @"http://localhost:8888/QBox/"
+//#define webserviceBaseUrl @"http://192.168.1.170:8888/QBox/"
+
+//#define webserviceBaseUrl @"http://108.175.148.221/question_app_test/"
+#define webserviceBaseUrl @"http://108.175.148.221/question_app_test/"
+//http://108.175.148.221/question_app_test/
+#import "LoginViewController_iPhone.h"
+  #import "SPHMacro.h"
+#import "ProgressHUD.h"
+
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+
+#endif
