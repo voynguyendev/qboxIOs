@@ -46,8 +46,8 @@
 -(NSArray*) getAllCategoriesByuserId:(NSString*)userId;
 -(void)registraionWEbService :(NSArray *)array;
 -(void)QBoxLoginWebService :(NSArray *)array;
-
--(NSArray*)sendQuestionService :(NSArray *)array imageBase64String:(NSString *)base64string tabfriendids:(NSString *) tabfriendids;
+-(NSArray*) getQuestionImagesByquestionId:(NSString*)questionId;
+-(NSArray*)sendQuestionService :(NSArray *)array imageBase64String:(NSString *)base64string tabfriendids:(NSString *) tabfriendids guidimage:(NSString *) guidimage;
 -(void)addAnswer :(NSArray *)array imageBase64String:(NSString *)base64string;
 -(void) addFavorite:(NSArray*) array favouriteValue:(int)favouriteVal;
 
@@ -57,6 +57,7 @@
 
 -(NSArray*) answerRate:(NSString*)answerId userId:(NSString*)userID rating:(int)rate;
 
+-(id) usersaveImage:(NSString*)questionid action:(NSString*) action  attachment:(NSString*) attachment guid:(NSString*) guid imagequestionId:(NSString*) imagequestionId;
 
 -(NSArray*) UpdateCategory:
 (NSString*) categoryname userId:(NSString*)userId hastags:(NSString*)hastags tabfriends:(NSString*)tabfriends catId:(NSString*) catId action:(NSString*) action;
@@ -65,11 +66,12 @@
 
 -(NSArray*) sendFriendRequest:(NSString*) senderId receiverId:(NSString*) receiverId;
 
--(void) saveProfile:(NSArray*) array imageBase64String:(NSString *)base64string;
+-(NSArray*) saveProfile:(NSArray*) array imageBase64String:(NSString *)base64string;
 
 -(void) saveStatusText:(NSString *) statustext userId:(NSString *)userid;
 
 
+-(NSArray*)flagAnswersQuestions:(NSString*)entityid entity:(NSString *)entity;
 
 -(NSArray*)changepassword :(NSString *)email password:(NSString *)password;
 
@@ -100,11 +102,13 @@
 -(void) saveQuestion:(NSString*)questionId userId:(NSString*)userId status:(int)status;
 -(NSArray*) receiveMessagenew:(NSString*) userId;
 
--(id) getAllQuestions:(NSString*)userID;
+-(id) getAllQuestions:(NSString*)userID categoriesId:(NSString*) categoriesId hashtag:(NSString*)hashtag rowget:(NSString*) rowget;
 
 -(NSArray*) getAllSavedQuestion:(NSString*)userId;
 
--(id) privateFriendPost:(NSString*)userId;
+-(id) privateFriendPost:(NSString*)userId categoriesId:(NSString*) categoriesId hashtag:(NSString*) hashtag rowget:(NSString*) rowget;
+
+
 -(void) notificationList;
 -(NSArray*)rejectFriendRequestSent:(NSString*)senderId receiverId:(NSString*)receiverID;
 -(NSArray*) pushNotificationData:(NSString*)userId;
@@ -120,7 +124,7 @@
 
 -(NSArray*)getFriendsPostsAndAnswers:(NSString*)FriendId andUserId:(NSString*)userID;
 -(id)addFollowAccount:(NSString*)friendID andUserId:(NSString*)userId andStatus:(NSString*)status;
--(id)getHotTopicsQuestions;
+-(id)getHotTopicsQuestions :(NSString*) categoriesId hashtag:(NSString*)hashtag rowget:(NSString*) rowget;
 
 
 

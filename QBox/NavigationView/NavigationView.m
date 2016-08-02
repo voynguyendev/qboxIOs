@@ -26,11 +26,11 @@
     
        
         self.navigationView=[[UIView alloc]init];
-        self.navigationView.frame=CGRectMake(0.0, 0.0, 320.0, 44.0);
+        self.navigationView.frame=CGRectMake(0.0, 15.0, 320.0, 30.0);
         self.navigationView.backgroundColor=[UIColor clearColor];
         
         self.imageView = [[UIImageView alloc] initWithFrame:self.navigationView.bounds];
-        self.imageView.contentMode=UIViewContentModeScaleAspectFit;
+        self.imageView.contentMode=UIViewContentModeScaleToFill;
         self.imageView.image=[UIImage imageNamed:@"tabbar"];
         [self.navigationView addSubview:self.imageView];
         

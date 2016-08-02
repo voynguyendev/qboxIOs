@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddFriendViewController">
             <connections>
+                <outlet property="aboutButton" destination="sot-z7-RmP" id="nv1-HL-Q1n"/>
                 <outlet property="acceptedAnswersButton" destination="h9C-JL-u7q" id="z0v-bM-rMu"/>
                 <outlet property="addFriendButton" destination="IwG-ex-vX6" id="F7H-3m-LNa"/>
                 <outlet property="btfollow" destination="V4p-n1-3Z5" id="RYw-kf-A13"/>
                 <outlet property="btmessage" destination="Ej8-w7-Lzv" id="zza-TE-vAO"/>
                 <outlet property="contentTableView" destination="qNT-j8-wAZ" id="3aq-9k-fQY"/>
                 <outlet property="contentView" destination="URe-c7-ZMF" id="GZZ-80-ChL"/>
+                <outlet property="lbltitle" destination="vbb-vj-Wed" id="LZn-gF-rkb"/>
                 <outlet property="numberOfFollowLabel" destination="6we-eV-U0X" id="niz-wn-aqb"/>
                 <outlet property="numberOfFollowersLabel" destination="wq5-8v-rHN" id="2WS-xp-YaF"/>
                 <outlet property="postsButton" destination="lH0-06-X8E" id="bj5-AL-7sD"/>
@@ -40,7 +42,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="116" height="116"/>
                                         </imageView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E0Z-tX-YX9">
-                                            <rect key="frame" x="13" y="13" width="90" height="90"/>
+                                            <rect key="frame" x="8" y="8" width="100" height="100"/>
                                         </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -70,14 +72,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="184" height="86"/>
                                             <rect key="contentStretch" x="0.10000000000000001" y="0.10000000000000001" width="0.80000000000000004" height="0.80000000000000004"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="164" translatesAutoresizingMaskIntoConstraints="NO" id="va8-qO-4P0">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="164" translatesAutoresizingMaskIntoConstraints="NO" id="va8-qO-4P0">
                                             <rect key="frame" x="10" y="10" width="164" height="66"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" id="Cy8-U9-xdl"/>
                                                 <constraint firstAttribute="width" constant="164" id="qd4-ni-KwL"/>
                                             </constraints>
                                             <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ut iaculis neque, in pulvinar nibh. Quisque quis pellentesque nisl, id placerat mi. Ut lobortis purusid placerat mi. Ut lobortis purusculis neque, in pulvinar nibh. Quisque quis pellentesque nisl, id placerat mi. Ut lobortis purusid placerat mi. Ut lobortis purus.</string>
-                                            <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="8"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="12"/>
                                             <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -100,33 +102,18 @@
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Mellisa Anders" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aT8-XJ-1Rx">
                                     <rect key="frame" x="10" y="111" width="116" height="17"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="10"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
                                     <color key="textColor" red="0.45882352941176469" green="0.45882352941176469" blue="0.45882352941176469" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg_bar.png" translatesAutoresizingMaskIntoConstraints="NO" id="wCb-3b-hGk">
                                     <rect key="frame" x="10" y="156" width="300" height="23"/>
                                 </imageView>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lH0-06-X8E" userLabel="Posts Button">
-                                    <rect key="frame" x="10" y="156" width="150" height="23"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="10"/>
-                                    <inset key="contentEdgeInsets" minX="60" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    <state key="normal" title="Posts" image="icon_question_active.png">
-                                        <color key="titleColor" red="0.50980392156862742" green="0.50980392156862742" blue="0.50980392156862742" alpha="1" colorSpace="calibratedRGB"/>
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <state key="selected" image="post_icon.png"/>
-                                    <connections>
-                                        <action selector="postButtonTapped:" destination="-1" eventType="touchUpInside" id="xGh-QH-15W"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h9C-JL-u7q" userLabel="Accepted Answers Button">
-                                    <rect key="frame" x="160" y="156" width="150" height="23"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="10"/>
-                                    <inset key="contentEdgeInsets" minX="27" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <rect key="frame" x="201" y="156" width="108" height="23"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="11"/>
                                     <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    <state key="normal" title="Accepted Answers" image="icon_answer_inactive.png">
+                                    <state key="normal" title="Accepted Answers">
                                         <color key="titleColor" red="0.50980392156862742" green="0.50980392156862742" blue="0.50980392156862742" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -134,14 +121,19 @@
                                         <action selector="acceptedAnswersButtonTapped:" destination="-1" eventType="touchUpInside" id="E6O-ef-cVe"/>
                                     </connections>
                                 </button>
-                                <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="144" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qNT-j8-wAZ" userLabel="Content Table View">
-                                    <rect key="frame" x="0.0" y="187" width="320" height="314"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sot-z7-RmP" userLabel="Accepted Answers Button">
+                                    <rect key="frame" x="8" y="156" width="106" height="23"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="11"/>
+                                    <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <state key="normal" title="About">
+                                        <color key="titleColor" red="0.50980392159999999" green="0.50980392159999999" blue="0.50980392159999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
                                     <connections>
-                                        <outlet property="dataSource" destination="-1" id="0jp-yg-FQU"/>
-                                        <outlet property="delegate" destination="-1" id="CTV-Ay-H8u"/>
+                                        <action selector="aboutClick:" destination="-1" eventType="touchUpInside" id="wdq-Wu-SDO"/>
                                     </connections>
-                                </tableView>
+                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ej8-w7-Lzv" userLabel="Message Button">
                                     <rect key="frame" x="36" y="133" width="65" height="15"/>
                                     <state key="normal" image="message_buttton.png">
@@ -172,6 +164,28 @@
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
+                                <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" style="plain" separatorStyle="none" rowHeight="144" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qNT-j8-wAZ" userLabel="Content Table View">
+                                    <rect key="frame" x="0.0" y="187" width="320" height="594"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-1" id="0jp-yg-FQU"/>
+                                        <outlet property="delegate" destination="-1" id="CTV-Ay-H8u"/>
+                                    </connections>
+                                </tableView>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lH0-06-X8E" userLabel="Posts Button">
+                                    <rect key="frame" x="112" y="156" width="91" height="23"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="11"/>
+                                    <inset key="contentEdgeInsets" minX="80" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="titleEdgeInsets" minX="-50" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <state key="normal" title="Posts">
+                                        <color key="titleColor" red="0.50980392156862742" green="0.50980392156862742" blue="0.50980392156862742" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <state key="selected" image="post_icon.png"/>
+                                    <connections>
+                                        <action selector="postButtonTapped:" destination="-1" eventType="touchUpInside" id="J7X-KU-pYF"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
@@ -179,7 +193,7 @@
                                 <constraint firstItem="qNT-j8-wAZ" firstAttribute="leading" secondItem="URe-c7-ZMF" secondAttribute="leading" id="48J-BC-eu0"/>
                                 <constraint firstItem="dsF-YG-0Q0" firstAttribute="leading" secondItem="URe-c7-ZMF" secondAttribute="leading" constant="125" id="ILQ-ZP-oxX"/>
                                 <constraint firstAttribute="trailing" secondItem="qNT-j8-wAZ" secondAttribute="trailing" id="IQh-KJ-5bS"/>
-                                <constraint firstAttribute="bottom" secondItem="qNT-j8-wAZ" secondAttribute="bottom" constant="50" id="VPe-b3-g34"/>
+                                <constraint firstAttribute="bottom" secondItem="qNT-j8-wAZ" secondAttribute="bottom" id="VPe-b3-g34"/>
                                 <constraint firstItem="qNT-j8-wAZ" firstAttribute="top" secondItem="URe-c7-ZMF" secondAttribute="top" constant="190" id="e9O-bN-jRk"/>
                             </constraints>
                         </view>
@@ -190,13 +204,13 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Friend Profile" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbb-vj-Wed">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <rect key="frame" x="0.0" y="5" width="320" height="44"/>
                                     <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="15"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z8d-jA-nsE">
-                                    <rect key="frame" x="0.0" y="4" width="40" height="35"/>
+                                    <rect key="frame" x="0.0" y="8" width="40" height="35"/>
                                     <state key="normal" image="back_blue.png">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -245,8 +259,6 @@
         <image name="bg_count.png" width="183" height="17"/>
         <image name="bg_status.png" width="184" height="84"/>
         <image name="follow_button.png" width="65" height="15"/>
-        <image name="icon_answer_inactive.png" width="11" height="10"/>
-        <image name="icon_question_active.png" width="9" height="11"/>
         <image name="message_buttton.png" width="62" height="14"/>
         <image name="post_icon.png" width="13" height="15"/>
         <image name="tabbar.png" width="320" height="44"/>

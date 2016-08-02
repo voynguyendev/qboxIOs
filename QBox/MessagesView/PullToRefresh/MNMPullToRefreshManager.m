@@ -23,7 +23,7 @@
 
 #import "MNMPullToRefreshManager.h"
 #import "MNMPullToRefreshView.h"
-
+#import "AppDelegate.h"
 CGFloat const kAnimationDuration = 0.2f;
 
 @interface MNMPullToRefreshManager()
@@ -79,21 +79,26 @@ CGFloat const kAnimationDuration = 0.2f;
  */
 - (void)tableViewScrolled {
     
-    if (![pullToRefreshView_ isHidden] && ![pullToRefreshView_ isLoading]) {
-        
-        CGFloat offset = [table_ contentOffset].y;
+    
 
-        if (offset >= 0.0f) {
+        if (![pullToRefreshView_ isHidden] && ![pullToRefreshView_ isLoading]) {
+            
+        CGFloat offset = [table_ contentOffset].y;
+                   if (offset >= 0.0f) {
         
             [pullToRefreshView_ changeStateOfControl:MNMPullToRefreshViewStateIdle withOffset:offset];
             
         } else if (offset <= 0.0f && offset >= -[pullToRefreshView_ fixedHeight]) {
                 
             [pullToRefreshView_ changeStateOfControl:MNMPullToRefreshViewStatePull withOffset:offset];
+           // [[AppDelegate sharedDelegate].TabBarView  showtabar];
+
             
         } else {
-            
-            [pullToRefreshView_ changeStateOfControl:MNMPullToRefreshViewStateRelease withOffset:offset];
+         //   [[AppDelegate sharedDelegate].TabBarView  showtabar];
+
+            [pullToRefreshView_ changeStateOfControl:MNMPullToRefreshViewStatePull withOffset:offset];
+            ;
         }
     }
 }
@@ -133,9 +138,12 @@ CGFloat const kAnimationDuration = 0.2f;
         [table_ setContentInset:UIEdgeInsetsZero];
     
     } completion:^(BOOL finished) {
-        
+
         [pullToRefreshView_ setLastUpdateDate:[NSDate date]];
         [pullToRefreshView_ changeStateOfControl:MNMPullToRefreshViewStateIdle withOffset:CGFLOAT_MAX];
+      //  [[AppDelegate sharedDelegate].TabBarView  showtabar];
+
+        
     }];    
 }
 

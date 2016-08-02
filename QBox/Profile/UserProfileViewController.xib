@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UserProfileViewController">
@@ -13,6 +13,7 @@
                 <outlet property="ContainerSaveCount" destination="ZIp-xd-JEj" id="FKH-QT-rDD"/>
                 <outlet property="acceptedQuestionCountLabel" destination="sG7-b3-hS2" id="kkX-UJ-Bxb"/>
                 <outlet property="avatarImageView" destination="Yj2-BE-R2P" id="05d-dp-7do"/>
+                <outlet property="btpost" destination="mrs-Dl-dl1" id="HYm-U9-wsg"/>
                 <outlet property="messageCountLabel" destination="VEf-Md-SVk" id="ZOW-PQ-rQf"/>
                 <outlet property="nameLabel" destination="0fj-QH-KSR" id="MI4-zt-A5P"/>
                 <outlet property="recentQuestionCountLabel" destination="aJh-lf-b98" id="LOD-1V-rFL"/>
@@ -26,20 +27,20 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aEN-3r-poA">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aEN-3r-poA">
+                    <rect key="frame" x="0.0" y="8" width="320" height="568"/>
                     <subviews>
                         <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KSL-EB-V96" userLabel="Menu View">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Profilecircle.png" translatesAutoresizingMaskIntoConstraints="NO" id="kZw-2d-YSk">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                    <rect key="frame" x="0.0" y="17" width="320" height="568"/>
                                 </imageView>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="CircleProfile.png" translatesAutoresizingMaskIntoConstraints="NO" id="am3-xu-aG0">
-                                    <rect key="frame" x="10" y="10" width="300" height="300"/>
+                                    <rect key="frame" x="18" y="27" width="280" height="280"/>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cXp-Q1-MMa" userLabel="Recent Button">
-                                    <rect key="frame" x="51" y="91" width="41" height="31"/>
+                                    <rect key="frame" x="41" y="100" width="41" height="31"/>
                                     <state key="normal" image="icon_refresh.png">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -48,7 +49,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m7Q-4U-Zua" userLabel="Accepted Button">
-                                    <rect key="frame" x="245" y="91" width="35" height="31"/>
+                                    <rect key="frame" x="235" y="108" width="35" height="31"/>
                                     <state key="normal" image="icon_accepted_question.png">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -57,10 +58,10 @@
                                     </connections>
                                 </button>
                                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZIp-xd-JEj" userLabel="Saved Count View">
-                                    <rect key="frame" x="169" y="27" width="15" height="15"/>
+                                    <rect key="frame" x="169" y="14" width="15" height="15"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dF1-Th-Yyd">
-                                            <rect key="frame" x="2" y="0.0" width="15" height="15"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" id="81Y-zx-Jy0"/>
@@ -81,7 +82,7 @@
                                     </constraints>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XbW-T1-acf" userLabel="Posted Button">
-                                    <rect key="frame" x="238" y="198" width="42" height="36"/>
+                                    <rect key="frame" x="233" y="205" width="42" height="36"/>
                                     <state key="normal" image="icon_posted_question.png">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -89,23 +90,14 @@
                                         <action selector="postedQuestionsButtonTapped:" destination="-1" eventType="touchUpInside" id="fTn-0Z-TtE"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCa-Rk-f9Z" userLabel="Saved Button">
-                                    <rect key="frame" x="145" y="37" width="34" height="33"/>
-                                    <state key="normal" image="icon_saved_question.png">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="savedQuestionsButtonTapped:" destination="-1" eventType="touchUpInside" id="g8f-bm-pvu"/>
-                                    </connections>
-                                </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyL-9y-GpP">
-                                    <rect key="frame" x="119" y="96" width="100" height="21"/>
+                                    <rect key="frame" x="119" y="113" width="100" height="21"/>
                                     <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="7"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RNC-qt-eH7" userLabel="Recent Count View">
-                                    <rect key="frame" x="80" y="80" width="15" height="15"/>
+                                    <rect key="frame" x="70" y="87" width="15" height="15"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aJh-lf-b98">
                                             <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
@@ -129,7 +121,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Urr-mt-ANE" userLabel="Accepted Count View">
-                                    <rect key="frame" x="270" y="80" width="15" height="15"/>
+                                    <rect key="frame" x="260" y="97" width="15" height="15"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sG7-b3-hS2">
                                             <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
@@ -153,7 +145,7 @@
                                     </constraints>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zLo-bd-BWb">
-                                    <rect key="frame" x="119" y="269" width="86" height="30"/>
+                                    <rect key="frame" x="119" y="256" width="86" height="30"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <state key="normal" title="View Profile">
                                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -164,22 +156,13 @@
                                     </connections>
                                 </button>
                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UyF-In-V83" userLabel="StatusText">
-                                    <rect key="frame" x="13" y="313" width="300" height="68"/>
+                                    <rect key="frame" x="10" y="315" width="300" height="68"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
                                 </textView>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vVq-zQ-iqr" userLabel="Chat Button">
-                                    <rect key="frame" x="51" y="188" width="36" height="32"/>
-                                    <state key="normal" image="icon_chat.png">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="chatButtonTapped:" destination="-1" eventType="touchUpInside" id="1pu-uj-Y9t"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" alpha="0.20000000000000001" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="93E-kZ-Nv6" userLabel="Logout Button">
-                                    <rect key="frame" x="281" y="0.0" width="29" height="34"/>
+                                    <rect key="frame" x="281" y="10" width="29" height="51"/>
                                     <state key="normal" image="icon_logout.png">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -187,11 +170,24 @@
                                         <action selector="logoutButtonTapped:" destination="-1" eventType="touchUpInside" id="nE2-f3-ruv"/>
                                     </connections>
                                 </button>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yj2-BE-R2P" userLabel="Avatar Image View">
-                                    <rect key="frame" x="90" y="91" width="141" height="137"/>
-                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vVq-zQ-iqr" userLabel="Chat Button">
+                                    <rect key="frame" x="51" y="205" width="36" height="32"/>
+                                    <state key="normal" image="icon_chat.png">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="chatButtonTapped:" destination="-1" eventType="touchUpInside" id="1pu-uj-Y9t"/>
+                                    </connections>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tony Truong" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0fj-QH-KSR" userLabel="Name Label">
+                                    <rect key="frame" x="110" y="217" width="100" height="21"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="8"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                    <size key="shadowOffset" width="0.0" height="0.0"/>
+                                </label>
                                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2FI-wc-7qR" userLabel="Message Count View">
-                                    <rect key="frame" x="67" y="178" width="15" height="15"/>
+                                    <rect key="frame" x="67" y="195" width="15" height="15"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VEf-Md-SVk">
                                             <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
@@ -214,15 +210,11 @@
                                         <constraint firstAttribute="centerX" secondItem="VEf-Md-SVk" secondAttribute="centerX" id="hsR-5n-OfU"/>
                                     </constraints>
                                 </view>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tony Truong" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0fj-QH-KSR" userLabel="Name Label">
-                                    <rect key="frame" x="113" y="199" width="100" height="21"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="8"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                    <nil key="highlightedColor"/>
-                                    <size key="shadowOffset" width="0.0" height="0.0"/>
-                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yj2-BE-R2P" userLabel="Avatar Image View">
+                                    <rect key="frame" x="79" y="85" width="159" height="163"/>
+                                </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrs-Dl-dl1" userLabel="Save Statustext">
-                                    <rect key="frame" x="238" y="397" width="74" height="22"/>
+                                    <rect key="frame" x="236" y="391" width="74" height="22"/>
                                     <state key="normal" backgroundImage="btPost.png">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -230,16 +222,25 @@
                                         <action selector="SaveStatusText:" destination="-1" eventType="touchUpInside" id="J9b-Ul-CbC"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCa-Rk-f9Z" userLabel="Saved Button">
+                                    <rect key="frame" x="145" y="44" width="34" height="33"/>
+                                    <state key="normal" image="icon_saved_question.png">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="savedQuestionsButtonTapped:" destination="-1" eventType="touchUpInside" id="g8f-bm-pvu"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstItem="Urr-mt-ANE" firstAttribute="top" secondItem="KSL-EB-V96" secondAttribute="top" constant="80" id="1Ng-EA-UJU"/>
-                                <constraint firstItem="RNC-qt-eH7" firstAttribute="leading" secondItem="KSL-EB-V96" secondAttribute="leading" constant="80" id="3LW-Cg-ODi"/>
+                                <constraint firstItem="Urr-mt-ANE" firstAttribute="top" secondItem="KSL-EB-V96" secondAttribute="top" constant="97" id="1Ng-EA-UJU"/>
+                                <constraint firstItem="RNC-qt-eH7" firstAttribute="leading" secondItem="KSL-EB-V96" secondAttribute="leading" constant="70" id="3LW-Cg-ODi"/>
                                 <constraint firstAttribute="height" constant="586" id="AXH-lm-xoN"/>
-                                <constraint firstItem="2FI-wc-7qR" firstAttribute="leading" secondItem="KSL-EB-V96" secondAttribute="leading" constant="71" id="Jks-TV-erN"/>
-                                <constraint firstItem="RNC-qt-eH7" firstAttribute="top" secondItem="KSL-EB-V96" secondAttribute="top" constant="80" id="PRM-NW-CD1"/>
-                                <constraint firstItem="ZIp-xd-JEj" firstAttribute="top" secondItem="KSL-EB-V96" secondAttribute="top" constant="27" id="XTH-Ek-5XG"/>
-                                <constraint firstItem="2FI-wc-7qR" firstAttribute="top" secondItem="KSL-EB-V96" secondAttribute="top" constant="190" id="da1-At-XP8"/>
+                                <constraint firstItem="2FI-wc-7qR" firstAttribute="leading" secondItem="KSL-EB-V96" secondAttribute="leading" constant="67" id="Jks-TV-erN"/>
+                                <constraint firstItem="RNC-qt-eH7" firstAttribute="top" secondItem="KSL-EB-V96" secondAttribute="top" constant="87" id="PRM-NW-CD1"/>
+                                <constraint firstItem="ZIp-xd-JEj" firstAttribute="top" secondItem="KSL-EB-V96" secondAttribute="top" constant="34" id="XTH-Ek-5XG"/>
+                                <constraint firstItem="2FI-wc-7qR" firstAttribute="top" secondItem="KSL-EB-V96" secondAttribute="top" constant="195" id="da1-At-XP8"/>
                                 <constraint firstItem="ZIp-xd-JEj" firstAttribute="leading" secondItem="KSL-EB-V96" secondAttribute="leading" constant="169" id="pGM-nt-EQW"/>
                                 <constraint firstAttribute="width" constant="320" id="rwe-j8-bPl"/>
                                 <constraint firstItem="Urr-mt-ANE" firstAttribute="leading" secondItem="KSL-EB-V96" secondAttribute="leading" constant="270" id="yrq-EI-aXL"/>
@@ -269,7 +270,7 @@
         </view>
     </objects>
     <resources>
-        <image name="CircleProfile.png" width="637" height="619"/>
+        <image name="CircleProfile.png" width="955" height="930"/>
         <image name="Profilecircle.png" width="320" height="568"/>
         <image name="btPost.png" width="133" height="37"/>
         <image name="icon_accepted_question.png" width="86" height="73"/>

@@ -88,7 +88,7 @@
     [self.view addSubview:nav.navigationView];
     
     UIButton *titleBckBtn=[[UIButton alloc]init];
-    titleBckBtn.frame=CGRectMake(0, 10, 45, 30);
+    titleBckBtn.frame=CGRectMake(0, 13, 45, 30);
     [titleBckBtn setImage:[UIImage imageNamed:@"back_blue"] forState:UIControlStateNormal];
     [titleBckBtn addTarget:self action:@selector(backView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:titleBckBtn];
@@ -96,7 +96,7 @@
     
 
     //Custom Search Field
-    searchView=[[UIView alloc]initWithFrame:CGRectMake(5,nav.navigationView.frame.size.height+5, self.view.frame.size.width-10, 30)];
+    searchView=[[UIView alloc]initWithFrame:CGRectMake(5,nav.navigationView.frame.origin.y+nav.navigationView.frame.size.height+5, self.view.frame.size.width, 30)];
     searchView.layer.borderColor=[UIColor lightGrayColor].CGColor;
     searchView.layer.borderWidth=0.5f;
     searchView.layer.cornerRadius=4.0f;
@@ -126,12 +126,12 @@
     UIView *lineView=[[UIView alloc]init];
     lineView.frame=CGRectMake(0, searchView.frame.origin.y+searchView.frame.size.height+2, self.view.frame.size.width, 2);
     [lineView setBackgroundColor:[UIColor lightGrayColor]];
-    [self.view addSubview:lineView];
+   // [self.view addSubview:lineView];
     
 
     //Table View
     answerTableView=[[UITableView alloc]init];
-    answerTableView.frame=CGRectMake(0,nav.navigationView.frame.size.height+searchView.frame.size.height+12, self.view.frame.size.width, self.view.frame.size.height-(90+searchView.frame.size.height+10));
+    answerTableView.frame=CGRectMake(0,searchView.frame.origin.y+searchView.frame.size.height+5, self.view.frame.size.width, self.view.frame.size.height-(90+searchView.frame.size.height+10));
     answerTableView.dataSource=self;
     answerTableView.delegate=self;
     answerTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
@@ -440,8 +440,8 @@
 
 -(void) fetchData
 {
-    detailArray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil];
-    NSString *userId=[[detailArray valueForKey:@"id"]objectAtIndex:0];
+    detailArray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil]objectAtIndex:0];
+    NSString *userId=[detailArray valueForKey:@"id"];
   
    
     NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]countAcceptedAnswer:_friendId];
@@ -604,13 +604,68 @@
     }
     
     NSURL *imageUrl=[NSURL URLWithString:urlString];
-    
-    
-    [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"name_icon"]];
-    [cell.questionLabel setText:[[filteredArray objectAtIndex:indexPath.row]valueForKey:@"answer"]];
+        NSRange rangeimagepng = [urlString rangeOfString:@".png" options:NSCaseInsensitiveSearch];
+        NSRange rangeimagejpg = [urlString rangeOfString:@".jpg" options:NSCaseInsensitiveSearch];
+        //if (range.location != NSNotFound) {
         
-    NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
-        NSString *userName=[userData valueForKey:@"name"];
+        if(rangeimagepng.location != NSNotFound || rangeimagejpg.location != NSNotFound)
+        
+
+        {
+            [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"name_icon"]];
+            [cell.questionLabelNoImage removeFromSuperview];
+            
+            
+            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popquestiondetail:)];
+            
+            [cell.questionLabel setText:[[filteredArray objectAtIndex:indexPath.row]valueForKey:@"answer"]];
+            
+            [cell.questionLabel addGestureRecognizer:singleTap];
+            cell.questionLabel.userInteractionEnabled=YES;
+            cell.questionLabel.tag=indexPath.row;
+
+            
+        }
+        else
+        {
+            
+            
+            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popquestiondetail:)];
+            
+            [cell.questionLabelNoImage setText:[[filteredArray objectAtIndex:indexPath.row]valueForKey:@"answer"]];
+            
+            [cell.questionLabelNoImage addGestureRecognizer:singleTap];
+            cell.questionLabelNoImage.userInteractionEnabled=YES;
+            cell.questionLabelNoImage.tag=indexPath.row;
+
+            
+            [cell.questionImageView removeFromSuperview];
+            
+            [cell.questionLabel removeFromSuperview];
+            
+            [cell.questionLabelNoImage setText:[[filteredArray objectAtIndex:indexPath.row]valueForKey:@"answer"]];
+            
+        }
+        
+          NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        NSString *urlString1 = [userData valueForKey:@"profile_pic"];
+        if ([urlString1 rangeOfString:@"http://"].location == NSNotFound)
+        {
+            urlString1 = [NSString stringWithFormat:@"http://%@", urlString1];
+        }
+        NSURL *imageUrl1=[NSURL URLWithString:urlString1];
+        [cell.userImageView setImageWithURL:imageUrl1 placeholderImage:[UIImage imageNamed:@"name_icon"]];
+        cell.userImageView.layer.cornerRadius=cell.userImageView.frame.size.width/2;
+        cell.userImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
+        cell.userImageView.layer.borderWidth=1.0f;
+        cell.userImageView.clipsToBounds=YES;
+
+        
+        
+        
+        
+  
+        NSString *userName=[NSString stringWithFormat:@"%@ %@",  [userData valueForKey:@"name"],[userData valueForKey:@"lname"]];
         
     [cell.userNameBtn setTitle:userName forState:UIControlStateNormal];
     cell.userNameBtn.tag=indexPath.row;
@@ -618,13 +673,13 @@
     
     
     NSString *timeStampString=[NSString stringWithFormat:@"%@",[[filteredArray objectAtIndex:indexPath.row]valueForKey:@"accept_date"]];
-    NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
-    NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
-    [cell.dateLabel setText:resultString];
+    //NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
+    //NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
+    [cell.dateLabel setText:timeStampString];
         
     //Time Label
-    NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];
-    [cell.timeLabel setText:resultTime];
+    //NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];
+    //[cell.timeLabel setText:resultTime];
         
     UIView *lineView=[[UIView alloc]init];
     lineView.frame=CGRectMake(0, 78.0,cell.frame.size.width, 2.0);
@@ -658,14 +713,30 @@
     
 }
 
+
+-(void) popquestiondetail:(UITapGestureRecognizer *)recognizer{
+    NSString *userId=[detailArray valueForKey:@"id"];
+    NSString *totalQues=[detailArray valueForKey:@"no_of_ques"];
+    NSString *questionId=[[answerData valueForKey:@"questionId"]objectAtIndex:recognizer.view.tag];
+    //
+    PostQuestionDetailViewController *profileView=[[PostQuestionDetailViewController alloc]init];
+    // profileView.ques=totalQues;
+    profileView.ids=userId;
+    //profileView.value=true;
+    profileView.generalViewValue=1;
+    profileView.acceptQuestId=questionId;
+     [self.navigationController pushViewController:profileView animated:NO];
+
+}
+
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView==answerTableView)
     {
     
     NSLog(@"%@",answerData);
-    NSString *userId=[[detailArray valueForKey:@"id"]objectAtIndex:0];
-    NSString *totalQues=[[detailArray valueForKey:@"no_of_ques"]objectAtIndex:0];
+    NSString *userId=[detailArray valueForKey:@"id"];
+    NSString *totalQues=[detailArray valueForKey:@"no_of_ques"];
     NSString *questionId=[[answerData valueForKey:@"questionId"]objectAtIndex:indexPath.row];
 //
    PostQuestionDetailViewController *profileView=[[PostQuestionDetailViewController alloc]init];

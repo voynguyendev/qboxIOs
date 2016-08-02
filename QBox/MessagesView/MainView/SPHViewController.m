@@ -376,7 +376,19 @@
     
     
     //containerView = [[UIView alloc] initWithFrame:CGRectMake(0,self.view.frame.size.height-40, 320, 40)];
-    containerView = [[UIView alloc] initWithFrame:CGRectMake(0,self.view.frame.size.height-70,self.view.frame.size.width, 40)];
+    int val=self.view.frame.size.height;
+    int valframe=self.view.frame.size.height-70;
+    if(val>560)
+    {
+        valframe=self.view.frame.size.height-90;
+    }
+    else
+    {
+        valframe=self.view.frame.size.height-170;
+
+    }
+    
+    containerView = [[UIView alloc] initWithFrame:CGRectMake(0,valframe,self.view.frame.size.width, 40)];
     //textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(40, 3, 206, 40)];
     textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(40, 3,self.view.frame.size.width-115,40)];
     textView.contentInset = UIEdgeInsetsMake(0, 5, 0, 5);
@@ -773,7 +785,9 @@ finishedSavingWithError:(NSError *)error
         
         [cell SetCellData:feed_data targetedView:self Atrow:indexPath.row];
         [cell.Avatar_Image setupImageViewer];
-        id userData=[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"];
+       
+       
+        NSArray *userData= [[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
         
         NSString *profileImageStr=[userData valueForKey:@"profile_pic"];
         NSURL *url=[NSURL URLWithString:profileImageStr];

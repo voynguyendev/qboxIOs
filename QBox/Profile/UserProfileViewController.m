@@ -72,6 +72,30 @@
 
 }
 
+-(void)keyboardDidHide:(NSNotification*) note
+{
+    CGRect containerFrametext = self.tvStatusText.frame;
+    CGRect containerFramepost = self.btpost.frame;
+    containerFrametext.origin.y=containerFrametext.origin.y+280;
+    containerFramepost.origin.y=containerFramepost.origin.y+280;
+    
+    self.tvStatusText.frame=containerFrametext;
+    self.btpost.frame=containerFramepost;
+}
+
+-(void)keyboardDidShow:(NSNotification*) note
+{
+     CGRect containerFrametext = self.tvStatusText.frame;
+     CGRect containerFramepost = self.btpost.frame;
+     containerFrametext.origin.y=containerFrametext.origin.y-280;
+     containerFramepost.origin.y=containerFramepost.origin.y-280;
+
+     self.tvStatusText.frame=containerFrametext;
+     self.btpost.frame=containerFramepost;
+
+    
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -94,7 +118,16 @@
         
     }
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+
     
 }
 
@@ -127,6 +160,8 @@
 }
 
 - (IBAction)logoutButtonTapped:(id)sender{
+    
+    
     UIAlertView *logoutAlertView = [[UIAlertView alloc] initWithTitle:@"Alert!!" message:@"Do you want to log out?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
     logoutAlertView.tag = 1;
     [logoutAlertView show];
@@ -188,7 +223,8 @@
     [[WebServiceSingleton sharedMySingleton] saveStatusText:statustext userId:userid];
     
     UIAlertView *sucessUpdateAlert=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Successfully updated Statustext" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
-    [sucessUpdateAlert show];
+   // [sucessUpdateAlert show];
+    [self.tvStatusText resignFirstResponder];
     
     [self hideActivity];
 }
@@ -200,15 +236,16 @@
     //LogOut Alert View
     if (alertView.tag == 1) {
         if (buttonIndex == 1) {
+            
+            
+            
+            
             LoginViewController_iPhone *loginView = [[LoginViewController_iPhone alloc] init];
             [AppDelegate sharedDelegate].navController = [[[AppDelegate sharedDelegate] navController]
                                                           initWithRootViewController:loginView];
             
-            [AppDelegate sharedDelegate].window.rootViewController=[AppDelegate sharedDelegate].navController;
-           // [self.navigationController pushViewController:loginView animated:NO];
-            
-          /*  LoginViewController_iPhone *loginView=[[LoginViewController_iPhone alloc]init];
-            [AppDelegate sharedDelegate].navController=[[UINavigationController alloc]initWithRootViewController:loginView];*/
+                       [AppDelegate sharedDelegate].window.rootViewController=[AppDelegate sharedDelegate].navController;
+          
 
             
         }

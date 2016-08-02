@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-#import <RevMobAds/RevMobAds.h>
+
 #import <RevMobAds/RevMobAdsDelegate.h>
 
 #import <CoreLocation/CoreLocation.h>

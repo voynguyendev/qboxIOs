@@ -246,7 +246,7 @@
         [self searchUser];
         nav.titleView.text=@"SEARCH FRIENDS";
         
-        searchTextField=[[UITextField alloc]initWithFrame:CGRectMake(10, nav.navigationView.frame.size.height+5,self.view.frame.size.width-20,40)];
+        searchTextField=[[UITextField alloc]initWithFrame:CGRectMake(10, nav.navigationView.frame.size.height+20,self.view.frame.size.width-30,40)];
         [searchTextField setPlaceholder:@"Search Filter"];
         searchTextField.delegate=self;
         searchTextField.layer.borderColor=[UIColor lightGrayColor].CGColor;
@@ -278,7 +278,7 @@
         [viewFriends addSubview:searchTextField];
        // [viewFriends addSubview:inviteFriendsBtn];
         
-         tableViewPos=nav.navigationView.frame.size.height+searchTextField.frame.size.height+10;
+         tableViewPos=searchTextField.frame.origin.y+searchTextField.frame.size.height+5;
          tableViewHeight=self.view.frame.size.height-(90+searchTextField.frame.size.height+10);
          tableViewFrame=CGRectMake(0, tableViewPos, self.view.frame.size.width, tableViewHeight);
          friendsList.frame=tableViewFrame;
@@ -356,8 +356,8 @@
     NSLog(@"%@",friendsData);
     
     
-    personalDetailarray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-    NSString *userID=[[personalDetailarray valueForKey:@"id"]objectAtIndex:0];
+    personalDetailarray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+    NSString *userID=[personalDetailarray valueForKey:@"id"];
     NSArray *DataArray=[[WebServiceSingleton sharedMySingleton]getAllFriendRequest:userID];
     if (DataArray==nil)
     {
@@ -451,11 +451,20 @@
     
     UIImageView *nameImg=[[UIImageView alloc]init];
     nameImg.frame=CGRectMake(10, 5, 30, 30);
+    
+    nameImg.layer.cornerRadius=nameImg.frame.size.width/2;
+    nameImg.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    nameImg.layer.borderWidth=1.0f;
+    nameImg.clipsToBounds=YES;
+
+    
+    
+    
     NSString *urlString=[[friendsData valueForKey:@"profile_pic"]objectAtIndex:indexPath.row];
     
      if (!urlString.length==0)
      {
-        if (![urlString isEqualToString:@"108.175.148.221/question_app_test/uploads/thumbs/"])
+        if (![urlString isEqualToString:@"54.69.127.235/question_app/uploads/thumbs/"])
         {
             if ([urlString rangeOfString:@"http:"].location==NSNotFound)
             {
@@ -487,8 +496,13 @@
    
     [cell.contentView addSubview:nameImg];
     
+    
+    NSString *userName=[NSString stringWithFormat:@"%@",  [[friendsData valueForKey:@"name"]objectAtIndex:indexPath.row]];
+    
+
+    
     UILabel *nameLbl=[[UILabel alloc]init];
-    nameLbl.text=[[friendsData valueForKey:@"name"]objectAtIndex:indexPath.row];
+    nameLbl.text=   userName;
     nameLbl.frame=CGRectMake(nameImg.frame.size.width+30, 0, 100, 30);
     nameLbl.font=[UIFont fontWithName:@"Helvetica" size:14.0f];
     [cell.contentView addSubview:nameLbl];
@@ -581,11 +595,11 @@
     
     */
     
-//    AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
-//    addFriend.friendUserId=[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row];
-//    [self.navigationController pushViewController:addFriend animated:NO];
+    AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+    addFriend.friendUserId=[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row];
+    [self.navigationController pushViewController:addFriend animated:NO];
     
-    [[AppDelegate sharedDelegate].TabBarView gotoFriendProfileScreenWithFriendID:[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row]];
+   // [[AppDelegate sharedDelegate].TabBarView gotoFriendProfileScreenWithFriendID:[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row]];
     
 //    
    /* UserDetailViewController *userDetail=[[UserDetailViewController alloc]init];
@@ -742,8 +756,8 @@
    // searchArray=[mainArray objectAtIndex:0];
         searchArray=[[mainArray valueForKey:@"message"]objectAtIndex:0];
     NSLog(@"%@",searchArray);
-      personalDetailarray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-        NSString *user_id=[[personalDetailarray valueForKey:@"id"]objectAtIndex:0];
+      personalDetailarray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        NSString *user_id=[personalDetailarray valueForKey:@"id"];
        
        
 //        if ([searchArray count]==1)
@@ -855,8 +869,8 @@
         
 
         
-        personalDetailarray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-        NSString *senderId=[[personalDetailarray valueForKey:@"id"]objectAtIndex:0];
+        personalDetailarray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        NSString *senderId=[personalDetailarray valueForKey:@"id"];
         NSString *receiverId=[[friendsData valueForKey:@"id"]objectAtIndex:i];
         
         
@@ -1069,8 +1083,8 @@
     }
     else if (requestValue==1)
     {
-        personalDetailarray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-        NSString *receiverId=[[personalDetailarray valueForKey:@"id"]objectAtIndex:0];
+        personalDetailarray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        NSString *receiverId=[personalDetailarray valueForKey:@"id"];
         NSString *senderId=[[friendsData valueForKey:@"sender_id"]objectAtIndex:acceptRequestAlert.tag];
         
         
@@ -1087,8 +1101,8 @@
     
     else if (requestValue==2)
     {
-        personalDetailarray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-        NSString *receiverId=[[personalDetailarray valueForKey:@"id"]objectAtIndex:0];
+        personalDetailarray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        NSString *receiverId=[personalDetailarray valueForKey:@"id"];
         NSString *senderId=[[friendsData valueForKey:@"sender_id"]objectAtIndex:rejectRequestAlert.tag];
         
         
@@ -1117,8 +1131,8 @@
     
     else if (requestValue==3)
     {
-       personalDetailarray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-        NSString *senderId=[[personalDetailarray valueForKey:@"id"]objectAtIndex:0];
+       personalDetailarray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        NSString *senderId=[personalDetailarray valueForKey:@"id"];
         NSString *receiverId=[[friendsData valueForKey:@"id"]objectAtIndex:acceptRequestAlert.tag];
         
         

@@ -14,7 +14,7 @@
 #import "LoginViewController_iPhone.h"
 #import "AddFriendViewController.h"
 #import "UpdatesViewController.h"
-
+#import "CustomnavigationController.h"
 
 typedef void (^ACTIVITY_BLOCK)(void);
 
@@ -41,15 +41,16 @@ typedef void (^ACTIVITY_BLOCK)(void);
     
     
     
-  
+  //  [UIApplication sharedApplication].statusBarFrame.size.width  =100;
 
    
-    [RevMobAds startSessionWithAppID:@"53fd85475270d0d348aafa64" andDelegate:self];
+   // [RevMobAds startSessionWithAppID:@"53fd85475270d0d348aafa64" andDelegate:self];
 
-    [UIApplication sharedApplication].statusBarHidden = YES;
+   // [UIApplication sharedApplication].statusBarHidden = YES;
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-       if ([[NSUserDefaults standardUserDefaults]objectForKey:@"userid"])
+    NSString* user=[[NSUserDefaults standardUserDefaults]objectForKey:@"test"];
+       if ([user isEqualToString:@"YES"])
      {
 //         AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
 //         [self.navController pushViewController:addFriend animated:NO];
@@ -60,7 +61,7 @@ typedef void (^ACTIVITY_BLOCK)(void);
          
          TabBarView=[[TaBBarViewController alloc]init];
          //TabBarView.notificationViewValue=0;
-         self.navController=[[UINavigationController alloc]initWithRootViewController:TabBarView];
+         self.navController=[[CustomnavigationController alloc]initWithRootViewController:TabBarView];
          
          self.navController.navigationBarHidden = YES;
     }
@@ -68,7 +69,7 @@ typedef void (^ACTIVITY_BLOCK)(void);
     {
         //self._firstScreen=[[FirstScreenViewController alloc]init];
         LoginViewController_iPhone *loginView=[[LoginViewController_iPhone alloc]init];
-       self.navController=[[UINavigationController alloc]initWithRootViewController:loginView];
+       self.navController=[[CustomnavigationController alloc]initWithRootViewController:loginView];
     
     }
     NSString *ver = [[UIDevice currentDevice] systemVersion];
@@ -137,15 +138,23 @@ typedef void (^ACTIVITY_BLOCK)(void);
 - (void)revmobAdDidFailWithError:(NSError *)error {
 }
 
--(BOOL) prefersStatusBarHidden
-{
-    return YES;
-}
+
 
 -(void) performSelectorInBackground:(SEL)aSelector withObject:(id)arg
 {
     
 }
+
+-(NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    if(self.restrictRotation)
+        return UIInterfaceOrientationMaskAll;
+   else
+       return UIInterfaceOrientationMaskPortrait;
+      // return ;
+    //return ;
+}
+
 
 -(void) pushNotificationData
 {
@@ -344,7 +353,7 @@ typedef void (^ACTIVITY_BLOCK)(void);
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
      TabBarView=[[TaBBarViewController alloc]init];
-     self.navController=[[UINavigationController alloc]initWithRootViewController:TabBarView];
+     self.navController=[[CustomnavigationController alloc]initWithRootViewController:TabBarView];
      self.navController.navigationBarHidden = YES;
     
      TabBarView.questionId=@"1";

@@ -3,10 +3,99 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[PostQuestionDetailViewController editquestionBtnAction:]:PostQuestionDetailViewController.m">
+         contextName = "-[TopicViewController scrollViewDidEndDragging:willDecelerate:]:TopicViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "TabVC.questionId">
+               value = "scrollView.contentOffset.y">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[AddFriendViewController tableView:cellForRowAtIndexPath:]:AddFriendViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "cell.tvabout.text">
+            </PersistentString>
+            <PersistentString
+               value = "indexPath.row">
+            </PersistentString>
+            <PersistentString
+               value = "self.userInfo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[PostQuestionDetailViewController commentView]:PostQuestionDetailViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "0x7c1b6400">
+            </PersistentString>
+            <PersistentString
+               value = "self.view.frame.size.height">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[WebServiceSingleton sendQuestionService:imageBase64String:tabfriendids:]:WebServiceSingleton.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "paramDataString">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[AddFriendViewController popQuestionImageViewFriend:]:AddFriendViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "recognizer.view.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[PostQuestionDetailViewController textView:shouldInteractWithURL:inRange:]:PostQuestionDetailViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "addFriend.hashtag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[AddFriendViewController reloadData]:AddFriendViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "userInfo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[AddFriendViewController popquestiondetail:]:AddFriendViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "ecognizer.view.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[UserDetailViewController imagePickerController:didFinishPickingMediaWithInfo:]:UserDetailViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "personalDetailarray">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[UserDetailViewController selectimage:]:UserDetailViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "recognizer.view.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TopicViewController popquestiondetail:]:TopicViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "postView.generalQuestionArray">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -19,6 +108,119 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TopicViewController globalQuesWebservice]:TopicViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "issearchcategory">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__69-[AddFriendViewController requestGetAllPostQuestionandAcceptedAnswer]_block_invoke:AddFriendViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = " weakSelf.userInfo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[PostQuestionViewController loadquestiondetail]:PostQuestionViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = ":[objectvalue objectForKey:@&quot;category_name&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "[objectvalue objectForKey:@&quot;category_name&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "multipleCategoriesStr">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TopicViewController viewDidLoad]:TopicViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.hashtag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[PostQuestionDetailViewController editquestionBtnAction:]:PostQuestionDetailViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "TabVC.questionId">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[UserDetailViewController activityDidAppear]:UserDetailViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "aboutmeTextview.text">
+            </PersistentString>
+            <PersistentString
+               value = "self.personalDetailarray">
+            </PersistentString>
+            <PersistentString
+               value = "schoolTextfield.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TopicViewController scrollViewDidScroll:]:TopicViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "scrollView.contentOffset.y">
+            </PersistentString>
+            <PersistentString
+               value = "scrollView.contentOffset.x">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TopicViewController tableView:cellForRowAtIndexPath:]:TopicViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "cell.questionLabel.frame.origin.y">
+            </PersistentString>
+            <PersistentString
+               value = "hashtag">
+            </PersistentString>
+            <PersistentString
+               value = "[questionInfo valueForKey:@&quot;categoiesId&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = " lablehastag.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "main:main.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.personalDetailarray">
+            </PersistentString>
+            <PersistentString
+               value = "[profileData objectAtIndex:13]">
+            </PersistentString>
+            <PersistentString
+               value = "[profileData objectAtIndex:11]">
+            </PersistentString>
+            <PersistentString
+               value = "self.userInfo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[UserDetailViewController tableView:cellForRowAtIndexPath:]:UserDetailViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.row">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TopicViewController hotTopicsWebservice]:TopicViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -27,10 +229,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TopicViewController globalQuesWebservice]:TopicViewController.m">
+         contextName = "-[PostQuestionViewController categorySubview]:PostQuestionViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "issearchcategory">
+               value = "categoryofuserArray">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

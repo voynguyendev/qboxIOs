@@ -367,8 +367,39 @@ finishedWithAuth:(GTMOAuth2Authentication *)auth
 - (void)viewDidLoad {
   rightBarButtonItem_.customView = navButtonsView_;
   self.navigationItem.rightBarButtonItem = rightBarButtonItem_;
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:@   {NSForegroundColorAttributeName : [UIColor blueColor]}];
+    self.navigationController.navigationBar.translucent = NO;
+    
+    UINavigationBar *naviBarObj = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 40, 320, 20)];
+    [self.view addSubview:naviBarObj];
+    
+    UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc]initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Cancel", nil)] style:UIBarButtonItemStyleBordered target:self
+                                                                 action:@selector(cancelGdriveSignIn:)];
+    
+    [cancelItem.customView addTarget:self action:@selector(cancelYouTubeTapped:) forControlEvents:UIControlEventTouchDown];
+    
+    UINavigationItem *navigItem = [[UINavigationItem alloc] initWithTitle:@""];
+    navigItem.rightBarButtonItem = cancelItem;
+    naviBarObj.items = [NSArray arrayWithObjects: navigItem,nil];
 }
 
+-(void)cancelGdriveSignIn:(id)sender
+{
+    [self cancelSigningIn];
+    //[self.navigationController pushViewController:viewController animated:YES];
+    //[self dismissViewControllerAnimated:YES completion:^(void){}];
+   // [self.navigationController popViewControllerAnimated:YES];
+
+}
+    
+
+
+
+-(void)cancelYouTubeTapped:(id)sender{
+    [self.navigationController dismissViewControllerAnimated:YES
+                                                  completion:nil];
+}
 - (void)popView {
 #if NS_BLOCKS_AVAILABLE
   void (^popViewBlock)() = self.popViewBlock;

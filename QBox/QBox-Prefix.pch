@@ -14,9 +14,9 @@
 //#define webserviceBaseUrl @"http://localhost:8888/QBox/"
 //#define webserviceBaseUrl @"http://192.168.1.170:8888/QBox/"
 
-//#define webserviceBaseUrl @"http://108.175.148.221/question_app_test/"
-#define webserviceBaseUrl @"http://108.175.148.221/question_app_test/"
-//http://108.175.148.221/question_app_test/
+//#define webserviceBaseUrl @"http://54.69.127.235/question_app/"
+#define webserviceBaseUrl @"http://54.69.127.235/question_app/"
+//http://54.69.127.235/question_app/
 #import "LoginViewController_iPhone.h"
   #import "SPHMacro.h"
 #import "ProgressHUD.h"

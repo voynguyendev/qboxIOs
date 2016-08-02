@@ -11,8 +11,18 @@
 #import "NavigationView.h"
 #import "CustomTableViewCell.h"
 #import "WebServiceSingleton.h"
+#import "UIImageView+WebCache.h"
+#import "TopicViewController.h"
+#import "NavigationView.h"
+#import "CustomTableViewCell.h"
 #import "AppDelegate.h"
 #import "ProgressHUD.h"
+#import "WebServiceSingleton.h"
+#import "ProjectHelper.h"
+#import "UIImageView+WebCache.h"
+#import "SDImageCache.h"
+
+
 
 @interface MessageViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -152,11 +162,14 @@
     NSString* name=[msgArray valueForKey:@"name"];
     
 
-    //NSString *ImageURL = [msgArray valueForKey:@"user_image_thumb"];
-    //NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageURL]];
-   // userImageView.image = [UIImage imageWithData:imageData];
+   NSString *ImageURL = [msgArray valueForKey:@"user_image_thumb"];
+  //  NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageURL]];
+  // userImageView.image = [UIImage imageWithData:imageData];
+    [userImageView setImageWithURL:ImageURL placeholderImage:[UIImage imageNamed:@"name_icon"]];
 
-   [userImageView setImage    :[UIImage   imageNamed:@"placeholder"]];
+    
+    
+  // [userImageView setImage    :[UIImage   imageNamed:@"placeholder"]];
     [userNameBtn setTitle:[msgArray valueForKey:@"name"] forState:UIControlStateNormal];
     [messageTextLabel setText:[msgArray valueForKey:@"message"]];
     NSString *date_Time=[msgArray valueForKey:@"date_time"];
@@ -207,10 +220,10 @@
         {
         
         NSString* name=[[messageArray objectAtIndex:i] valueForKey:@"name" ];
-        if(![self checkexistsarray:name])
-        {
+        //if(![self checkexistsarray:name])
+       // {
             [messageArray1 addObject:[messageArray objectAtIndex:i]];
-        }
+        //}
         }
     }
     

@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "ProgressHUD.h"
 #import "AddFriendViewController.h"
+#import "ProjectHelper.h"
 
 @interface QuestionViewController ()<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
 {
@@ -42,6 +43,7 @@
 
 - (void)viewDidLoad
 {
+   
     selectedBtnArray=[[NSMutableArray alloc]init];
     iscreatecategory=NO;
     [super viewDidLoad];
@@ -159,7 +161,15 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [ProgressHUD show:@"Loading..." Interaction:NO];
+  
+    if (![ProjectHelper internetAvailable])
+    {
+       //[ProgressHUD dismiss];
+        SHOW_NO_INTERNET_ALERT(self);
+        
+        return;
+    }
+      [ProgressHUD show:@"Loading..." Interaction:NO];
     [self fetchData];
 }
 
@@ -180,7 +190,7 @@
     [self.view addSubview:nav.navigationView];
     
     UIButton *titleBckBtn=[[UIButton alloc]init];
-    titleBckBtn.frame=CGRectMake(0,(nav.navigationView.frame.size.height-30)/2,45,30);
+    titleBckBtn.frame=CGRectMake(0,(nav.navigationView.frame.size.height)/2,45,30);
     [titleBckBtn setImage:[UIImage imageNamed:@"back_blue"] forState:UIControlStateNormal];
     //backBtnValue=0;
     nav.iconImageView.image=[UIImage imageNamed:@"nav_posted_question"];
@@ -194,7 +204,7 @@
     
     
     //Custom Search Field
-    searchView=[[UIView alloc]initWithFrame:CGRectMake(5,nav.navigationView.frame.size.height+5, self.view.frame.size.width-10, 30)];
+    searchView=[[UIView alloc]initWithFrame:CGRectMake(5,nav.navigationView.frame.origin.y+nav.navigationView.frame.size.height+5, self.view.frame.size.width-10, 30)];
     searchView.layer.borderColor=[UIColor lightGrayColor].CGColor;
     searchView.layer.borderWidth=0.5f;
     searchView.layer.cornerRadius=4.0f;
@@ -238,7 +248,7 @@
     
     questionView=[[UIView alloc]init];
     questionView.backgroundColor=[UIColor lightGrayColor];
-    [questionView setFrame:CGRectMake(0, nav.navigationView.frame.size.height+searchView.frame.size.height+12,self.view.frame.size.width,(self.view.frame.size.height-(90+searchView.frame.size.height+10)))];
+    [questionView setFrame:CGRectMake(0, searchView.frame.origin.y+searchView.frame.size.height+5,self.view.frame.size.width,(self.view.frame.size.height-(90+searchView.frame.size.height+10)))];
     [self.view addSubview:questionView];
     
     questionsTableView=[[UITableView alloc]init];
@@ -261,8 +271,8 @@
 #pragma mark webservice Method
 -(void) fetchData
 {
-    NSArray *userData=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-    NSString *ids=[[userData valueForKey:@"id"]objectAtIndex:0];
+    NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+    NSString *ids=[userData valueForKey:@"id"];
     NSMutableArray *array = [[[WebServiceSingleton sharedMySingleton]fetchData:_friendID]mutableCopy];
     NSLog(@"%@",array);
     
@@ -483,6 +493,9 @@
     
 }
 
+
+
+
 #pragma TextFieldMethods
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
@@ -598,13 +611,49 @@
         [cell.questionLabel setText:[[filteredResults objectAtIndex:indexPath.row]valueForKey:@"question"]];
         
         
+        NSRange rangeimagepng = [urlString rangeOfString:@".png" options:NSCaseInsensitiveSearch];
+        NSRange rangeimagejpg = [urlString rangeOfString:@".jpg" options:NSCaseInsensitiveSearch];
+        //if (range.location != NSNotFound) {
+        
+        if(rangeimagepng.location != NSNotFound || rangeimagejpg.location != NSNotFound)
+        {
+
+             UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popquestiondetail:)];
+            cell.questionLabel.tag=indexPath.row;
+            [cell.questionLabel setUserInteractionEnabled:YES];
+            [cell.questionLabel addGestureRecognizer:singleTap];
+            
+            
+            
+            [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"name_icon"]];
+            [cell.questionLabelNoImage removeFromSuperview];
+        }
+        else
+        {
+            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popquestiondetail:)];
+            cell.questionLabelNoImage.tag=indexPath.row;
+            [cell.questionLabelNoImage setUserInteractionEnabled:YES];
+            [cell.questionLabelNoImage addGestureRecognizer:singleTap];
+            
+
+            
+            [cell.questionImageView removeFromSuperview];
+            
+            [cell.questionLabel removeFromSuperview];
+            
+            [cell.questionLabelNoImage setText:[[filteredResults objectAtIndex:indexPath.row]valueForKey:@"question"]];
+            
+        }
+
         
         
         
         
         
-        [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"[%@]",[[filteredResults objectAtIndex:indexPath.row]valueForKey:@"totalAnswers"]]];
         
+        
+        [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"%@",[[filteredResults objectAtIndex:indexPath.row]valueForKey:@"totalAnswers"]]];
+         [cell.ReliesLabel setText:@"Replies"];
         
         NSString *user_name=[userDetailData valueForKey:@"name"];
         
@@ -612,8 +661,20 @@
         
 //        [cell.userNameBtn addTarget:self action:@selector(profileView:) forControlEvents:UIControlEventTouchUpInside];
 //        cell.userNameBtn.tag=indexPath.row;
+        NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        NSString *urlString1 = [userData valueForKey:@"profile_pic"];
+        if ([urlString1 rangeOfString:@"http://"].location == NSNotFound)
+        {
+            urlString1 = [NSString stringWithFormat:@"http://%@", urlString1];
+        }
+        NSURL *imageUrl1=[NSURL URLWithString:urlString1];
+        [cell.userImageView setImageWithURL:imageUrl1 placeholderImage:[UIImage imageNamed:@"name_icon"]];
+        cell.userImageView.layer.cornerRadius=cell.userImageView.frame.size.width/2;
+        cell.userImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
+        cell.userImageView.layer.borderWidth=1.0f;
+        cell.userImageView.clipsToBounds=YES;
         
-        
+
         
         
         
@@ -624,17 +685,17 @@
         
         
         
-        NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
+        //NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
         
-        NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
-        [cell.dateLabel setText:resultString];
+        //NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
+        [cell.dateLabel setText:timeStampString];
         
         
         
         //Time Label
-        NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];
+        //NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];
         
-        [cell.timeLabel setText:resultTime];
+        //[cell.timeLabel setText:resultTime];
         
         
         
@@ -675,7 +736,19 @@
     }
 
 }
-
+-(void) popquestiondetail:(UITapGestureRecognizer *)recognizer{
+    PostQuestionDetailViewController *profileView=[[PostQuestionDetailViewController alloc]init];
+    profileView.generalViewValue=6;
+    NSMutableArray *questionArr=[filteredResults objectAtIndex:recognizer.view.tag];
+    profileView.generalQuestionArray=questionArr;
+    //profileView.ViewAllTitle=ViewAllBtn.titleLabel.text;
+    // profileView.generalQuestionArray=[NSMutableArray arrayWithObjects:questionArr,totalAnswers, nil];
+    NSString *userID=[[filteredResults valueForKey:@"userId"]objectAtIndex:recognizer.view.tag];
+    profileView.userIdGeneral=userID;
+    
+    [self.navigationController pushViewController:profileView animated:NO];
+    
+}
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     

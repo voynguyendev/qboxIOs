@@ -57,7 +57,7 @@ static int chatInputStartingHeight = 40;
         // TopBar
         _topBar = [[TopBar alloc]init];
         //NSString *titleLabel=@"";
-        _topBar.title = @"Chat";
+        _topBar.title = @"Chataa";
         
         _topBar.backgroundColor = [UIColor colorWithWhite:1 alpha:1.0];
   

@@ -71,7 +71,7 @@
     nav.iconImageView.image=[UIImage imageNamed:@"nav_updates_icon"];
         
         UIButton *titleBckBtn=[[UIButton alloc]init];
-        titleBckBtn.frame=CGRectMake(0,(nav.navigationView.frame.size.height-30)/2,45,30);
+        titleBckBtn.frame=CGRectMake(0,(nav.navigationView.frame.size.height-30)/2+15,45,30);
         [titleBckBtn setImage:[UIImage imageNamed:@"back_blue"] forState:UIControlStateNormal];
         //backBtnValue=0;
     
@@ -90,7 +90,8 @@
         searchView.layer.borderWidth=0.5f;
         searchView.layer.cornerRadius=4.0f;
         [self.view addSubview:searchView];
-        
+        [searchView setHidden:YES];
+    
         UIImageView *searchImageView=[[UIImageView alloc]init];
         searchImageView.frame=CGRectMake(0,(searchView.frame.size.height-25)/2, 25, 25);
         [searchImageView setImage:[UIImage imageNamed:@"search_icon"]];
@@ -116,7 +117,7 @@
         UIView *lineView=[[UIView alloc]init];
         lineView.frame=CGRectMake(0, searchView.frame.origin.y+searchView.frame.size.height+2, self.view.frame.size.width, 2);
         [lineView setBackgroundColor:[UIColor lightGrayColor]];
-        [self.view addSubview:lineView];
+       // [self.view addSubview:lineView];
    
         
         questionTableView=[[UITableView alloc]init];
@@ -306,7 +307,12 @@
                imageUrlStr=[NSMutableString stringWithFormat:@"http://%@",imageUrlStr];
            }
            NSURL *imageUrl=[NSURL URLWithString:imageUrlStr];
+           cell.questionImageView.layer.cornerRadius=cell.questionImageView.frame.size.width/2;
+           cell.questionImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
+           cell.questionImageView.layer.borderWidth=1.0f;
+           cell.userImageView.clipsToBounds=YES;
            [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"placeholder"]];
+          
            
            [cell.btAccept addTarget:self action:@selector(userAcceptBtn:) forControlEvents:UIControlEventTouchUpInside];
            [cell.btReject addTarget:self action:@selector(userRejectBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -390,17 +396,22 @@
                imageUrlStr=[NSMutableString stringWithFormat:@"http://%@",imageUrlStr];
            }
            NSURL *imageUrl=[NSURL URLWithString:imageUrlStr];
+           cell.questionImageView.layer.cornerRadius=cell.questionImageView.frame.size.width/2;
+           cell.questionImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
+           cell.questionImageView.layer.borderWidth=1.0f;
+           cell.questionImageView.clipsToBounds=YES;
+
            [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"placeholder"]];
     
            
            NSString *timeStampString=[NSString stringWithFormat:@"%@",[questionArray valueForKey:@"DateCreate"]];
-            NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
-            NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
-            [cell.dateLabel setText:resultString];
+           // NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
+           // NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
+            [cell.dateLabel setText:timeStampString];
             
             //Time Label
-            NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];
-            [cell.timeLabel setText:resultTime];
+            //NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];
+          //  [cell.timeLabel setText:resultTime];
             /*
             [cell.userNameBtn setTitle:[questionArray valueForKey:@"name"] forState:UIControlStateNormal];
             [cell.userNameBtn addTarget:self action:@selector(userProfileBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -476,9 +487,9 @@
         {
             
             NSArray *detailArray;
-            detailArray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil];
-            NSString *userId=[[detailArray valueForKey:@"id"]objectAtIndex:0];
-            NSString *totalQues=[[detailArray valueForKey:@"no_of_ques"]objectAtIndex:0];
+            detailArray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil]objectAtIndex:0];
+            NSString *userId=[detailArray valueForKey:@"id"];
+            NSString *totalQues=[detailArray valueForKey:@"no_of_ques"];
             
             
             PostQuestionDetailViewController *postQues=[[PostQuestionDetailViewController alloc]init];
@@ -642,7 +653,7 @@
     
     if (filteredResults.count<=0)
     {
-        [[[UIAlertView alloc]initWithTitle:@"Alert" message:@"No PushNotifycation at this time" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil]show];
+        [[[UIAlertView alloc]initWithTitle:@"Alert" message:@"No Push Notifycations at this time" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil]show];
     }
     
     [ProgressHUD dismiss];

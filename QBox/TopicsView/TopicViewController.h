@@ -13,5 +13,8 @@
 
 
 @property(strong,nonatomic) NSString *Indexredirect;
+@property(strong,nonatomic) NSString *hashtag;
+
+
 @property (nonatomic, readwrite, strong) MNMPullToRefreshManager *pullToRefreshManager;
 @end

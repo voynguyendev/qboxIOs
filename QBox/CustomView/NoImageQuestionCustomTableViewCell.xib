@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="402" id="KGk-i7-Jjw" customClass="NoImageQuestionCustomTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="382" height="422"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="382" height="421"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEL-EO-BDn">
+                        <rect key="frame" x="133" y="340" width="49" height="14"/>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="12"/>
+                        <color key="textColor" red="0.37647058820000001" green="0.37647058820000001" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fuo-7X-Ykc">
+                        <rect key="frame" x="133" y="7" width="141" height="20"/>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="10"/>
+                        <color key="textColor" red="0.37647058823529411" green="0.37647058823529411" blue="0.37647058823529411" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8DB-pz-ag9">
+                        <rect key="frame" x="44" y="8" width="60" height="19"/>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="12"/>
+                        <state key="normal" title="1">
+                            <color key="titleColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GDj-1h-CF0">
+                        <rect key="frame" x="338" y="250" width="51" height="20"/>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="10"/>
+                        <color key="textColor" red="0.37647058823529411" green="0.37647058823529411" blue="0.37647058823529411" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="flag.png" translatesAutoresizingMaskIntoConstraints="NO" id="fWp-3h-u0h">
+                        <rect key="frame" x="326" y="290" width="40" height="21"/>
+                    </imageView>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="guP-hF-Vut">
+                        <rect key="frame" x="8" y="43" width="310" height="0.0"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" ambiguous="YES" misplaced="YES" text="fdfdf f fdsf  fdsfdsf  " textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="R8y-YL-8F9" customClass="CCHLinkTextView">
+                        <rect key="frame" x="2" y="30" width="300" height="0.0"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="300" id="EDV-Sk-CUL"/>
+                            <constraint firstAttribute="height" id="Fim-wG-7wf"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z9h-0T-FJi">
+                        <rect key="frame" x="0.0" y="30" width="382" height="30"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="borderaction.png" translatesAutoresizingMaskIntoConstraints="NO" id="U2G-bJ-yyn">
+                                <rect key="frame" x="220" y="1" width="62" height="29"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="borderaction.png" translatesAutoresizingMaskIntoConstraints="NO" id="h1t-dW-Rfa">
+                                <rect key="frame" x="10" y="0.0" width="62" height="29"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="borderaction.png" translatesAutoresizingMaskIntoConstraints="NO" id="hlV-Ip-un4">
+                                <rect key="frame" x="100" y="0.0" width="62" height="29"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="imgcomment.png" translatesAutoresizingMaskIntoConstraints="NO" id="rvr-U6-Zwc">
+                                <rect key="frame" x="110" y="5" width="46" height="10"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="imggood.png" translatesAutoresizingMaskIntoConstraints="NO" id="nrs-16-Xqe">
+                                <rect key="frame" x="24" y="5" width="32" height="10"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="12" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qy-bM-VnJ">
+                                <rect key="frame" x="35" y="10" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EX7-mv-Wov">
+                                <rect key="frame" x="130" y="15" width="42" height="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.042321000419999998" green="0.054046311229999998" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DyM-PO-Kuh">
+                                <rect key="frame" x="0.0" y="40" width="382" height="1"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" fixedFrame="YES" text="3 More  Pictures" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ru-FS-R2f">
+                                <rect key="frame" x="200" y="18" width="161" height="31"/>
+                                <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="20"/>
+                                <color key="textColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gx9-9k-Vj6">
+                                <rect key="frame" x="-140" y="0.0" width="582" height="249"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="12" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V1U-Ni-Kah">
+                                <rect key="frame" x="243" y="12" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="View" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDs-cT-SZX">
+                                <rect key="frame" x="235" y="0.0" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                <color key="textColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="..." textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GmG-jS-RyB">
+                                <rect key="frame" x="235" y="-77" width="42" height="107"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="small_user_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="Q2m-e4-0Y9">
+                        <rect key="frame" x="8" y="1" width="34" height="34"/>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="z9h-0T-FJi" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="22" id="TMs-kQ-lXB"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="ReliesLabel" destination="dEL-EO-BDn" id="ahk-45-fmw"/>
+                <outlet property="dateLabel" destination="fuo-7X-Ykc" id="wMN-3l-9yh"/>
+                <outlet property="imflag" destination="fWp-3h-u0h" id="JN4-1H-C7t"/>
+                <outlet property="imgComent" destination="rvr-U6-Zwc" id="tAP-LO-qjC"/>
+                <outlet property="imgComentborder" destination="hlV-Ip-un4" id="1fg-cI-ivI"/>
+                <outlet property="imgbordergood" destination="h1t-dW-Rfa" id="fWH-06-a3C"/>
+                <outlet property="imggood" destination="nrs-16-Xqe" id="HcC-XF-olh"/>
+                <outlet property="lbCountPictures" destination="2Ru-FS-R2f" id="Mjc-iz-oxf"/>
+                <outlet property="lbcountview" destination="V1U-Ni-Kah" id="eXa-DU-SwK"/>
+                <outlet property="lbmenuaction" destination="GmG-jS-RyB" id="XEW-AP-rqL"/>
+                <outlet property="lcquestionlabelheight" destination="Fim-wG-7wf" id="J0r-jA-HNE"/>
+                <outlet property="lcviewquestion" destination="TMs-kQ-lXB" id="0Fm-dd-phj"/>
+                <outlet property="questionImageView" destination="Gx9-9k-Vj6" id="Kqv-NW-Jgb"/>
+                <outlet property="questionLabel" destination="R8y-YL-8F9" id="rsa-5r-fFd"/>
+                <outlet property="questionLabelNoImage" destination="guP-hF-Vut" id="E8d-S6-aMO"/>
+                <outlet property="timeLabel" destination="GDj-1h-CF0" id="FTf-9O-drM"/>
+                <outlet property="totalAnswersLabel" destination="EX7-mv-Wov" id="goa-Nd-DyV"/>
+                <outlet property="totalLikeLabel" destination="5qy-bM-VnJ" id="sio-Pe-gVC"/>
+                <outlet property="userImageView" destination="Q2m-e4-0Y9" id="RvY-me-8x3"/>
+                <outlet property="userNameBtn" destination="8DB-pz-ag9" id="nAC-G6-VaR"/>
+                <outlet property="viewquestion" destination="z9h-0T-FJi" id="xUy-qd-OQw"/>
+            </connections>
+            <point key="canvasLocation" x="317" y="379"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="borderaction.png" width="166" height="87"/>
+        <image name="flag.png" width="15" height="16"/>
+        <image name="imgcomment.png" width="170" height="28"/>
+        <image name="imggood.png" width="126" height="34"/>
+        <image name="small_user_icon.png" width="8" height="8"/>
+    </resources>
+</document>

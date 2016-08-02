@@ -33,5 +33,8 @@
 -(void)selectTab :(int)value;
 
 - (void)gotoFriendProfileScreenWithFriendID:(NSString *)friendID;
+-(void)showtabar;
+-(void)hidetabar;
+
 
 @end

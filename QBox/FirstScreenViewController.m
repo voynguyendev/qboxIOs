@@ -14,7 +14,8 @@
 
 @interface FirstScreenViewController ()
 {
-    
+    UIImageView *ImagePostQuestion;
+
     
 }
 
@@ -29,6 +30,7 @@
     if (self) {
         // Custom initialization
     }
+    
     return self;
 }
 
@@ -109,7 +111,7 @@
 
 -(BOOL) prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 - (void)didReceiveMemoryWarning

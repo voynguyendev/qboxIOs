@@ -57,7 +57,7 @@
 {
     
     NSLog(@"%@",searchData);
-    personalDetailarray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
+    personalDetailarray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
    
   
    
@@ -73,7 +73,7 @@
 
 -(BOOL) prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -264,7 +264,7 @@
         {
             
             NSLog(@"%@",personalDetailarray);
-            NSString *senderId=[[personalDetailarray valueForKey:@"id"]objectAtIndex:0];
+            NSString *senderId=[personalDetailarray valueForKey:@"id"];
             NSString *receiverId=[[searchData valueForKey:@"id"]objectAtIndex:requestAlertView.tag];
             
             

@@ -95,10 +95,10 @@
 -(void) createUI
 {
     NavigationView *nav = [[NavigationView alloc] init];
-    nav.titleView.text = @"FRIEND LIST";
+    nav.titleView.text = @"Buddies LIST";
     [self.view addSubview:nav.navigationView];
     
-    searchTextField=[[UITextField alloc]initWithFrame:CGRectMake(10, nav.navigationView.frame.size.height+5,200,40)];
+    searchTextField=[[UITextField alloc]initWithFrame:CGRectMake(10, nav.navigationView.frame.size.height+20,200,30)];
     [searchTextField setPlaceholder:@"Search Filter"];
     searchTextField.delegate=self;
     searchTextField.layer.borderColor=[UIColor lightGrayColor].CGColor;
@@ -117,7 +117,7 @@
     searchTextField.leftViewMode=UITextFieldViewModeAlways;
     
     
-    UIButton *inviteFriendsBtn=[[UIButton alloc]initWithFrame:CGRectMake(searchTextField.frame.origin.x+searchTextField.frame.size.width+5, searchTextField.frame.origin.y, self.view.frame.size.width-(searchTextField.frame.size.width+30),40)];
+    UIButton *inviteFriendsBtn=[[UIButton alloc]initWithFrame:CGRectMake(searchTextField.frame.origin.x+searchTextField.frame.size.width+5, searchTextField.frame.origin.y, self.view.frame.size.width-(searchTextField.frame.size.width+30),30)];
     inviteFriendsBtn.layer.cornerRadius=4.0f;
     [inviteFriendsBtn setTitle:@"Search" forState:UIControlStateNormal];
     [inviteFriendsBtn setBackgroundColor:BUTTONCOLOR];
@@ -132,8 +132,7 @@
     
     CGFloat tableViewPos=nav.navigationView.frame.size.height+searchTextField.frame.size.height+10;
     CGFloat tableViewHeight=self.view.frame.size.height-(90+searchTextField.frame.size.height+10);
-    CGRect tableViewFrame=CGRectMake(0, tableViewPos, self.view.frame.size.width, tableViewHeight);
-    
+    CGRect tableViewFrame=CGRectMake(0, tableViewPos+15, self.view.frame.size.width, tableViewHeight);
     
     
 
@@ -191,8 +190,8 @@
 -(void) friendList
 {
    
-   NSArray *personalDetailarray=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-    NSString *userId=[[personalDetailarray valueForKey:@"id"]objectAtIndex:0];
+   NSArray *personalDetailarray=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+    NSString *userId=[personalDetailarray valueForKey:@"id"];
     NSArray *listArray=[[WebServiceSingleton sharedMySingleton]getAllFriendList:userId];
     NSString *status=[[listArray valueForKey:@"status"]objectAtIndex:0];
     if ([status isEqualToString:@"0"])
@@ -283,10 +282,15 @@
     
     UIImageView *nameImg=[[UIImageView alloc]init];
     nameImg.frame=CGRectMake(10, 5, 30, 30);
+    nameImg.layer.cornerRadius=nameImg.frame.size.width/2;
+    nameImg.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    nameImg.layer.borderWidth=1.0f;
+    nameImg.clipsToBounds=YES;
+    
     NSString *urlString=[[friendsData valueForKey:@"thumb"]objectAtIndex:indexPath.row];
     if (!urlString.length==0)
     {
-        if (![urlString isEqualToString:@"108.175.148.221/question_app_test/uploads/thumbs/"])
+        if (![urlString isEqualToString:@"54.69.127.235/question_app/uploads/thumbs/"])
         {
         if ([urlString rangeOfString:@"http:"].location==NSNotFound)
         {
@@ -320,7 +324,9 @@
     [cell.contentView addSubview:nameImg];
     
     UILabel *nameLbl=[[UILabel alloc]init];
-    nameLbl.text=[[friendsData valueForKey:@"name"]objectAtIndex:indexPath.row];
+    NSString *userName=[NSString stringWithFormat:@"%@ %@",  [[friendsData valueForKey:@"name"]objectAtIndex:indexPath.row],[[friendsData valueForKey:@"lname"]objectAtIndex:indexPath.row]];
+
+    nameLbl.text=userName;
     nameLbl.frame=CGRectMake(nameImg.frame.size.width+30, 0, 100, 30);
     nameLbl.font=[UIFont fontWithName:@"Helvetica" size:14.0f];
     [cell.contentView addSubview:nameLbl];
@@ -359,7 +365,16 @@
 //    addFriend.friendUserId=[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row];
 //    [self.navigationController pushViewController:addFriend animated:NO];
     
-    [[AppDelegate sharedDelegate].TabBarView gotoFriendProfileScreenWithFriendID:[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row]];
+   // [[AppDelegate sharedDelegate].TabBarView gotoFriendProfileScreenWithFriendID:[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row]];
+    
+    
+    AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+    addFriend.friendUserId=[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row];
+    [self.navigationController pushViewController:addFriend animated:NO];
+
+    
+
+    
     
    
 //    [self userDetailData:indexPath.row];

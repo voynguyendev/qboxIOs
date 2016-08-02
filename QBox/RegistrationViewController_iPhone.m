@@ -67,6 +67,18 @@
     
     
 }
+-(BOOL) checkIfUsernameValidation:(NSString*) username{
+    NSString *_username = username;
+    
+    NSCharacterSet * set = [[NSCharacterSet characterSetWithCharactersInString:@".!#$%&'*+-/=?^_`{|}~,;"] invertedSet];
+    
+    if ([_username rangeOfCharacterFromSet:set].location != NSNotFound){
+        return YES;
+    }
+    else
+        return NO;
+}
+
 
 -(void)registerCreateUI
 {
@@ -534,7 +546,7 @@
 
 -(BOOL) prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 -(void)professionButtonClick
@@ -704,7 +716,7 @@
 
 -(void)registerAPICall
 {
-   // http://108.175.148.221/question_app_test/user_reg.php?name=&lname=&email=&password=&confirmpassword=&action=
+   // http://54.69.127.235/question_app/user_reg.php?name=&lname=&email=&password=&confirmpassword=&action=
 //    NSArray *registraiondetailArray=[[NSArray alloc]initWithObjects:firstNameTextField.text,emailTextfield.text ,passwordTextfield.text,mobileNumberTextField.text,studentTitle,@"grade",@"city",nil];
     
     NSArray *registraiondetailArray=[[NSArray alloc]initWithObjects:firstNameTextField.text,lastNameTextField.text,emailTextfield.text ,passwordTextfield.text,nil];
@@ -822,23 +834,23 @@
     int validateNumber=0;
     
     
-    if (firstNameTextField.text.length==0)
+    if (firstNameTextField.text.length==0 || [self checkIfUsernameValidation:firstNameTextField.text]==NO)
     {
         validateNumber++;
-        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Please enter first name" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
+        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Please enter valid first name" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
         [alertView show];
         
     }
-    else if (lastNameTextField.text.length==0)
+    else if (lastNameTextField.text.length==0 || [self checkIfUsernameValidation:lastNameTextField.text]==NO)
     {
         validateNumber++;
-        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Please enter last name" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
+        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Please enter valid last name" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
         [alertView show];
     }
-    else if (emailTextfield.text.length==0)
+    else if (emailTextfield.text.length==0 || [self checkIfUsernameValidation:emailTextfield.text]==NO)
     {
         validateNumber++;
-        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Please enter e-mail" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
+        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Please enter valid e-mail" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
         [alertView show];
     }
     else if ([self isValidEmail:emailTextfield.text]==NO)
@@ -964,7 +976,7 @@
     
     //[[WebServiceSingleton sharedMySingleton]notificationList];
     
-    registartionAlertView=[[UIAlertView alloc]initWithTitle:@"Registration" message:@"Registration Successful" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
+    registartionAlertView=[[UIAlertView alloc]initWithTitle:@"Alert!" message:@"Registration Successfully" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
     [registartionAlertView show];
     
 }
@@ -976,11 +988,11 @@
         if (buttonIndex==0)
         {
             
-            TaBBarViewController *TabVC=[[TaBBarViewController alloc]init];
-            TabVC.nameValue=1;
-            [self.navigationController pushViewController:TabVC animated:YES];
-//            HomeViewController *homeView=[[HomeViewController alloc]init];
-//            [self.navigationController pushViewController:homeView animated:NO];
+           // TaBBarViewController *TabVC=[[TaBBarViewController alloc]init];
+           // TabVC.nameValue=1;
+            //[self.navigationController pushViewController:TabVC animated:YES];
+            LoginViewController_iPhone *homeView=[[LoginViewController_iPhone alloc]init];
+           [self.navigationController pushViewController:homeView animated:NO];
             
         }
     }

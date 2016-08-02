@@ -6,7 +6,7 @@
 //  Created by iapp on 26/05/14.
 //  Copyright (c) 2014 iapp. All rights reserved.
 //
-
+#import "CustomnavigationController.h"
 #import "TaBBarViewController.h"
 #import "AddFriendViewController.h"
 #import "AppDelegate.h"
@@ -23,7 +23,7 @@
     UITabBar *tabBar;
     UITabBarController *tabBarController;
     UITabBarItem *tabItem3;
-    UINavigationController *friendNav;
+    CustomnavigationController *friendNav;
     
 }
 
@@ -48,7 +48,7 @@ questionId;
 
 - (void)viewDidLoad
 {
-   
+    [self showtabar];
     NSLog(@"%d",nameValue);
     tabBarController = [[UITabBarController alloc] init];
    //[tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"tabbar"]];
@@ -89,7 +89,7 @@ questionId;
 }
 -(BOOL) prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 -(void)CreateUI
@@ -98,8 +98,8 @@ questionId;
     
     
    //Save User id
-    NSArray *userId=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]valueForKey:@"userid"], nil];
-    NSLog(@"%@",userId);
+    //NSArray *userId=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]valueForKey:@"userid"], nil];
+   // NSLog(@"%@",userId);
     
     //Home,UserProfile,Post Questions,Friends,Notification
     
@@ -112,7 +112,7 @@ questionId;
         
         postquestionVC = [[PostQuestionViewController alloc] init];
         postquestionVC.questionId=questionId;
-         UINavigationController *postNav=[[UINavigationController alloc]initWithRootViewController:postquestionVC];
+         CustomnavigationController *postNav=[[CustomnavigationController alloc]initWithRootViewController:postquestionVC];
         
         UITabBarItem *tabItem1=[[UITabBarItem alloc]init];
         [tabItem1 setTag:0];
@@ -136,7 +136,7 @@ questionId;
 //        NSString *userID=[info valueForKey:@"id"];
 //        userDetail.friendID = userID;
         userDetail.Indexredirect=self.questionId;
-         UINavigationController *userDetailNav=[[UINavigationController alloc]initWithRootViewController:userDetail];
+         CustomnavigationController *userDetailNav=[[CustomnavigationController alloc]initWithRootViewController:userDetail];
         
         
         UITabBarItem *tabItem2=[[UITabBarItem alloc]init];
@@ -153,7 +153,7 @@ questionId;
         
         
         searchFriends=[[SearchFriendsViewController alloc]init];
-         UINavigationController *searchNav=[[UINavigationController alloc]initWithRootViewController:searchFriends];
+         CustomnavigationController *searchNav=[[CustomnavigationController alloc]initWithRootViewController:searchFriends];
         
         tabItem3=[[UITabBarItem alloc]init];
         
@@ -170,7 +170,7 @@ questionId;
         
         homeVC=[[TopicViewController alloc]init];
         homeVC.Indexredirect=self.questionId;
-        UINavigationController *homeNav=[[UINavigationController alloc]initWithRootViewController:homeVC];
+        CustomnavigationController *homeNav=[[CustomnavigationController alloc]initWithRootViewController:homeVC];
        
         //homeNav.v
         
@@ -202,11 +202,11 @@ questionId;
         
         
         
-        // UINavigationController *inviteNav=[[UINavigationController alloc]initWithRootViewController:inviteVC];
+        // CustomnavigationController *inviteNav=[[CustomnavigationController alloc]initWithRootViewController:inviteVC];
         
         friendListVC=[[FriendListViewController alloc]init];
        
-        friendNav=[[UINavigationController alloc]initWithRootViewController:friendListVC];
+        friendNav=[[CustomnavigationController alloc]initWithRootViewController:friendListVC];
         UITabBarItem *tabItem5=[[UITabBarItem alloc]init];
         
         UIImage *friend1=[UIImage imageNamed:@"tab_set_user"];
@@ -275,7 +275,7 @@ questionId;
     {
      postquestionVC = [[PostQuestionViewController alloc] init];
         postquestionVC.questionId=questionId;
-     UINavigationController *postNav=[[UINavigationController alloc]initWithRootViewController:postquestionVC];
+     CustomnavigationController *postNav=[[CustomnavigationController alloc]initWithRootViewController:postquestionVC];
     
     UITabBarItem *tabItem1=[[UITabBarItem alloc]init];
 
@@ -294,7 +294,7 @@ questionId;
     
     
     userDetail=[[HomeViewController alloc]init];
-    UINavigationController *userDetailNav=[[UINavigationController alloc]initWithRootViewController:userDetail];
+    CustomnavigationController *userDetailNav=[[CustomnavigationController alloc]initWithRootViewController:userDetail];
 
     
     UITabBarItem *tabItem2=[[UITabBarItem alloc]init];
@@ -310,7 +310,7 @@ questionId;
     
     
     searchFriends=[[SearchFriendsViewController alloc]init];
-    UINavigationController *searchNav=[[UINavigationController alloc]initWithRootViewController:searchFriends];
+    CustomnavigationController *searchNav=[[CustomnavigationController alloc]initWithRootViewController:searchFriends];
     
     tabItem3=[[UITabBarItem alloc]init];
     
@@ -325,7 +325,7 @@ questionId;
     
     homeVC=[[TopicViewController alloc]init];
        // homeVC.nameValue=nameValue;
-    UINavigationController *homeNav=[[UINavigationController alloc]initWithRootViewController:homeVC];
+    CustomnavigationController *homeNav=[[CustomnavigationController alloc]initWithRootViewController:homeVC];
     
     UITabBarItem *tabItem4=[[UITabBarItem alloc]init];
     
@@ -354,10 +354,10 @@ questionId;
     
     
     
-   // UINavigationController *inviteNav=[[UINavigationController alloc]initWithRootViewController:inviteVC];
+   // CustomnavigationController *inviteNav=[[CustomnavigationController alloc]initWithRootViewController:inviteVC];
   
     friendListVC=[[FriendListViewController alloc]init];
-    friendNav=[[UINavigationController alloc]initWithRootViewController:friendListVC];
+    friendNav=[[CustomnavigationController alloc]initWithRootViewController:friendListVC];
     UITabBarItem *tabItem5=[[UITabBarItem alloc]init];
     
     UIImage *friend1=[UIImage imageNamed:@"tab_set_user"];
@@ -441,6 +441,14 @@ questionId;
 
 }
 
+-(void)showtabar
+{
+    [tabBarController.tabBar setHidden:NO];
+}
+-(void)hidetabar
+{
+       [tabBarController.tabBar setHidden:YES];
+}
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
     
@@ -454,7 +462,8 @@ questionId;
       [AppDelegate sharedDelegate].window.rootViewController=TabVC;
    
        // [self.navigationController pushViewController:TabVC animated:NO];
-    
+        [AppDelegate sharedDelegate].TabBarView=TabVC;
+
     //Care
     //[AppDelegate sharedDelegate].TabBarView = TabVC;
         
@@ -468,9 +477,9 @@ questionId;
         TabVC.questionId=@"";
         
         [AppDelegate sharedDelegate].window.rootViewController=TabVC;
-        
-        //[self.navigationController pushViewController:TabVC animated:NO];
-        
+               //[self.navigationController pushViewController:TabVC animated:NO];
+        [AppDelegate sharedDelegate].TabBarView=TabVC;
+
         //Care
        // [AppDelegate sharedDelegate].TabBarView = TabVC;
     }
@@ -482,7 +491,7 @@ questionId;
 
         
         [AppDelegate sharedDelegate].window.rootViewController=TabVC;
-
+        [AppDelegate sharedDelegate].TabBarView=TabVC;
         
        // [self.navigationController pushViewController:TabVC animated:NO];
         
@@ -505,10 +514,13 @@ questionId;
         
         //Care
         //[AppDelegate sharedDelegate].TabBarView = TabVC;
-        
+        [AppDelegate sharedDelegate].TabBarView=TabVC;
+
         
     }
-        
+    
+
+    
 }
 
 -(void)selectTab :(int)value

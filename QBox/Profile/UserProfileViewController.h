@@ -14,6 +14,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 
 @property (weak, nonatomic) IBOutlet UITextView *tvStatusText;
+@property (weak, nonatomic) IBOutlet UIView *viewtest;
 
 @property (strong, nonatomic) IBOutlet UILabel *messageCountLabel;
 @property (strong, nonatomic) IBOutlet UILabel *acceptedQuestionCountLabel;
@@ -39,6 +40,7 @@
 - (IBAction)chatButtonTapped:(id)sender;
 
 - (IBAction)ViewProfile:(id)sender;
+@property (strong, nonatomic) IBOutlet UIButton *btpost;
 
 
 - (IBAction)SaveStatusText:(id)sender;

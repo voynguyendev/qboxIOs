@@ -467,7 +467,7 @@
 -(void)getFacebookLogin:(id)facebookInfo
 {
     [ProgressHUD show:@"Please wait..." Interaction:NO];
-    // http://108.175.148.221/question_app_test/fb_user_reg.php?name=&lname=&email=&fbid=&action=1
+    // http://54.69.127.235/question_app/fb_user_reg.php?name=&lname=&email=&fbid=&action=1
     NSString *firstName=[facebookInfo valueForKey:@"first_name"];
     NSString *lastName=[facebookInfo valueForKey:@"last_name"];
     NSString *email=[facebookInfo valueForKey:@"email"];
@@ -526,7 +526,7 @@
 {
     if ([ProjectHelper internetAvailable])
     {
-        [ProgressHUD show:@"Please wait..." Interaction:NO];
+        //[ProgressHUD show:@"Please wait..." Interaction:NO];
         [self performSelector:@selector(doLoginWithGmail) withObject:nil afterDelay:0.1];
         
     }
@@ -549,10 +549,16 @@
                                                                                                 keychainItemName:@"GoogleKeychainName"
                                                                                                         delegate:self
                                                                                                 finishedSelector:@selector(viewController:finishedWithAuth:error:)];
-    [self.navigationController pushViewController:viewController animated:YES];
+   
+   
+    
     [ProgressHUD dismiss];
     
     
+}
+-(void)cancelYouTubeTapped:(id)sender{
+    [self.navigationController dismissViewControllerAnimated:YES
+                                                  completion:nil];
 }
 
 - (void)viewController:(GTMOAuth2ViewControllerTouch * )viewController
@@ -560,7 +566,7 @@
                  error:(NSError * )error
 {
     
-    [ProgressHUD show:@"Please Wait..." Interaction:NO];
+   // [ProgressHUD show:@"Please Wait..." Interaction:NO];
     NSLog(@"finished");
     NSLog(@"auth access token: %@", auth1.accessToken);
     
@@ -580,12 +586,15 @@
     
     if (error != nil)
     {
-        gmailLogin= [[UIAlertView alloc] initWithTitle:@"Error Authorizing with Google"
+        [ProgressHUD dismiss];
+
+        gmailLogin= [[UIAlertView alloc] initWithTitle:@"Errortest Authorizing with Google"
                                                message:[error localizedDescription]
                                               delegate:nil
                                      cancelButtonTitle:@"OK"
                                      otherButtonTitles:nil];
         [gmailLogin show];
+        
     }
     else
     {
@@ -617,7 +626,7 @@
 -(void)getGmailLogin:(id)gmailData
 {
     
-    // http://108.175.148.221/question_app_test/gmail_user_reg.php?name=&lname=&email=&gmailid=&action=1
+    // http://54.69.127.235/question_app/gmail_user_reg.php?name=&lname=&email=&gmailid=&action=1
     NSString *firstName=[gmailData valueForKey:@"given_name"];
     NSString *lastName=[gmailData valueForKey:@"family_name"];
     NSString *email=[gmailData valueForKey:@"email"];
@@ -698,7 +707,7 @@
 
 -(BOOL) prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 -(void)loginClick
@@ -940,7 +949,7 @@
     NSArray *arr=array;
     NSLog(@"%@",arr);
     //have To remove
-    loginAlertView=[[UIAlertView alloc]initWithTitle:@"Successful" message:@"Change Password Successfully" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    loginAlertView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"Change Password Successfully" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [loginAlertView show];
     
     

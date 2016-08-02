@@ -16,7 +16,7 @@
 #import "UIImage+fixOrientation.h"
 #import "UIImagefixOrientation.h"
 #import "GeneralViewController.h"
-#import <RevMobAds/RevMobAds.h>
+
 #import "AppDelegate.h"
 #import "ACEViewController.h"
 #define REVMOB_ID @"5106be9d0639b41100000052"
@@ -52,6 +52,7 @@
     
     UIAlertView *successAlert;
     UIAlertView *deleteCategoryAlert;
+    UIAlertView *deleteImageAlert;
    
     UIButton *imageCaptureButton;
     UIButton *backBtn;
@@ -71,7 +72,11 @@
     NSString *friendsString;
     NSString *friendIdsString;
     
+    
     NSString *createcategoryfriendsString;
+    NSString *createcategoryfriendidsString;
+    
+    
     
     UIPickerView *subjectPicker;
     UIPickerView *categoryPicker;
@@ -82,10 +87,19 @@
     UIScrollView *backgroundScrollView;
     
     UIImageView *postQuestionImage;
+    UIImageView *postQuestionImage1;
+
+    UIImageView *postQuestionImage2;
+
+    UIImageView *postQuestionImage3;
+
+    UIImageView *postQuestionImage4;
+
+    
     
     UIView *questionBackgroundView;
     
-    RevMobFullscreen *fs;
+    //RevMobFullscreen *fs;
     GeneralViewController *generalView;
     
     NSMutableArray *friendsData;
@@ -117,13 +131,22 @@
     
     UITextField *createcategorieshastagsTextField;
     
+    UITextField *hastagsTextField;
+    
+    
+    
     UITextField *createcategoriestagFriendsTextField;
     
     NSMutableString *multipleCategoriesStr;
     UIView *lineView;
     
     NSString *action;
-
+    
+    NSString *guidImage;
+    
+    NSMutableArray *imagelinksArray;
+    NSMutableArray *imageidArray;
+    NSUInteger indeximage;
 }
 @end
 
@@ -138,13 +161,28 @@
     }
     return self;
 }
+
+
+
+-(NSString *)getUUID
+{
+    CFUUIDRef newUniqueID = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef newUniqueIDString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueID);
+    NSString *guid = (__bridge NSString *)newUniqueIDString;
+    CFRelease(newUniqueIDString);
+    CFRelease(newUniqueID);
+    return([guid lowercaseString]);
+
+
+}
 - (void)viewDidLoad
 {
+    //[imagelinksArray removeObjectAtIndex:(NSUInteger)
     if (generalView)
     {
         [self.navigationController popToViewController:generalView animated:NO];
     }
-     userData=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
+     userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
     self.navigationController.navigationBarHidden=YES;
     [self questionValue];
     [super viewDidLoad];
@@ -153,6 +191,8 @@
     friendsString=@"";
     imageString=@"";
     createcategoryfriendsString=@"";
+      createcategoryfriendidsString=@"";
+    multipleCategoriesStr=[[NSMutableString alloc]init];
     friendIdsString=@"";
     
     categoryValuelabel.text=@"";
@@ -203,7 +243,14 @@
             }
         }
     }
-    [self loadquestiondetail];
+   
+    
+    
+    imagelinksArray=[[NSMutableArray alloc] init];
+    imageidArray=[[NSMutableArray alloc] init];
+     [self loadquestiondetail];
+    guidImage=[self getUUID];
+    
     // Do any additional setup after loading the view.
 }
 
@@ -213,11 +260,11 @@
    {
        return;
    }
-    NSString *ids=[[userData valueForKey:@"id"]objectAtIndex:0];
+    NSString *ids=[userData valueForKey:@"id"];
     NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]postData:self.questionId userId:ids];
     NSString *success=[[mainArray valueForKey:@"success"]objectAtIndex:0];
     NSMutableArray *postData=nil;
-    [categorySelectionBtn setHidden:YES];
+    //[categorySelectionBtn setHidden:YES];
     [postTitleLabel setText:@"Edit Question"];
     [createQuestionBtn setTitle:@"Edit Question" forState:UIControlStateNormal];
 
@@ -225,33 +272,28 @@
     //{
         questionInfo=[[NSMutableArray alloc]initWithObjects:[[mainArray valueForKey:@"question_info"]objectAtIndex:0], nil];
         questiontextView.text=[[questionInfo valueForKey:@"question"]objectAtIndex:0];
-    
-    
-    
-    
-         int value = [[[questionInfo valueForKey:@"categoryId"]objectAtIndex:0] intValue];
+    NSString* categoriesname=@"";
+     NSString* categoriesid=@"";
+    for(id objectvalue in [[questionInfo valueForKey:@"categories"]objectAtIndex:0])
+    {
+         categoriesname=[categoriesname stringByAppendingString:[objectvalue objectForKey:@"category_name"]];
+        categoriesname=[categoriesname stringByAppendingString:@","];
+        categoriesid=[objectvalue objectForKey:@"id"];
+        [multipleCategoriesStr appendString: categoriesid ];
+        [multipleCategoriesStr appendString:@","];
         
-         if(value<=3)
-         {
-              categoriesTextField.text=[categoryArray objectAtIndex:value];
-         
-         }
-         else
-         {
-             for(id objectvalue in categoryofuserArray)
-             {
-                 if([[objectvalue objectForKey:@"id"] intValue] ==value)
-                 {
-                     categoriesTextField.text= [objectvalue objectForKey:@"category_name"];
-                     break;
-                 }
-             }
-         
-         }
-        
-    //}
-//[[questionInfo valueForKey:@"question"]objectAtIndex:0];
+    }
+    hastagsTextField.text=[[questionInfo valueForKey:@"hashtag"]objectAtIndex:0];
+    categoriesTextField.text=categoriesname;
     
+    for(id objectvalue in [[questionInfo valueForKey:@"questionImages"]objectAtIndex:0])
+    {
+        NSString* imageurl=[objectvalue objectForKey:@"image"];
+        [imagelinksArray addObject:imageurl];
+        NSString* imageid=[objectvalue objectForKey:@"imagequestionid"];
+        [imageidArray addObject:imageid];
+    }
+    [self viewimagesquestion];
 
 
 }
@@ -265,8 +307,10 @@
 
 -(void)questionValue
 {
-    categoryArray=[[NSMutableArray alloc]initWithObjects:@"All",@"Science",@"Maths",@"Arts",nil];
-    
+    //categoryArray=[[NSMutableArray alloc]initWithObjects:@"All",@"Science",@"Maths",@"Arts",nil];
+   
+    categoryArray=[[NSMutableArray alloc] init];
+    // [categoryArray cl;
     
     NSString *userid= [[NSUserDefaults standardUserDefaults]objectForKey:@"userid"];
     
@@ -276,6 +320,8 @@
 if([status isEqualToString:@"1"])
 {
     categoryofuserArray=[[listArray valueForKey:@"data"]objectAtIndex:0];
+    
+    
     
     if(categoryofuserArray.count>0)
     {
@@ -287,6 +333,10 @@ if([status isEqualToString:@"1"])
     }
     }
 }
+    else
+    {
+        categoryofuserArray=[NSArray array];
+    }
     
     
     scienceArray=[[NSArray alloc]initWithObjects:@"Biology",@"Physics",@"Chemistry", nil];
@@ -318,7 +368,7 @@ if([status isEqualToString:@"1"])
     //Navigation View
     NavigationView *nav = [[NavigationView alloc] init];
     
-    [self.view addSubview:nav.navigationView];
+   // [self.view addSubview:nav.navigationView];
     
     CGRect iconFrame=nav.iconImageView.frame;
     iconFrame.origin.x+=20;
@@ -330,12 +380,15 @@ if([status isEqualToString:@"1"])
     
     nav.titleView.text = @"Questions";
     [nav.iconImageView setImage:[UIImage imageNamed:@"nav_question_icon"]];
-    
-    
-    questionsTextScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, nav.navigationView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+    int val=self.view.frame.size.height;
+    if(val>560)
+    questionsTextScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    else
+         questionsTextScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0,-20, self.view.frame.size.width, self.view.frame.size.height)];
     questionsTextScrollView.scrollEnabled=YES;
     [self.view addSubview:questionsTextScrollView];
     
+    [questionsTextScrollView addSubview:nav.navigationView];
     
     UITapGestureRecognizer *tapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeAllSubviews)];
     tapGestureRecognizer.delegate=self;
@@ -343,19 +396,19 @@ if([status isEqualToString:@"1"])
     
     backBtn=[[UIButton alloc]init];
     [backBtn setHidden:YES];
-    backBtn.frame=CGRectMake(0, 10, 45,30);
+    backBtn.frame=CGRectMake(20, 33, 45,30);
     [backBtn setImage:[UIImage imageNamed:@"back_blue"] forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(backBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backBtn];
 
     
     //Line View
-     lineView=[[UIView alloc]initWithFrame:CGRectMake(5,10, self.view.frame.size.width-10,1)];
+    /* lineView=[[UIView alloc]initWithFrame:CGRectMake(5,30, self.view.frame.size.width-10,1)];
     [lineView setBackgroundColor:BORDERCOLOR];
-    [questionsTextScrollView addSubview:lineView];
+    [questionsTextScrollView addSubview:lineView];*/
     
     //Post Title
-    postTitleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, lineView.frame.origin.y+lineView.frame.size.height+5, self.view.bounds.size.width, 30)];
+    postTitleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, backBtn.frame.origin.y+backBtn.frame.size.height+5, self.view.bounds.size.width, 30)];
     postTitleLabel.textAlignment=NSTextAlignmentCenter;
     [postTitleLabel setText:@"Post a New Question"];
     [postTitleLabel setFont:LABELFONT];
@@ -413,6 +466,7 @@ if([status isEqualToString:@"1"])
     tagFriendsTextField.layer.borderWidth=1.0f;
     tagFriendsTextField.layer.cornerRadius=2.0f;
 
+    
     [questionsTextScrollView addSubview:tagFriendsTextField];
     
     UIView *paddingView1=[[UIView alloc]initWithFrame:CGRectMake(10, tagFriendsTextField.frame.origin.y, 30, 40)];
@@ -445,6 +499,36 @@ if([status isEqualToString:@"1"])
     
     
     
+    hastagsTextField=[[UITextField alloc]initWithFrame:CGRectMake(20, tagFriendsTextField.frame.origin.y+tagFriendsTextField.frame.size.height+10, (self.view.frame.size.width-40), 40)];
+    hastagsTextField.delegate=self;
+    [hastagsTextField setPlaceholder:@"Hashtags"];
+    [hastagsTextField setFont:LABELFONT];
+    [hastagsTextField setTextColor:TEXTCOLOR];
+    hastagsTextField.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    hastagsTextField.layer.borderWidth=1.0f;
+    hastagsTextField.layer.cornerRadius=2.0f;
+    [questionsTextScrollView addSubview:hastagsTextField];
+    
+    UIColor *color1=TEXTCOLOR;
+   hastagsTextField.attributedPlaceholder=[[NSAttributedString alloc]initWithString:@"Hashtags" attributes:@{NSForegroundColorAttributeName:color1}];
+    
+    UIView *leftPaddingView1=[[UIView alloc]initWithFrame:CGRectMake(5, hastagsTextField.frame.origin.y, 30, 40)];
+    hastagsTextField.leftView=leftPaddingView1;
+    hastagsTextField.leftViewMode=UITextFieldViewModeAlways;
+    
+    UIImageView *categoryImageView1=[[UIImageView alloc]initWithFrame:CGRectMake(5,(leftPaddingView.frame.size.height-20)/2, 20, 20)];
+    [categoryImageView1 setImage:[UIImage imageNamed:@"category_icon"]];
+    [leftPaddingView1 addSubview:categoryImageView1];
+    
+    UIView *rightPaddingView2=[[UIView alloc]initWithFrame:CGRectMake(hastagsTextField.frame.size.width-30, hastagsTextField.frame.origin.y, 30, 40)];
+    hastagsTextField.rightView=rightPaddingView2;
+    hastagsTextField.rightViewMode=UITextFieldViewModeAlways;
+    
+    
+    
+    
+    
+    
     //Question Text View
     
     UIView *textViewPadding=[[UIView alloc]initWithFrame:CGRectMake(0, questiontextView.frame.origin.y, 30,30)];
@@ -455,7 +539,7 @@ if([status isEqualToString:@"1"])
     [textViewPadding addSubview:questionTextImage];
     
     
-    questiontextView =[[UITextView alloc]initWithFrame:CGRectMake(20,tagFriendsTextField.frame.origin.y+tagFriendsTextField.frame.size.height+10,(self.view.frame.size.width-40),100)];
+    questiontextView =[[UITextView alloc]initWithFrame:CGRectMake(20,hastagsTextField.frame.origin.y+hastagsTextField.frame.size.height+10,(self.view.frame.size.width-40),100)];
     questiontextView.text = @"Question Text";
     questiontextView.font=LABELFONT;
     questiontextView.textColor = TEXTCOLOR;
@@ -546,11 +630,87 @@ if([status isEqualToString:@"1"])
     postQuestionImage.layer.borderColor=[UIColor lightGrayColor].CGColor;
     
     postQuestionImage.frame=CGRectMake(maxWidth-25, calciBtn.frame.origin.y, 25, 25);
+    postQuestionImage.tag=0;
+    
+    postQuestionImage.layer.borderWidth=0.5;
+    [postQuestionImage setHidden:true];
+    UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteimage:)];
+    postQuestionImage.tag=0;
+    [postQuestionImage setUserInteractionEnabled:YES];
+    [postQuestionImage addGestureRecognizer:tapGesture];
+    
     // postQuestionImage.image=convertedImage;
     [questionsTextScrollView addSubview:postQuestionImage];
     
     
+    postQuestionImage1=[[UIImageView alloc]init];
+    [postQuestionImage1 setImage:[UIImage imageNamed:@""]];
+    postQuestionImage1.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    postQuestionImage1.tag=1;
+    postQuestionImage1.frame=CGRectMake(postQuestionImage.frame.origin.x-35, calciBtn.frame.origin.y, 25, 25);
     
+    postQuestionImage1.layer.borderWidth=0.5;
+    [postQuestionImage1 setHidden:true];
+    UITapGestureRecognizer *tapGesture1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteimage:)];
+   
+    [postQuestionImage1 setUserInteractionEnabled:YES];
+    [postQuestionImage1 addGestureRecognizer:tapGesture1];
+    // postQuestionImage.image=convertedImage;
+    [questionsTextScrollView addSubview:postQuestionImage1];
+    
+
+    
+    postQuestionImage2=[[UIImageView alloc]init];
+    [postQuestionImage2 setImage:[UIImage imageNamed:@""]];
+    postQuestionImage2.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    postQuestionImage2.tag=2;
+    postQuestionImage2.frame=CGRectMake(postQuestionImage1.frame.origin.x-35, calciBtn.frame.origin.y, 25, 25);
+    
+    
+    postQuestionImage2.layer.borderWidth=0.5;
+    [postQuestionImage2 setHidden:true];
+    UITapGestureRecognizer *tapGesture2=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteimage:)];
+ 
+    [postQuestionImage setUserInteractionEnabled:YES];
+    [postQuestionImage addGestureRecognizer:tapGesture2];
+
+    
+    [questionsTextScrollView addSubview:postQuestionImage2];
+    
+    
+    postQuestionImage3=[[UIImageView alloc]init];
+    [postQuestionImage3 setImage:[UIImage imageNamed:@""]];
+    postQuestionImage3.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    postQuestionImage3.tag=3;
+    
+    postQuestionImage3.frame=CGRectMake(postQuestionImage2.frame.origin.x-35, calciBtn.frame.origin.y, 25, 25);
+    
+    
+    postQuestionImage3.layer.borderWidth=0.5;
+    [postQuestionImage3 setHidden:true];
+    UITapGestureRecognizer *tapGesture3=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteimage:)];
+    
+    [postQuestionImage3 setUserInteractionEnabled:YES];
+    [postQuestionImage3 addGestureRecognizer:tapGesture3];
+    [questionsTextScrollView addSubview:postQuestionImage3];
+    
+    postQuestionImage4=[[UIImageView alloc]init];
+    [postQuestionImage4 setImage:[UIImage imageNamed:@""]];
+    postQuestionImage4.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    postQuestionImage4.tag=4;
+    
+    
+    
+    postQuestionImage4.layer.borderWidth=0.5;
+    [postQuestionImage4 setHidden:true];
+    UITapGestureRecognizer *tapGesture4=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteimage:)];
+    
+    [postQuestionImage setUserInteractionEnabled:YES];
+    [postQuestionImage addGestureRecognizer:tapGesture4];
+    
+    
+    postQuestionImage4.frame=CGRectMake(postQuestionImage3.frame.origin.x-35, calciBtn.frame.origin.y, 25, 25);
+    [questionsTextScrollView addSubview:postQuestionImage4];
     
 }
 -(void)backBtn:(id) sender
@@ -558,6 +718,96 @@ if([status isEqualToString:@"1"])
     [createcategorySubview removeFromSuperview];
     [backBtn setHidden:YES];
     
+}
+
+-(void) deleteimage:(UITapGestureRecognizer *)recognizer
+
+{
+    indeximage=recognizer.view.tag;
+    
+    deleteImageAlert=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Do you want to delete this image?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+    [deleteImageAlert show];
+    
+    // UserDetailViewController *userProfile=[[UserDetailViewController alloc]init];
+    //recognizer.view.tag
+ 
+}
+-(void )viewimagesquestion
+{
+    [postQuestionImage setHidden:true];
+     [postQuestionImage2 setHidden:true];
+    [postQuestionImage3 setHidden:true];
+    [postQuestionImage4 setHidden:true];
+    [postQuestionImage1 setHidden:true];
+
+    
+
+    for (int i=0; i<imagelinksArray.count; i++)
+    {
+        NSString *imageurl = [imagelinksArray objectAtIndex:i] ;
+        
+      imageurl = [NSString stringWithFormat:@"http://%@", imageurl];
+        NSURL *url = [NSURL URLWithString:imageurl];
+        
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        UIImage *image = [UIImage imageWithData:data];
+        
+
+        if(i==0)
+        {
+            [postQuestionImage  setImage:image ];
+            [postQuestionImage setHidden:false];
+            
+        }else if(i==1)
+        {
+             [postQuestionImage1  setImage:image ];
+            [postQuestionImage1 setHidden:false];
+            
+        }
+        else if(i==2)
+        {
+            [postQuestionImage2  setImage:image ];
+            [postQuestionImage2 setHidden:false];
+            
+        }
+        else if(i==3)
+        {
+            [postQuestionImage3  setImage:image ];
+             [postQuestionImage3 setHidden:false];
+            
+        }
+        else if(i==4)
+        {
+            [postQuestionImage4 setImage:image ];
+            [postQuestionImage4 setHidden:false];
+            
+        }
+    }
+
+}
+-(void)postImageUser:(NSString*)questionid action:(NSString*) action  attachment:(NSString*) attachment guid:(NSString*) guid imagequestionId:(NSString*) imagequestionId
+{
+    NSArray *mainArray= [[WebServiceSingleton sharedMySingleton]usersaveImage:questionid action:action attachment:attachment guid:guid imagequestionId:imagequestionId ];
+    if ([[mainArray valueForKey:@"status"] isEqualToString:@"1"])
+    {
+        if(![action isEqualToString:@"delete"])
+           {
+                NSString *imageurl =[mainArray valueForKey:@"ImageURL"];
+                [imagelinksArray addObject:imageurl];
+                NSString *imagequestionid =[mainArray valueForKey:@"imagequestionid"];
+                [imageidArray addObject:imagequestionid];
+           }
+           else
+           {
+               [imagelinksArray removeObjectAtIndex:indeximage];
+              
+               [imageidArray removeObjectAtIndex:indeximage];
+           
+           }
+        
+           [self viewimagesquestion];
+    }
+     [self hideActivity];
 }
 
 -(void)CreateUI
@@ -803,16 +1053,8 @@ if([status isEqualToString:@"1"])
 //    subjectValuelabel.text=@"";
    
 //
-    [ImagePostQuestion removeFromSuperview];
-    _postImage=[[AppDelegate sharedDelegate]postedImage];
-    
-    
-    UIImage *quesImage=_postImage;
-    if (quesImage)
-    {
-        convertedImage=quesImage;
-    }
-    
+        /*[ImagePostQuestion removeFromSuperview];
+     
     if (convertedImage)
     {
         [postQuestionImage setImage:convertedImage];
@@ -822,7 +1064,20 @@ if([status isEqualToString:@"1"])
         [tapGesture addTarget:self action:@selector(popImageView)];
         [postQuestionImage addGestureRecognizer:tapGesture];
         postQuestionImage.userInteractionEnabled=YES;
+    }*/
+    
+    _postImage=[[AppDelegate sharedDelegate]postedImage];
+    
+    
+    UIImage *quesImage=_postImage;
+    if (quesImage)
+    {
+        convertedImage=quesImage;
+        action=@"insertimageuser";
+        [self showActivity];
     }
+    
+    
 }
 
 #pragma mark Action Methods
@@ -851,8 +1106,8 @@ if([status isEqualToString:@"1"])
 
 -(void)createcategorySelectionAction:(id)sender
 {
-    
-    //selectedBtnArray=[[NSMutableArray alloc]init];
+    [questiontextView resignFirstResponder];
+   //selectedBtnArray=[[NSMutableArray alloc]init];
     [categoriesTextField resignFirstResponder];
     
     //    if (![questionsTextScrollView.subviews containsObject:categoryTableView])
@@ -864,14 +1119,14 @@ if([status isEqualToString:@"1"])
     
     
     
-    [questiontextView resignFirstResponder];
+    
     [subjectTableView removeFromSuperview];
 }
 
 
 -(void)categorySelectionAction:(id)sender
 {
-    
+    [questiontextView resignFirstResponder];
     selectedBtnArray=[[NSMutableArray alloc]init];
     [categoriesTextField resignFirstResponder];
     
@@ -889,11 +1144,16 @@ if([status isEqualToString:@"1"])
 }
 -(void)subjectSelectionAction:(id)sender
 {
+    
     [tagFriendsTextField resignFirstResponder];
     
     if (![questionsTextScrollView.subviews containsObject:subjectTableView])
     {
         [questionsTextScrollView addSubview:subjectTableView];
+    }
+    else
+    {
+        [subjectTableView removeFromSuperview];
     }
     
     
@@ -908,6 +1168,10 @@ if([status isEqualToString:@"1"])
     if (![createcategorySubview.subviews containsObject:categoryfriendTableView])
     {
         [createcategorySubview addSubview:categoryfriendTableView];
+    }
+    else
+    {
+        [categoryfriendTableView removeFromSuperview];
     }
     
     
@@ -971,7 +1235,7 @@ if([status isEqualToString:@"1"])
 -(void)createCategoryActionSubview
 {
     [backBtn setHidden:NO];
-    createcategorySubview=[[UIScrollView alloc]initWithFrame:CGRectMake(postTitleLabel.frame.origin.x, postTitleLabel.frame.origin.y+30, postTitleLabel.frame.size.width, self.view.frame.size.height-(postTitleLabel.frame.origin.y+100))];
+    createcategorySubview=[[UIScrollView alloc]initWithFrame:CGRectMake(postTitleLabel.frame.origin.x, postTitleLabel.frame.origin.y+20, postTitleLabel.frame.size.width, self.view.frame.size.height-(postTitleLabel.frame.origin.y+100))];
     [createcategorySubview setBackgroundColor:[UIColor whiteColor]];
     //createcategorySubview.layer.borderColor=[UIColor grayColor].CGColor;
     //createcategorySubview.layer.borderWidth=2.0f;
@@ -1014,7 +1278,7 @@ if([status isEqualToString:@"1"])
     
     createcategorieshastagsTextField=[[UITextField alloc]initWithFrame:CGRectMake(20, createcategoriesnameTextField.frame.origin.y+createcategoriesnameTextField.frame.size.height+10, (self.view.frame.size.width-40), 40)];
     createcategorieshastagsTextField.delegate=self;
-    [createcategorieshastagsTextField setPlaceholder:@"Hastags"];
+    [createcategorieshastagsTextField setPlaceholder:@"Hashtags"];
     [createcategorieshastagsTextField setFont:LABELFONT];
     [createcategorieshastagsTextField setTextColor:TEXTCOLOR];
     createcategorieshastagsTextField.layer.borderColor=[UIColor lightGrayColor].CGColor;
@@ -1023,7 +1287,7 @@ if([status isEqualToString:@"1"])
     [createcategorySubview addSubview:createcategorieshastagsTextField];
     
     UIColor *color1=TEXTCOLOR;
-    createcategorieshastagsTextField.attributedPlaceholder=[[NSAttributedString alloc]initWithString:@"Hastags" attributes:@{NSForegroundColorAttributeName:color1}];
+    createcategorieshastagsTextField.attributedPlaceholder=[[NSAttributedString alloc]initWithString:@"Hashtags" attributes:@{NSForegroundColorAttributeName:color1}];
     
     UIView *leftPaddingView1=[[UIView alloc]initWithFrame:CGRectMake(5, createcategoriesnameTextField.frame.origin.y, 30, 40)];
     createcategorieshastagsTextField.leftView=leftPaddingView1;
@@ -1114,7 +1378,7 @@ if([status isEqualToString:@"1"])
 }
 -(void)categorySubview
 {
-    categorySubview=[[UIScrollView alloc]initWithFrame:CGRectMake(categoriesTextField.frame.origin.x, categoriesTextField.frame.origin.y+30, categoriesTextField.frame.size.width, self.view.frame.size.height-(categoriesTextField.frame.origin.y+100))];
+    categorySubview=[[UIScrollView alloc]initWithFrame:CGRectMake(categoriesTextField.frame.origin.x, categoriesTextField.frame.origin.y+10, categoriesTextField.frame.size.width, self.view.frame.size.height-(categoriesTextField.frame.origin.y+100))];
     [categorySubview setBackgroundColor:[UIColor whiteColor]];
     categorySubview.layer.borderColor=[UIColor grayColor].CGColor;
     categorySubview.layer.borderWidth=2.0f;
@@ -1123,10 +1387,10 @@ if([status isEqualToString:@"1"])
     
     CGRect btnFrame=CGRectMake(10, 0, 120,30);
    // NSArray *titleArray=[[NSArray alloc]initWithObjects:@"All",@"Science",@"Maths",@"Arts", nil];
-    NSInteger rowCount=categoryArray.count/2;
+    NSInteger rowCount=categoryofuserArray.count/2;
     NSInteger columnCount;
     columnCount=2;
-    if (categoryArray.count%2!=0)
+    if (categoryofuserArray.count%2!=0)
     {
         rowCount=rowCount+1;
     }
@@ -1138,7 +1402,7 @@ if([status isEqualToString:@"1"])
        
         for (int j=0; j<columnCount; j++)
         {
-            if(a==categoryArray.count)
+            if(a==categoryofuserArray.count)
                 break;
         categoryBtn=[UIButton buttonWithType:UIButtonTypeCustom];
         categoryBtn.frame=btnFrame;
@@ -1151,15 +1415,16 @@ if([status isEqualToString:@"1"])
         //
       
         categoryBtn.contentHorizontalAlignment=UIControlContentHorizontalAlignmentLeft;
-            
+              NSString * categoryname=[[categoryofuserArray objectAtIndex:a] valueForKey:@"category_name"];
             categoryBtn.titleEdgeInsets=UIEdgeInsetsMake(0,30, 0, -10);
-        [categoryBtn setTitle:[categoryArray objectAtIndex:a] forState:UIControlStateNormal];
+        [categoryBtn setTitle:categoryname forState:UIControlStateNormal];
         [categoryBtn addTarget:self action:@selector(multipleCategorySelection:) forControlEvents:UIControlEventTouchUpInside];
         UIImageView *boxImageView=[[UIImageView alloc]initWithFrame:CGRectMake(10,(categoryBtn.frame.size.height-15)/2,17, 15)];
         [boxImageView setImage:[UIImage imageNamed:@"unselected_box"]];
         [categoryBtn addSubview:boxImageView];
         UILabel *categoryLabel=[[UILabel alloc]initWithFrame:CGRectMake(boxImageView.frame.origin.x+boxImageView.frame.size.width+5, 0, categoryBtn.frame.size.width-22, categoryBtn.frame.size.height)];
-        [categoryLabel setText:[categoryArray objectAtIndex:a]];
+          
+        [categoryLabel setText:categoryname];
         [categoryLabel setTextColor:[UIColor lightGrayColor]];
        // [categoryBtn addSubview:categoryLabel];
         [categorySubview addSubview:categoryBtn];
@@ -1243,6 +1508,7 @@ if([status isEqualToString:@"1"])
                 //int value = [btn.tatag intValue];
                 //NSInteger inter=btn.tag;
                 [selectedBtnArray removeObject:str];
+              //  [selectedBtnArray removeObjectsAtIndexes:<#(nonnull NSIndexSet *)#>
             }
             else
             {
@@ -1285,6 +1551,7 @@ if([status isEqualToString:@"1"])
       [v removeFromSuperview];
     }
     NSMutableString *str=[[NSMutableString alloc]init];
+    multipleCategoriesStr =[[NSMutableString alloc]init];
     for (int i=0; i<selectedBtnArray.count; i++)
     {
        /* if ([[selectedBtnArray objectAtIndex:i] isEqualToString:@"0"])
@@ -1308,7 +1575,14 @@ if([status isEqualToString:@"1"])
             [str appendString:@","];
         }*/
         int value = [[selectedBtnArray objectAtIndex:i] intValue];
-        [str appendString:[categoryArray objectAtIndex:value]];
+        [str appendString:[[categoryofuserArray objectAtIndex:value] valueForKey:@"category_name"]];
+        
+      
+        NSString *categoryid=[[categoryofuserArray objectAtIndex:value] valueForKey:@"id"];
+        [multipleCategoriesStr appendString: categoryid ];
+        [multipleCategoriesStr appendString:@","];
+        
+        
         [str appendString:@","];
         
     }
@@ -1371,7 +1645,14 @@ if([status isEqualToString:@"1"])
         }
         else
         {
-          cell.textLabel.text=[[friendsData valueForKey:@"name"]objectAtIndex:indexPath.row];
+            NSString *valueshow=[[friendsData valueForKey:@"name"]objectAtIndex:indexPath.row];
+            if([valueshow isEqualToString:@""])
+            {
+                valueshow=[[friendsData valueForKey:@"email"]objectAtIndex:indexPath.row];
+
+            }
+            
+          cell.textLabel.text=valueshow;
         }
     
     return cell;
@@ -1421,7 +1702,14 @@ if([status isEqualToString:@"1"])
             [categoryfriendTableView removeFromSuperview];
             createcategoryfriendsString=createcategoriestagFriendsTextField.text;
             createcategoryfriendsString=[createcategoryfriendsString stringByAppendingString:[[friendsData valueForKey:@"name"]objectAtIndex:indexPath.row]];
+            
+            createcategoryfriendidsString=[createcategoryfriendidsString stringByAppendingString:[[friendsData valueForKey:@"id"]objectAtIndex:indexPath.row]];
+            
+            
             createcategoryfriendsString=[createcategoryfriendsString stringByAppendingString:@","];
+            
+            createcategoryfriendidsString=[createcategoryfriendidsString stringByAppendingString:@","];
+
             
             createcategoriestagFriendsTextField.text=createcategoryfriendsString;
         }
@@ -1502,22 +1790,23 @@ if([status isEqualToString:@"1"])
 
 -(void) popImageView
 {
-    [backgroundScrollView setContentOffset:CGPointMake(0, 0)];
+    [imageScrollView setContentOffset:CGPointMake(0, 0)];
     [questiontextView resignFirstResponder];
     
     imageScrollView=[[UIScrollView alloc]init];
     imageScrollView.delegate=self;
     imageScrollView.frame=CGRectMake(0,44, 320, self.view.frame.size.height-44);
-    imageScrollView.maximumZoomScale=5.0;
+    imageScrollView.maximumZoomScale=10.0;
     imageScrollView.minimumZoomScale=1.0;
-    
+    imageScrollView.bounces=NO;
+    [imageScrollView setContentSize: CGSizeMake(self.view.frame.size.width, 1000)];
     if (imageScrollView.minimumZoomScale)
     {
-        ImagePostQuestion.frame=CGRectMake(100, 100, 320, self.view.frame.size.height-44);
+        ImagePostQuestion.frame=CGRectMake(100, 100, 320, 1000);
     }
     else
     {
-         ImagePostQuestion.frame=CGRectMake(0, 0, 320, self.view.frame.size.height-44);
+         ImagePostQuestion.frame=CGRectMake(0, 0, 320, 1000);
     }
     
     
@@ -1736,32 +2025,127 @@ if([status isEqualToString:@"1"])
 
 }
 
+-(UIImage*)fixrotation:(UIImage *)image{
+    
+    
+    if (image.imageOrientation == UIImageOrientationUp) return image;
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    
+    switch (image.imageOrientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, image.size.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, 0);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, image.size.height);
+            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            break;
+        case UIImageOrientationUp:
+        case UIImageOrientationUpMirrored:
+            break;
+    }
+    
+    switch (image.imageOrientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        case UIImageOrientationUp:
+        case UIImageOrientationDown:
+        case UIImageOrientationLeft:
+        case UIImageOrientationRight:
+            break;
+    }
+    
+    // Now we draw the underlying CGImage into a new context, applying the transform
+    // calculated above.
+    CGContextRef ctx = CGBitmapContextCreate(NULL, image.size.width, image.size.height,
+                                             CGImageGetBitsPerComponent(image.CGImage), 0,
+                                             CGImageGetColorSpace(image.CGImage),
+                                             CGImageGetBitmapInfo(image.CGImage));
+    CGContextConcatCTM(ctx, transform);
+    switch (image.imageOrientation) {
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            // Grr...
+            CGContextDrawImage(ctx, CGRectMake(0,0,image.size.height,image.size.width), image.CGImage);
+            break;
+            
+        default:
+            CGContextDrawImage(ctx, CGRectMake(0,0,image.size.width,image.size.height), image.CGImage);
+            break;
+    }
+    
+    // And now we just create a new UIImage from the drawing context
+    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+    UIImage *img = [UIImage imageWithCGImage:cgimg];
+    CGContextRelease(ctx);
+    CGImageRelease(cgimg);
+    return img;}
+
+
+-(UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize {
+    UIGraphicsBeginImageContext(newSize);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+-(UIImage *) resizeimage :(UIImage *)originalImage
+  {
+      
+      CGSize newSize;
+      UIGraphicsBeginImageContext(newSize);
+      newSize.width=originalImage.size.width;
+      newSize.height=originalImage.size.height;
+      
+      if (originalImage.size.width > 1920)
+      {
+          newSize.width = 1920;
+          newSize.height = (1920 * originalImage.size.height) / originalImage.size.width;
+         
+      }
+      
+      if (originalImage.size.height > 1080)
+      {
+          
+          newSize.width = (1080 * originalImage.size.width) / originalImage.size.height;
+          newSize.height = 1080;
+          
+          
+      }
+      
+      
+    
+      return [self imageWithImage :originalImage scaledToSize:newSize] ;
+      
+      
+  }
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info;
 {
-    convertedImage=[info valueForKey:UIImagePickerControllerOriginalImage];
+  /*  convertedImage=[info valueForKey:UIImagePickerControllerOriginalImage];
     [picker dismissViewControllerAnimated:NO completion:nil];
     
-    
-   /* CGRect rect = CGRectMake(0.0, 0.0, 320, self.view.frame.size.height);
-   // CGRect rect=postQuestionImage.frame;
-    UIGraphicsBeginImageContext(rect.size);
-    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];//here you can use your image view instead of self,view...
-    [convertedImage drawInRect:rect];
-    convertedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();*/
-    
-
-   // NSData *data=UIImagePNGRepresentation(convertedImage);
-   // convertedImage=[UIImage imageWithData:data];
-    //[convertedImage fixOrientation];
-    
-   // NSData *data = UIImagePNGRepresentation(convertedImage);
-    
-    //convertedImage = [UIImage imageWithCGImage:[UIImage imageWithData:data].CGImage
-      //                                 scale:convertedImage.scale
-        //                         orientation:convertedImage.imageOrientation];
-    
-    if (convertedImage)
+if (convertedImage)
     {
         postQuestionImage.image=convertedImage;
         UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc]init];
@@ -1771,8 +2155,16 @@ if([status isEqualToString:@"1"])
         postQuestionImage.userInteractionEnabled=YES;
     }
     
+    */
     
+  convertedImage=[info valueForKey:UIImagePickerControllerOriginalImage];
     
+
+     
+     [picker dismissViewControllerAnimated:NO completion:nil];
+       action=@"insertimageuser";
+    [self showActivity];
+
   
   
 }
@@ -1803,6 +2195,7 @@ if([status isEqualToString:@"1"])
     
     for(id objectvalue in categoryofuserArray)
     {
+        
         if([[objectvalue objectForKey:@"category_name"] isEqualToString:categoryname])
         {
             return [objectvalue objectForKey:@"id"];
@@ -1816,41 +2209,24 @@ if([status isEqualToString:@"1"])
     if([action isEqualToString:@"createquestion"])
        {
     //begin
-    multipleCategoriesStr=[[NSMutableString alloc]init];
+    //multipleCategoriesStr=[[NSMutableString alloc]init];
     
-    for (int i=0; i<selectedBtnArray.count; i++)
+   /* for (int i=0; i<selectedBtnArray.count; i++)
     {
-        if ([[selectedBtnArray objectAtIndex:i]isEqualToString:@"0"])
-        {
-            [multipleCategoriesStr appendString:[selectedBtnArray objectAtIndex:i]];
-            [multipleCategoriesStr appendString:@","];
-        }
-        else
-        {
-            NSInteger k=[[selectedBtnArray objectAtIndex:i]integerValue];
-            if(k<=3)
-            {
-            NSInteger j=k-1;
-            NSString *str=[NSString stringWithFormat:@"%ld ",(long)j];
-            [multipleCategoriesStr appendString:str];
-            [multipleCategoriesStr appendString:@","];
-            }
-            else
-            {
-                
-                [multipleCategoriesStr appendString: [self GetCategoryIdByIndex:k] ];
-                [multipleCategoriesStr appendString:@","];
-                
-            }
-        }
-       
-        
-    }
+        NSInteger k=[[selectedBtnArray objectAtIndex:i]integerValue];
+        NSString *categoryid=[[categoryofuserArray objectAtIndex:k] valueForKey:@"id"];
+        [multipleCategoriesStr appendString: categoryid ];
+        [multipleCategoriesStr appendString:@","];
+
+    }*/
     if (![multipleCategoriesStr isEqualToString:@""])
     {
       [multipleCategoriesStr deleteCharactersInRange:NSMakeRange(multipleCategoriesStr.length-1, 1)];
     }
+           
+           
     
+           
     [questiontextView resignFirstResponder];
     [backgroundScrollView setContentOffset:CGPointMake(0, 0)];
     [ImagePostQuestion removeFromSuperview];
@@ -1859,6 +2235,13 @@ if([status isEqualToString:@"1"])
     
     if (convertedImage)
     {
+        convertedImage=[self fixrotation:convertedImage];
+        
+        convertedImage=[self resizeimage:convertedImage];
+        
+     
+        convertedImage = [UIImage imageWithData:UIImageJPEGRepresentation(convertedImage, 0)];
+        
         imageString=[self encodeToBase64String:convertedImage];
     }
     
@@ -1867,48 +2250,8 @@ if([status isEqualToString:@"1"])
     
     if ([self validationCheck])
     {
-        
-        
-        if (categoryId==0)
-        {
-            if ([scienceArray containsObject:tagFriendsTextField.text])
-            {
-                cat=0;
-            }
-            
-            else if ([mathArray containsObject:tagFriendsTextField.text])
-            {
-                cat=1;
-                NSInteger count=[scienceArray count];
-                NSInteger value=(subjectId-count);
-                subjectId=value;
-            }
-            else if ([artsArray containsObject:tagFriendsTextField.text])
-            {
-                cat=2;
-                NSInteger count=([scienceArray count]+[mathArray count]);
-                NSInteger value=(subjectId-count);
-                NSLog(@"%ld",(long)value);
-                //subjectId=[NSString stringWithFormat:@"%d",value];
-                subjectId=value;
-            }
-            subjectId=subjectId*-1;
-            subId=[NSString stringWithFormat:@"%ld0%ld",(long)cat,(long)subjectId];
-            
-        }
-        else
-        {
-            
-            cat=categoryId-1;
-            
-            subId=[NSString stringWithFormat:@"%ld0%ld",(long)cat,(long)subjectId];
-        }
-        
         [self postWebservice];
        
-        
-        
-        
     }
     else
     {
@@ -1926,20 +2269,13 @@ if([status isEqualToString:@"1"])
         
             if(selectedBtnArray.count<=0 || selectedBtnArray.count>=2)
             {
-                successAlert=[[UIAlertView alloc]initWithTitle:@"" message:@"Please choose only 1 category " delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                successAlert=[[UIAlertView alloc]initWithTitle:@"" message:@"please choose at least one category" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [successAlert show];
                 [self hideActivity];
                 return;
             }
         
             NSInteger k=[[selectedBtnArray objectAtIndex:0]integerValue];
-            if(k<=3)
-            {
-                successAlert=[[UIAlertView alloc]initWithTitle:@"" message:@"you can't delete category of system " delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [successAlert show];
-                [self hideActivity];
-                return;
-            }
         
         deleteCategoryAlert=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Do you want to delete this category?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
        [deleteCategoryAlert show];
@@ -1948,16 +2284,67 @@ if([status isEqualToString:@"1"])
         
     }
 
+    else if(([action isEqualToString:@"insertimageuser"]))
+    {
+        if(imagelinksArray.count >=5)
+        {
+            successAlert=[[UIAlertView alloc]initWithTitle:@"" message:@"You can't upload more images beacause maximun images of question is 5" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [successAlert show];
+            return;
+        }
+        if (convertedImage)
+        {
+            convertedImage=[self fixrotation:convertedImage];
+            
+            convertedImage=[self resizeimage:convertedImage];
+            
+            
+            convertedImage = [UIImage imageWithData:UIImageJPEGRepresentation(convertedImage, 0)];
+            
+            imageString=[self encodeToBase64String:convertedImage];
+            
+            [self  postImageUser:@"" action:@"" attachment:imageString guid:guidImage imagequestionId:@""];
+            
+        }
+       
+        
+       
+        
+    }
+    else if(([action isEqualToString:@"deleteimage"]))
+    {
+        NSString *imagequestionId=[imageidArray objectAtIndex:indeximage];
+        [self  postImageUser:@"" action:@"delete" attachment:@"" guid:guidImage imagequestionId:imagequestionId];
+        
+    }
+
+
+    
   else
   {
       if ([self CreateCategoryvalidationCheck])
       {
       
+          NSMutableString *mutableStringfriends = [createcategoryfriendidsString mutableCopy];
+          
+          
+          if (![mutableStringfriends isEqualToString:@""])
+          {
+              [mutableStringfriends deleteCharactersInRange:NSMakeRange(mutableStringfriends.length-1, 1)];
+          }
+          createcategoryfriendidsString=[NSString stringWithString:mutableStringfriends];
+          
+          NSString *hashtag=createcategorieshastagsTextField.text;
+          hashtag=[hashtag stringByReplacingOccurrencesOfString:@"#"
+                                                     withString:@""];
+
+          
           NSString *userid= [[NSUserDefaults standardUserDefaults]objectForKey:@"userid"];
-          NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]UpdateCategory: createcategoriesnameTextField.text userId:userid hastags:createcategorieshastagsTextField.text tabfriends:createcategoriestagFriendsTextField.text catId:@"" action:@"create"];
+          NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]UpdateCategory: createcategoriesnameTextField.text userId:userid hastags:hashtag tabfriends:createcategoryfriendidsString catId:@"" action:@"create"];
           
           if ([[mainArray valueForKey:@"status"] isEqualToString:@"1"])
           {
+              
               successAlert=[[UIAlertView alloc]initWithTitle:@"" message:@"Create Category Successfully" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
               [successAlert show];
                [backBtn setHidden:YES];
@@ -1970,7 +2357,8 @@ if([status isEqualToString:@"1"])
           else
           {
               
-              successAlert=[[UIAlertView alloc]initWithTitle:@"" message:@"Create Category Fail" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+              NSString *message=[mainArray valueForKey:@"message"];
+              successAlert=[[UIAlertView alloc]initWithTitle:@"" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
               [successAlert show];
 
           }
@@ -1999,7 +2387,7 @@ if([status isEqualToString:@"1"])
   int timestamp= [[[NSCalendar currentCalendar] dateFromComponents:comps] timeIntervalSince1970];
     
     
-if(![self.questionId isEqualToString:@""])
+/*if(![self.questionId isEqualToString:@""])
 {
     multipleCategoriesStr=[[NSMutableString alloc]init];
     
@@ -2007,23 +2395,37 @@ if(![self.questionId isEqualToString:@""])
 
 
 
-}
-    
+}*/
+    NSString *hashtag=hastagsTextField.text;
+    hashtag=[hashtag stringByReplacingOccurrencesOfString:@"#"
+                                               withString:@""];
    // NSString *timestamp= [NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970] * 1000];
     NSMutableString *questionText=[NSMutableString stringWithFormat:@"%@",questiontextView.text];
     [questionText replaceOccurrencesOfString:@"+" withString:@"%2b" options:NO range:NSMakeRange(0, questionText.length-1)];
     
      NSArray *questionArray=nil;
-        questionArray=[[NSArray alloc]initWithObjects:questionText,multipleCategoriesStr,@"0",[[NSUserDefaults standardUserDefaults]objectForKey:@"userid"],@""/*[NSString stringWithFormat:@"%d",timestamp]*/,imageString,self.questionId,@"",nil];
+        questionArray=[[NSArray alloc]initWithObjects:questionText,multipleCategoriesStr,@"0",[[NSUserDefaults standardUserDefaults]objectForKey:@"userid"],@""/*[NSString stringWithFormat:@"%d",timestamp]*/,imageString,self.questionId,@"",hashtag,nil];
+    //
+    NSMutableString *mutableStringfriends = [friendIdsString mutableCopy];
+
+    
+    if (![mutableStringfriends isEqualToString:@""])
+    {
+        [mutableStringfriends deleteCharactersInRange:NSMakeRange(mutableStringfriends.length-1, 1)];
+    }
+    friendIdsString=[NSString stringWithString:mutableStringfriends];
+
+//[friendIdsString del
     [WebServiceSingleton sharedMySingleton].postQuestionDelegate=self;
-    NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]sendQuestionService:questionArray imageBase64String:imageString tabfriendids:friendIdsString];
+    NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]sendQuestionService:questionArray imageBase64String:@"" tabfriendids:friendIdsString guidimage:guidImage ];
   
+    
     //friendIdsString
     if ([[mainArray valueForKey:@"status"] isEqualToString:@"1"])
     {
         
         TaBBarViewController *TabBarView=[[TaBBarViewController alloc]init];
-        [AppDelegate sharedDelegate].navController=[[UINavigationController alloc]initWithRootViewController:TabBarView];
+        [AppDelegate sharedDelegate].navController=[[CustomnavigationController alloc]initWithRootViewController:TabBarView];
         [AppDelegate sharedDelegate].navController.navigationBarHidden = YES;
         
        // TabBarView.questionId=@"1";
@@ -2193,9 +2595,7 @@ if(![self.questionId isEqualToString:@""])
 
 -(void)successposted
 {
-    fs = [[RevMobAds session] fullscreen];
-    fs.delegate = self;
-    [fs showAd];
+   
     
     successAlert=[[UIAlertView alloc]initWithTitle:@"" message:@"Question Successfully Posted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [successAlert show];
@@ -2247,8 +2647,10 @@ if(![self.questionId isEqualToString:@""])
         NSInteger k=[[selectedBtnArray objectAtIndex:0]integerValue];
         
         NSString *catId=[self GetCategoryIdByIndex:k] ;
-        
         NSString *userid= [[NSUserDefaults standardUserDefaults]objectForKey:@"userid"];
+            
+           // return;
+
         NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]UpdateCategory: createcategoriesnameTextField.text userId:userid hastags:createcategorieshastagsTextField.text tabfriends:createcategoriestagFriendsTextField.text catId:catId action:@"delete"];
         
         if ([[mainArray valueForKey:@"status"] isEqualToString:@"1"])
@@ -2264,14 +2666,30 @@ if(![self.questionId isEqualToString:@""])
         }
         else
         {
+            NSString *message=[mainArray valueForKey:@"message"];
             
-            successAlert=[[UIAlertView alloc]initWithTitle:@"" message:@"Delete Category Fail" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            successAlert=[[UIAlertView alloc]initWithTitle:@"" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [successAlert show];
             return;
             
         }
         }
     }
+    
+    else if(alertView==deleteImageAlert)
+    {
+    
+        if(buttonIndex==1)
+        {
+            action=@"deleteimage";
+            [self showActivity];
+           
+        
+        }
+    
+    
+    }
+    
 }
 
 - (void)showFullscreenWithDelegate
@@ -2303,6 +2721,11 @@ if(![self.questionId isEqualToString:@""])
 {
     activity = [ActivityView activityView];
     [activity setTitle:@"Creating..."];
+    if([action isEqualToString:@"deleteimage"])
+    {
+        [activity setTitle:@"Deleting..."];
+    
+    }
     activity.delegate=self;
     [activity setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.9]];
     [activity showBorder];
@@ -2361,7 +2784,7 @@ if(![self.questionId isEqualToString:@""])
 
 -(void)removeAdd
 {
-    [fs hideAd];
+    //[fs hideAd];
 }
 
 /*

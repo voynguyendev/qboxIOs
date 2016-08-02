@@ -213,7 +213,7 @@
     //Cancel
     
     UIButton *loginFbBtn = [UIButton buttonWithType:UIButtonTypeCustom] ;
-    loginFbBtn.frame = CGRectMake(emailTextField.frame.origin.x, emailTextField.frame.origin.y+emailTextField.frame.size.height+10, 120, 30);
+    loginFbBtn.frame = CGRectMake(textFieldMaxX-250, emailTextField.frame.origin.y+emailTextField.frame.size.height+10, 120, 30);
     [loginFbBtn setImage:[UIImage imageNamed:@"Resetpassword_Cancel_button_new.png"] forState:UIControlStateNormal];
     [loginFbBtn addTarget:self action:@selector(loginFacebook) forControlEvents:UIControlEventTouchUpInside];
     [backgroundScrollview addSubview:loginFbBtn];
@@ -413,7 +413,7 @@
 -(void)getFacebookLogin:(id)facebookInfo
 {
     [ProgressHUD show:@"Please wait..." Interaction:NO];
-    // http://108.175.148.221/question_app_test/fb_user_reg.php?name=&lname=&email=&fbid=&action=1
+    // http://54.69.127.235/question_app/fb_user_reg.php?name=&lname=&email=&fbid=&action=1
     NSString *firstName=[facebookInfo valueForKey:@"first_name"];
     NSString *lastName=[facebookInfo valueForKey:@"last_name"];
     NSString *email=[facebookInfo valueForKey:@"email"];
@@ -563,7 +563,7 @@
 -(void)getGmailLogin:(id)gmailData
 {
     
-    // http://108.175.148.221/question_app_test/gmail_user_reg.php?name=&lname=&email=&gmailid=&action=1
+    // http://54.69.127.235/question_app/gmail_user_reg.php?name=&lname=&email=&gmailid=&action=1
     NSString *firstName=[gmailData valueForKey:@"given_name"];
     NSString *lastName=[gmailData valueForKey:@"family_name"];
     NSString *email=[gmailData valueForKey:@"email"];
@@ -644,7 +644,7 @@
 
 -(BOOL) prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 -(void)loginClick

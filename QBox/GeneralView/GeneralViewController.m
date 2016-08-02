@@ -508,10 +508,10 @@
 {
     
    
-    NSArray *userData=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-    NSString *userId=[[userData valueForKey:@"id"]objectAtIndex:0];
+    NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+    NSString *userId=[userData valueForKey:@"id"];
     
-    NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]getAllQuestions:userId];
+    NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]getAllQuestions:userId categoriesId:@"" hashtag:@"" rowget:@"2000"];
     NSString *success=[[mainArray valueForKey:@"success"]objectAtIndex:0];
     if ([success isEqualToString:@"0"])
     {
@@ -770,7 +770,7 @@
             NSInteger index = indexPath.row - indexPath.row/10;
             
             [cell.questionLabel setText:[[filteredResults objectAtIndex:index]valueForKey:@"question"]];
-            [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"[%@]",[[filteredResults objectAtIndex:index]valueForKey:@"totalAnswers"]]];
+            [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"%@",[[filteredResults objectAtIndex:index]valueForKey:@"totalAnswers"]]];
             
             
             
@@ -836,7 +836,7 @@
         NSInteger index = indexPath.row - indexPath.row/10;
         
         [cell.questionLabel setText:[[filteredResults objectAtIndex:index]valueForKey:@"question"]];
-        [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"[%@]",[[filteredResults objectAtIndex:index]valueForKey:@"totalAnswers"]]];
+        [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"%@",[[filteredResults objectAtIndex:index]valueForKey:@"totalAnswers"]]];
         
         
         

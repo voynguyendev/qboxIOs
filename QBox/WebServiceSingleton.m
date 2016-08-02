@@ -29,9 +29,9 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 -(void)registraionWEbService :(NSArray *)array
 {
     
-    //http://108.175.148.221/question_app_test/user_reg.php";//?name=&email=&password=&confirmpassword=&mobile=&school=&grade=&city=;
+    //http://54.69.127.235/question_app/user_reg.php";//?name=&email=&password=&confirmpassword=&mobile=&school=&grade=&city=;
     
-    //http://108.175.148.221/question_app_test/user_reg.php?name=&lname=&email=&password=&confirmpassword=&action=
+    //http://54.69.127.235/question_app/user_reg.php?name=&lname=&email=&password=&confirmpassword=&action=
     NSString *urlString=[NSString stringWithFormat:@"%@user_reg.php?name=%@&lname=%@&email=%@&password=%@&confirmpassword=%@&action=0",webserviceBaseUrl,[array objectAtIndex:0],[array objectAtIndex:1],[array objectAtIndex:2],[array objectAtIndex:3],[array objectAtIndex:3]];
     NSLog(@"%@",urlString);
     NSURL *url=[NSURL URLWithString:urlString];
@@ -195,10 +195,6 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 -(void)QBoxLoginWebService :(NSArray *)array
 {
     
-    
- 
-    
-    
     //user_reg.php?mobile=%@&password=%@&action=1
      NSString *urlString=[NSString stringWithFormat:@"%@user_reg.php?email=%@&password=%@&action=1",webserviceBaseUrl,[array objectAtIndex:0],[array objectAtIndex:1]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -269,7 +265,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(void)QBoxUserValueWebService:(NSString*)userID friendId:(NSString*)friendID
 {
-    //http://108.175.148.221/question_app_test/getUserInfoById.php?mobile=155&friend_id=84
+    //http://54.69.127.235/question_app/getUserInfoById.php?mobile=155&friend_id=84
     
 //    NSString *urlString=[NSString stringWithFormat:@"%@/getUserInfoById.php?mobile=%@",webserviceBaseUrl,[[NSUserDefaults standardUserDefaults]objectForKey:@"userid"]];
   
@@ -309,17 +305,69 @@ static WebServiceSingleton* _sharedMySingleton = nil;
     
 }
 
--(NSArray*)sendQuestionService :(NSArray *)array imageBase64String:(NSString *)base64string tabfriendids:(NSString *) tabfriendids
+-(id) usersaveImage:(NSString*)questionid action:(NSString*) action  attachment:(NSString*) attachment guid:(NSString*) guid imagequestionId:(NSString*) imagequestionId
+{
+   /* NSString *str=[NSString stringWithFormat:@"%@imagequestionsave.php?questionId=%@&action=%@&attachment=%@&guid=%@",webserviceBaseUrl,questionid,action,attachment,guid];
+    str=[self BuiltUrlRequesthavetokent:str];
+    NSString* encodedUrl = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url=[NSURL URLWithString:encodedUrl];
+    return [self webserviceUrlMethod:url];*/
+    NSString *urlString=[NSString stringWithFormat:@"%@imagequestionsave.php",webserviceBaseUrl];
+    NSString *paramDataString = [NSString stringWithFormat:@"questionId=%@&action=%@&attachment=%@&guid=%@&imagequestionId=%@",questionid,action,attachment,guid,imagequestionId];
+    
+    //%@&attachment=
+    NSData *requestBody = [paramDataString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[requestBody length]];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60*5];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:requestBody];
+    
+    NSURLResponse *res;
+    NSError *error;
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&res error:&error];
+    
+    
+    NSString *response = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"response %@",response);
+    NSArray *resultArray = [response JSONValue];
+    
+    
+    
+    
+    
+    
+    if ([[resultArray valueForKey:@"status"] isEqualToString:@"1"])
+    {
+        //[self.postQuestionDelegate successposted];
+    }
+    else
+    {
+        
+        //[self.postQuestionDelegate failedToPost];
+    }
+    return resultArray;
+
+    
+    
+}
+-(NSArray*)sendQuestionService :(NSArray *)array imageBase64String:(NSString *)base64string tabfriendids:(NSString *) tabfriendids guidimage:(NSString *) guidimage
 {
     
     NSString *urlString=[NSString stringWithFormat:@"%@questions.php",webserviceBaseUrl];
     
     
-    NSString *paramDataString = [NSString stringWithFormat:@"question=%@&categoryId=%@&subjectId=%@&userId=%@&date=%@&attachment=%@&tagfriends=%@&questionId=%@&action=%@",[array objectAtIndex:0],[array objectAtIndex:1],[array objectAtIndex:2],[array objectAtIndex:3],[array objectAtIndex:4],base64string,tabfriendids,[array objectAtIndex:6],[array objectAtIndex:7]];
+    NSString *paramDataString = [NSString stringWithFormat:@"question=%@&categoryId=%@&subjectId=%@&userId=%@&date=%@&tagfriends=%@&questionId=%@&action=%@&hashtag=%@&guidimage=%@",[array objectAtIndex:0],[array objectAtIndex:1],[array objectAtIndex:2],[array objectAtIndex:3],[array objectAtIndex:4],tabfriendids,[array objectAtIndex:6],[array objectAtIndex:7],[array objectAtIndex:8],guidimage];
     
-     paramDataString=[self BuiltUrlRequesthavetokent:paramDataString];
+    //paramDataString=[self BuiltUrlRequesthavetokent:paramDataString];
+    paramDataString=[NSString stringWithFormat:@"%@&attachment=%@",paramDataString,base64string];
     
-    
+    //%@&attachment=
     NSData *requestBody = [paramDataString dataUsingEncoding:NSUTF8StringEncoding];
     NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[requestBody length]];
     
@@ -453,7 +501,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
         //[self.loginDelegate loginFailed];
         NSString *messageString=[resultArray valueForKey:@"message"];
        
-            messageString=@"your email not exists";
+            messageString=@"your email does not exist";
        
         UIAlertView *messageAlertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:messageString delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
         [messageAlertView show];
@@ -476,7 +524,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 -(void) saveStatusText:(NSString *) statustext userId:(NSString *)userid
 {
     
-    //http://108.175.148.221/question_app_test/user_edit.php?name=&email=&school=&grade=&city=&user_id=&lname=&dob=&gender=&state=&skill_and_interest=&profile_pic=
+    //http://54.69.127.235/question_app/user_edit.php?name=&email=&school=&grade=&city=&user_id=&lname=&dob=&gender=&state=&skill_and_interest=&profile_pic=
     NSString *urlString=[NSString stringWithFormat:@"%@user_updatestatustext.php?",webserviceBaseUrl];
  
     
@@ -509,15 +557,15 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 
 
--(void) saveProfile:(NSArray*) array imageBase64String:(NSString *)base64string
+-(NSArray*) saveProfile:(NSArray*) array imageBase64String:(NSString *)base64string
 {
     
-    //http://108.175.148.221/question_app_test/user_edit.php?name=&email=&school=&grade=&city=&user_id=&lname=&dob=&gender=&state=&skill_and_interest=&profile_pic=
+    //http://54.69.127.235/question_app/user_edit.php?name=&email=&school=&grade=&city=&user_id=&lname=&dob=&gender=&state=&skill_and_interest=&profile_pic=
     NSString *urlString=[NSString stringWithFormat:@"%@user_edit.php?",webserviceBaseUrl];
     NSLog(@"%@",urlString);
     NSLog(@"%@",array);
     
-    NSString *paramDataString = [NSString stringWithFormat:@"name=%@&email=%@&school=%@&grade=%@&city=%@&user_id=%@&lname=%@&dob=%@&gender=%@&state=%@&skill_and_interest=%@&img=%@&timezone=%@",[array objectAtIndex:0],[array objectAtIndex:1],[array objectAtIndex:2],[array objectAtIndex:3],[array objectAtIndex:4],[array objectAtIndex:5],[array objectAtIndex:6],[array objectAtIndex:7],[array objectAtIndex:8],[array objectAtIndex:9],[array objectAtIndex:10],base64string,[array objectAtIndex:11]];
+    NSString *paramDataString = [NSString stringWithFormat:@"name=%@&email=%@&school=%@&grade=%@&city=%@&user_id=%@&lname=%@&dob=%@&gender=%@&state=%@&skill_and_interest=%@&img=%@&timezone=%@&action=%@&imageid=%@&about=%@&workat=%@",[array objectAtIndex:0],[array objectAtIndex:1],[array objectAtIndex:2],[array objectAtIndex:3],[array objectAtIndex:4],[array objectAtIndex:5],[array objectAtIndex:6],[array objectAtIndex:7],[array objectAtIndex:8],[array objectAtIndex:9],[array objectAtIndex:10],base64string,[array objectAtIndex:11],[array objectAtIndex:12],[array objectAtIndex:13],[array objectAtIndex:14],[array objectAtIndex:15]];
     
      paramDataString=[self BuiltUrlRequesthavetokent:paramDataString];
     
@@ -542,6 +590,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
     
     NSLog(@"response %@",response);
     NSArray *resultArray = [response JSONValue];
+    return resultArray;
     NSLog(@"%@",resultArray);
 }
 
@@ -611,7 +660,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(id)getFacebookLogin:(NSArray*)array
 {
-    //http://108.175.148.221/question_app_test/fb_user_reg.php?name=&lname=&email=&fbid=&action=1
+    //http://54.69.127.235/question_app/fb_user_reg.php?name=&lname=&email=&fbid=&action=1
 
 
     NSString *urlString=[NSString stringWithFormat:@"%@fb_user_reg.php?name=%@&lname=%@&email=%@&fbid=%@",webserviceBaseUrl,[array objectAtIndex:0],[array objectAtIndex:1],[array objectAtIndex:2],[array objectAtIndex:3]];
@@ -650,7 +699,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(id)getGmailLogin:(NSArray*)array
 {
-    //http://108.175.148.221/question_app_test/gmail_user_reg.php?name=&lname=&email=&gmailid=&action=1
+    //http://54.69.127.235/question_app/gmail_user_reg.php?name=&lname=&email=&gmailid=&action=1
     NSString *urlString=[NSString stringWithFormat:@"%@gmail_user_reg.php?name=%@&lname=%@&email=%@&gmailid=%@",webserviceBaseUrl,[array objectAtIndex:0],[array objectAtIndex:1],[array objectAtIndex:2],[array objectAtIndex:3]];
     NSLog(@"%@",urlString);
     
@@ -686,7 +735,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(void)resetpassword:(NSString*)email
 {
-    //http://108.175.148.221/question_app_test/reset_password.php?email=&password=
+   // http://54.69.127.235/question_app/reset_password.php?email=&password=//
     NSString *urlString=[NSString stringWithFormat:@"%@reset_password.php?email=%@",webserviceBaseUrl,email];
     NSLog(@"%@",urlString);
     
@@ -784,6 +833,17 @@ static WebServiceSingleton* _sharedMySingleton = nil;
     
 }
 
+-(NSArray*) getQuestionImagesByquestionId:(NSString*)questionId
+{
+    NSString *str1=[NSString stringWithFormat:@"%@getQuestionImagesbyquestionid.php?questionid=%@",webserviceBaseUrl,questionId];
+    str1=[self BuiltUrlRequesthavetokent:str1];
+    
+    NSURL *url=[NSURL URLWithString:str1];
+    return [self webserviceMethod:url];
+    
+    
+}
+
 -(NSMutableArray*) postData: (NSArray*) questionId userId:(NSString*)userId
 {
     NSString *str=[NSString stringWithFormat:@"%@getAllAnswersByQuestionId.php?questionId=%@&userId=%@",webserviceBaseUrl,questionId,userId];
@@ -829,7 +889,9 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(NSArray*) searchUser:(NSString*) str
 {
-   NSString *userId=[[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"]valueForKey:@"id"];
+    NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+    
+   NSString *userId=[userData valueForKey:@"id"];
     NSString *str1=[NSString stringWithFormat:@"%@searchUsers.php?search_keyword=%@&user_id=%@",webserviceBaseUrl,str,userId];
   str1=[self BuiltUrlRequesthavetokent:str1];
    NSURL *url=[NSURL URLWithString:str1];
@@ -879,7 +941,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(NSArray*)getFriendInfo:(NSString*)userId friend:(NSString*)friendId
 {
-    //http://108.175.148.221/question_app_test//get_clicked_user_info.php?mobile=155&user_id=28
+    //http://54.69.127.235/question_app//get_clicked_user_info.php?mobile=155&user_id=28
     
     NSString *str1=[NSString stringWithFormat:@"%@/get_clicked_user_info.php?mobile=%@&user_id=%@",webserviceBaseUrl,userId,friendId];
     str1=[self BuiltUrlRequesthavetokent:str1];
@@ -914,8 +976,8 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(NSArray*) acceptAnswer:(NSString*) answerId
 {
-    NSArray *userDetail=[NSArray arrayWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil];
-    NSString *user_id=[[userDetail valueForKey:@"id"]objectAtIndex:0];
+    NSArray *userDetail=[[NSArray arrayWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil]objectAtIndex:0];
+    NSString *user_id=[userDetail valueForKey:@"id"];
     NSString *str1=[NSString stringWithFormat:@"%@acceptAnswer.php?answer_id=%@&status=accepted&logged_in_user_id=%@",webserviceBaseUrl,answerId,user_id];
     str1=[self BuiltUrlRequesthavetokent:str1];
     NSURL *url=[NSURL URLWithString:str1];
@@ -923,8 +985,8 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 }
 -(NSArray*) unacceptAnswer:(NSString*) answerId
 {
-    NSArray *userDetail=[NSArray arrayWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil];
-    NSString *user_id=[[userDetail valueForKey:@"id"]objectAtIndex:0];
+   NSArray *userDetail=[[NSArray arrayWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil]objectAtIndex:0];
+    NSString *user_id=[userDetail valueForKey:@"id"];
     
     NSString *str1=[NSString stringWithFormat:@"%@acceptAnswer.php?answer_id=%@&status=rejected&logged_in_user_id=%@",webserviceBaseUrl,answerId,user_id];
      str1=[self BuiltUrlRequesthavetokent:str1];
@@ -1033,18 +1095,20 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 }
 
--(id) getAllQuestions:(NSString*)userID
+-(id) getAllQuestions:(NSString*)userID categoriesId:(NSString*) categoriesId hashtag:(NSString*) hashtag rowget:(NSString*) rowget
 {
     
-    NSString *urlstring=[NSString stringWithFormat:@"%@getAllQuestionsInfo.php?user_id=%@",webserviceBaseUrl,userID];
+    NSString *urlstring=[NSString stringWithFormat:@"%@getAllQuestionsInfo.php?user_id=%@&categoriesId=%@&hashtag=%@&rowget=%@",webserviceBaseUrl,userID,categoriesId,hashtag,rowget];
      urlstring=[self BuiltUrlRequesthavetokent:urlstring];
-    NSURL *url=[NSURL URLWithString:urlstring];
+    NSString* encodedUrl = [urlstring stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url=[NSURL URLWithString:encodedUrl];
     return [self webserviceUrlMethod:url];
 
 }
 
 -(NSArray*) getAllSavedQuestion:(NSString*)userId
 {
+    
     NSString *str=[NSString stringWithFormat:@"%@getAllSavedQuestionsByUserId.php?user_id=%@",webserviceBaseUrl,userId];
     str=[self BuiltUrlRequesthavetokent:str];
     NSURL *url=[NSURL URLWithString:str];
@@ -1053,20 +1117,29 @@ static WebServiceSingleton* _sharedMySingleton = nil;
     
 }
 
--(id) privateFriendPost:(NSString*)userId
+-(id) privateFriendPost:(NSString*)userId categoriesId:(NSString*) categoriesId hashtag:(NSString*) hashtag rowget:(NSString*) rowget
 {
-    NSString *str=[NSString stringWithFormat:@"%@getAllFriendsQuestionsByUserId.php?userId=%@",webserviceBaseUrl,userId];
+    NSString *str=[NSString stringWithFormat:@"%@getAllFriendsQuestionsByUserId.php?userId=%@&categoriesId=%@&hashtag=%@&rowget=%@",webserviceBaseUrl,userId,categoriesId,hashtag,rowget];
       str=[self BuiltUrlRequesthavetokent:str];
-    NSURL *url=[NSURL URLWithString:str];
+    NSString* encodedUrl = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url=[NSURL URLWithString:encodedUrl];
     return [self webserviceUrlMethod:url];
 }
 
 -(void) notificationList
 {
-   NSArray *userData=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userid"],nil];
-    NSArray *deviceToken=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"deviceToken"], nil];
+    NSArray *userData=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userid"],nil];
+    //NSArray *deviceToken=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"deviceToken"], nil];
     NSString *ids=[userData objectAtIndex:0];
-    NSString *deviceTokenString=[deviceToken objectAtIndex:0];
+   
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    // getting an NSString
+    // NSString *myString = [prefs stringForKey:@"userid"];
+    
+    NSString *deviceTokenString=[prefs stringForKey:@"deviceToken"];
+    
+   
     NSString *str=[NSString stringWithFormat:@"%@device_token.php",webserviceBaseUrl];
     NSString *paramDataString=[NSString stringWithFormat:@"user_id=%@&device_token=%@&type=0",ids,deviceTokenString];
     paramDataString=[self BuiltUrlRequesthavetokent:paramDataString];
@@ -1096,7 +1169,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(NSArray*)rejectFriendRequestSent:(NSString*)senderId receiverId:(NSString*)receiverID
 {
-    NSString *str=[NSString stringWithFormat:@"%@reject_own_friend_request.php?sender_id=%@&receiver_id=%@",webserviceBaseUrl,senderId,receiverID];
+     NSString *str=[NSString stringWithFormat:@"%@reject_own_friend_request.php?sender_id=%@&receiver_id=%@",webserviceBaseUrl,senderId,receiverID];
      str=[self BuiltUrlRequesthavetokent:str];
      NSURL *url=[NSURL URLWithString:str];
      return [self webserviceMethod:url];
@@ -1114,8 +1187,8 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 
 -(NSArray*)getFriendsPostsAndAnswers:(NSString*)FriendId andUserId:(NSString*)userID
 {
-    //http://108.175.148.221/question_app_test/getAllPostQuestionandAcceptedAnswer.php?user_id=155
-  //  http://108.175.148.221/question_app_test/getAllPostQuestionandAcceptedAnswer.php?user_id=&login_id=
+    //http://54.69.127.235/question_app/getAllPostQuestionandAcceptedAnswer.php?user_id=155
+  //  http://54.69.127.235/question_app/getAllPostQuestionandAcceptedAnswer.php?user_id=&login_id=
     NSString *str=[NSString stringWithFormat:@"%@getAllPostQuestionandAcceptedAnswer.php?user_id=%@&login_id=%@",webserviceBaseUrl,FriendId,userID];
     str=[self BuiltUrlRequesthavetokent:str];
     NSURL *url=[NSURL URLWithString:str];
@@ -1126,7 +1199,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 -(id)getUpdatesQuestion:(NSString*)friendID
 {
    
-    //http://108.175.148.221/question_app_test/recent_questions_answers.php?user_id=262
+    //http://54.69.127.235/question_app/recent_questions_answers.php?user_id=262
     
     NSString *str=[NSString stringWithFormat:@"%@recent_questions_answers.php?user_id=%@",webserviceBaseUrl,friendID];
     str=[self BuiltUrlRequesthavetokent:str];
@@ -1137,7 +1210,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 -(id)getPushNotificationByUserId:(NSString*)userID
 {
     
-    //http://108.175.148.221/question_app_test/recent_questions_answers.php?user_id=262
+    //http://54.69.127.235/question_app/recent_questions_answers.php?user_id=262
     NSString *str=[NSString stringWithFormat:@"%@getPushNotificationByUserId.php?userid=%@",webserviceBaseUrl,userID];
     str=[self BuiltUrlRequesthavetokent:str];
     NSURL *url=[NSURL URLWithString:str];
@@ -1145,11 +1218,31 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 }
 
 
+-(NSArray*)flagAnswersQuestions:(NSString*)entityid entity:(NSString *)entity
+{
+    //54.69.127.235/question_app/answers_likes_dislikes.php?answer_id=%@&verdict=%@&user_id=
+    //NSString *userId=[[[AppDelegate sharedDelegate]userDetail]valueForKey:@"id"];
+    
+    id userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+    
+    NSString *userId=[userData valueForKey:@"id"];
+    
+
+    
+    NSString *str=[NSString stringWithFormat:@"%@answers_questions_flag.php?userid=%@&entity=%@&entityid=%@",webserviceBaseUrl,userId,entity,entityid];
+    str=[self BuiltUrlRequesthavetokent:str];
+    NSURL *url=[NSURL URLWithString:str];
+    
+    return [self webserviceUrlMethod:url];
+    
+    
+}
 
 -(NSArray*)likeAndDislikeAnswers:(NSString *)answerId likeValue:(NSString*)value
 {
-    //108.175.148.221/question_app_test/answers_likes_dislikes.php?answer_id=%@&verdict=%@&user_id=
-    NSString *userId=[[[AppDelegate sharedDelegate]userDetail]valueForKey:@"id"];
+    //54.69.127.235/question_app/answers_likes_dislikes.php?answer_id=%@&verdict=%@&user_id=
+     NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+    NSString *userId=[userData valueForKey:@"id"];
     NSString *str=[NSString stringWithFormat:@"%@answers_likes_dislikes.php?answer_id=%@&verdict=%@&user_id=%@",webserviceBaseUrl,answerId,value,userId];
      str=[self BuiltUrlRequesthavetokent:str];
     NSURL *url=[NSURL URLWithString:str];
@@ -1160,8 +1253,10 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 }
 -(NSArray*)likeAndDislikeQuestions:(NSString *)questionId andDislikeValue:(NSString*)value
 {
-    //108.175.148.221/question_app_test/questions_likes_dislikes.php?question_id=%@&verdict=%@&user_id=
-    NSString *userId=[[[AppDelegate sharedDelegate]userDetail]valueForKey:@"id"];
+    //54.69.127.235/question_app/questions_likes_dislikes.php?question_id=%@&verdict=%@&user_id=
+    NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+  
+    NSString *userId=[userData valueForKey:@"id"];
     NSString *str=[NSString stringWithFormat:@"%@questions_likes_dislikes.php?question_id=%@&verdict=%@&user_id=%@",webserviceBaseUrl,questionId,value,userId];
     str=[self BuiltUrlRequesthavetokent:str];
 
@@ -1180,7 +1275,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
     //tofollow means friendId
     //follower means loginId
     //Status 1
-   // http://108.175.148.221/question_app_test/followers.php?tofollow=155&follower=28&status=1
+   // http://54.69.127.235/question_app/followers.php?tofollow=155&follower=28&status=1
     NSString *str=[NSString stringWithFormat:@"%@followers.php?tofollow=%@&follower=%@&status=%@",webserviceBaseUrl,friendID,userId,status];
     str=[self BuiltUrlRequesthavetokent:str];
 
@@ -1190,19 +1285,23 @@ static WebServiceSingleton* _sharedMySingleton = nil;
 }
 
 //Hot Topics Webservice
--(id)getHotTopicsQuestions
+-(id)getHotTopicsQuestions:(NSString*) categoriesId hashtag:(NSString*) hashtag rowget:(NSString*) rowget
 {
     NSString *userId=[[NSUserDefaults standardUserDefaults]valueForKey:@"userid"];
     NSString *token=[[NSUserDefaults standardUserDefaults]valueForKey:@"token"];
     NSString *userIdchecktoken=[[NSUserDefaults standardUserDefaults]valueForKey:@"userid"];
     
+    NSString *urlstring=[NSString stringWithFormat:@"%@hot_topics.php?user_id=%@&token=%@&userIdchecktoken=%@&categoriesId=%@&hashtag=%@&rowget=%@",webserviceBaseUrl,userId,token,userId,categoriesId,hashtag,rowget];
     
+    NSString* encodedUrl = [urlstring stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
     
-    //http://108.175.148.221/question_app_test/hot_topics.php?user_id=155
-    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@hot_topics.php?user_id=%@&token=%@&userIdchecktoken=%@",webserviceBaseUrl,userId,token,userId]];
+    //http://54.69.127.235/question_app/hot_topics.php?user_id=155
+    NSURL *url=[NSURL URLWithString:encodedUrl];
+    
     id dic=[self webserviceUrlMethod:url];
     
-    id userDetail=[dic objectForKey:@"userdata"];
+    /*id userDetail=[dic objectForKey:@"userdata"];
     if ([[dic objectForKey:@"success"]boolValue])
     {
             [[NSUserDefaults standardUserDefaults]setObject:[[dic objectForKey:@"userdata"]valueForKey:@"id"] forKey:@"userid"];
@@ -1211,7 +1310,7 @@ static WebServiceSingleton* _sharedMySingleton = nil;
             [[NSUserDefaults standardUserDefaults]synchronize];
         
             [[AppDelegate sharedDelegate]setUserDetail:[dic objectForKey:@"userdata"]];
-    }
+    }*/
     return  [self webserviceUrlMethod:url];
 }
 

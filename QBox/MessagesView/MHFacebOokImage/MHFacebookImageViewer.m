@@ -61,7 +61,7 @@ static const CGFloat kMinImageScale = 1.0f;
 - (void)loadView
 {
     [super loadView];
-    [UIApplication sharedApplication].statusBarHidden = YES;
+    [UIApplication sharedApplication].statusBarHidden = NO;
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     CGRect windowBounds = rootViewController.view.bounds;
     

@@ -62,6 +62,12 @@
     [super viewDidLoad];
     
     
+   // [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDetail"];
+    //[[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"userid"];
+    [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"test"];
+
+    
+    [[NSUserDefaults standardUserDefaults]synchronize];
     
     self.navigationController.navigationBarHidden=YES;
     
@@ -526,7 +532,7 @@
 -(void)getFacebookLogin:(id)facebookInfo
 {
     [ProgressHUD show:@"Please wait..." Interaction:NO];
-   // http://108.175.148.221/question_app_test/fb_user_reg.php?name=&lname=&email=&fbid=&action=1
+   // http://54.69.127.235/question_app/fb_user_reg.php?name=&lname=&email=&fbid=&action=1
     NSString *firstName=[facebookInfo valueForKey:@"first_name"];
     NSString *lastName=[facebookInfo valueForKey:@"last_name"];
     NSString *email=[facebookInfo valueForKey:@"email"];
@@ -619,7 +625,7 @@
                  error:(NSError * )error
 {
     
-    [ProgressHUD show:@"Please Wait..." Interaction:NO];
+    //[ProgressHUD show:@"Please Wait..." Interaction:NO];
     NSLog(@"finished");
     NSLog(@"auth access token: %@", auth1.accessToken);
     
@@ -639,6 +645,7 @@
     
     if (error != nil)
     {
+        [ProgressHUD dismiss];
        gmailLogin= [[UIAlertView alloc] initWithTitle:@"Error Authorizing with Google"
                                                          message:[error localizedDescription]
                                                         delegate:nil
@@ -666,8 +673,15 @@
 //                                               otherButtonTitles:nil];
 //        [alert show];
         
+        [[AppDelegate sharedDelegate] setActivityText:@"Loading..."];
+        [[AppDelegate sharedDelegate] showActivityInView:self.view withBlock:^{
+           [self getGmailLogin:gmailData];
+            
+            [[AppDelegate sharedDelegate]hideActivity];
+            
+        }];
         
-        [self getGmailLogin:gmailData];
+        
         
         
     }
@@ -675,8 +689,9 @@
 
 -(void)getGmailLogin:(id)gmailData
 {
-    
-    // http://108.175.148.221/question_app_test/gmail_user_reg.php?name=&lname=&email=&gmailid=&action=1
+    //[ProgressHUD show:@"Please Wait..." Interaction:NO];
+   
+    // http://54.69.127.235/question_app/gmail_user_reg.php?name=&lname=&email=&gmailid=&action=1
     NSString *firstName=[gmailData valueForKey:@"given_name"];
     NSString *lastName=[gmailData valueForKey:@"family_name"];
     NSString *email=[gmailData valueForKey:@"email"];
@@ -756,11 +771,18 @@
 
 -(BOOL) prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 -(void)loginClick
 {
+    if (![ProjectHelper internetAvailable])
+    {
+        //[ProgressHUD dismiss];
+        SHOW_NO_INTERNET_ALERT(self);
+        
+        return;
+    }
     [ProgressHUD show:@"Please Wait" Interaction:NO];
     
     BOOL validationBool=[self validationCheck];
@@ -790,7 +812,8 @@
     
     
     
-}
+    }
+
 
 -(BOOL) validationCheck
 {
@@ -809,6 +832,8 @@
         [alertView show];
        
     }
+   
+    
   else
   {
      
@@ -991,12 +1016,19 @@
     NSArray *arr=array;
     NSLog(@"%@",arr);
     //have To remove
-   loginAlertView=[[UIAlertView alloc]initWithTitle:@"Successful" message:@"Login Successful" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-    [loginAlertView show];
+   //loginAlertView=[[UIAlertView alloc]initWithTitle:@"Successful" message:@"Login Successful" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+   // [loginAlertView show];
     
     
 
+    TaBBarViewController *TabVC=[[TaBBarViewController alloc]init];
+    TabVC.nameValue=1;
+    TabVC.notificationViewValue=0;
+    [self.navigationController pushViewController:TabVC animated:NO];
     
+    //Care
+    [AppDelegate sharedDelegate].TabBarView = TabVC;
+
     
 }
 

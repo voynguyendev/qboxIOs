@@ -165,9 +165,9 @@
 
 -(void) getFriendsPost
 {
-    NSArray *personalDetailArray=[NSArray arrayWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil];
-    NSString *userId=[[personalDetailArray valueForKey:@"id"]objectAtIndex:0];
-    NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]privateFriendPost:userId];
+    NSArray *personalDetailArray=[[NSArray arrayWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"], nil]objectAtIndex:0];
+    NSString *userId=[personalDetailArray valueForKey:@"id"];
+    NSArray *mainArray=[[WebServiceSingleton sharedMySingleton]privateFriendPost:userId categoriesId:@"" hashtag:@"" rowget:@"15"];
     NSLog(@"%@",mainArray);
     NSString *success=[[mainArray valueForKey:@"success"]objectAtIndex:0];
     if ([success isEqualToString:@"0"])
@@ -647,7 +647,7 @@
   
     
     //Total Answers
-    [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"[%@]",[[filteredArray objectAtIndex:index]valueForKey:@"totalAnswers"]]];
+    [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"%@",[[filteredArray objectAtIndex:index]valueForKey:@"totalAnswers"]]];
    
     //Name Btn
         NSString *user_name=[[filteredArray valueForKey:@"name"]objectAtIndex:index];
@@ -720,7 +720,7 @@
         
         
         //Total Answers
-        [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"[%@]",[[filteredArray objectAtIndex:index]valueForKey:@"totalAnswers"]]];
+        [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"%@",[[filteredArray objectAtIndex:index]valueForKey:@"totalAnswers"]]];
         
         //Name Btn
         NSString *user_name=[[filteredArray valueForKey:@"name"]objectAtIndex:index];

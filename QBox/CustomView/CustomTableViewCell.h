@@ -11,16 +11,18 @@
 @interface CustomTableViewCell : UITableViewCell
 
 @property(strong,nonatomic) IBOutlet UIImageView *questionImageView;
-@property(strong,nonatomic) IBOutlet UILabel *questionLabel;
+//@property(strong,nonatomic) IBOutlet UILabel *questionLabel;
 @property(strong,nonatomic) IBOutlet UIButton *userNameBtn;
 @property(strong,nonatomic) IBOutlet UILabel *dateLabel;
 @property(strong,nonatomic) IBOutlet UILabel *timeLabel;
+@property (strong, nonatomic) IBOutlet UITextView *questionLabel;
 
 @property(strong,nonatomic) IBOutlet UIImageView *dateImageView;
 @property(strong,nonatomic) IBOutlet UIImageView *timeImageView;
 @property(strong,nonatomic) IBOutlet UIImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UILabel *ReliesLabel;
-@property (weak, nonatomic) IBOutlet UILabel *questionLabelNoImage;
+//@property (weak, nonatomic) IBOutlet UILabel *questionLabelNoImage;
+@property (strong, nonatomic) IBOutlet UITextView *questionLabelNoImage;
 
 @property (weak, nonatomic) IBOutlet UILabel *totalAnswersLabel;
 @end

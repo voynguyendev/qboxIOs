@@ -16,6 +16,7 @@
     UIView *containerView;
     HPGrowingTextView *textView;
 }
+@property (weak, nonatomic) IBOutlet UIView *viewmenu;
 
 @property(strong,nonatomic) NSString *ques;
 @property(strong,nonatomic) NSString *ids;

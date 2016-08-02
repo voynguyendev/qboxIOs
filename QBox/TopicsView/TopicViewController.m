@@ -1,4 +1,4 @@
-//
+ //
 //  TopicViewController.m
 //  QBox
 //
@@ -15,10 +15,21 @@
 #import "ProjectHelper.h"
 #import "UIImageView+WebCache.h"
 #import "UpdatesViewController.h"
+#import "AddFriendViewController.h"
+#import "QuestionCustomTableViewCell.h"
+#import "NoImageQuestionCustomTableViewCell.h"
+#import "CCHLinkTextView.h"
+#import "CCHLinkTextViewDelegate.h"
+#import "CCHLinkGestureRecognizer.h"
+#import "MWPhotoBrowser.h"
+#import <Photos/Photos.h>
+#import "SDImageCache.h"
+#import "MWCommon.h"
 
 
 
-@interface TopicViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MNMPullToRefreshManagerClient>
+
+@interface TopicViewController ()<CCHLinkTextViewDelegate,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIAlertViewDelegate,UIScrollViewDelegate,UIGestureRecognizerDelegate,MNMPullToRefreshManagerClient,MWPhotoBrowserDelegate,UINavigationControllerDelegate,UITextViewDelegate>
 {
     UIView *searchView;
     UITextField *searchTextField;
@@ -30,6 +41,9 @@
     NSMutableArray *questionArray;
     NSArray *categoryofuserArray;
     
+    UIAlertView *reportadminAlert;
+    NSString *questionid;
+    UIScrollView *menuactionSubview;
     NSMutableArray *categoryArray;
     NSArray *questionInfoArray;
     NSString *searchTextStr;
@@ -41,6 +55,20 @@
     bool issearchcategory;
     NSMutableArray *filteredArrayCategory;
     bool hasall;
+    bool isshowsubmenu;
+    CGFloat lastContentOffset;
+    bool isscroll;
+    UIScrollView *imageScrollView;
+    UIView *popImageView;
+    UIImageView *ImagePostQuestion;
+    NSString *categoriesId;
+    int coutquestion;
+    NSString *rowget;
+    NSMutableArray *imagesQuestionViews;
+    UIPageViewController *PageViewController;
+    NSMutableArray *_photos;
+    NSMutableArray *arrayheights;
+    
 }
 
 @end
@@ -48,8 +76,32 @@
 @implementation TopicViewController;
 @synthesize pullToRefreshManager = pullToRefreshManager_;
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (self.isMovingFromParentViewController) {
+        // Do your stuff here
+    }
+}
+
 - (void)viewDidLoad
 {
+    [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"test"];
+    
+    
+    [[NSUserDefaults standardUserDefaults]synchronize];
+ 
+    
+     NSString* user=[[NSUserDefaults standardUserDefaults]objectForKey:@"test"];
+   // NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
+    ///[[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+  
+  /// [UIViewController a];
+    isshowsubmenu=false;
+    coutquestion=15;
+    rowget=[NSString stringWithFormat:@"%d",coutquestion];
+    categoriesId=@"";
+    isscroll=YES;
     issearchcategory=NO;
     selectedBtnArray=[[NSMutableArray alloc]init];
     iscreatecategory=NO;
@@ -69,27 +121,227 @@
     pullToRefreshManager_ = [[MNMPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f
                                                                                    tableView:questionTableView
                                                                                   withClient:self];
+    arrayheights=[[NSMutableArray alloc]init];
+    imagesQuestionViews=[[NSMutableArray alloc]init];
     
-    
-    
+   
     // Do any additional setup after loading the view.
+    
+    if(self.hashtag!=nil && ![self.hashtag isEqualToString:@""] )
+    {
+         btaction=@"global";
+        [globalBtn setImage:[UIImage imageNamed:@"globe_active"] forState:UIControlStateNormal];
+        [globalBtn setTitleColor:BUTTONCOLOR forState:UIControlStateNormal];
+
+        [topicsBtn setImage:[UIImage imageNamed:@"hot_topic"] forState:UIControlStateNormal];
+        [topicsBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [buddiesBtn setImage:[UIImage imageNamed:@"buddies"] forState:UIControlStateNormal];
+        [buddiesBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [self RefreshData:@"" hashtag:self.hashtag];
+        
+    }
+    else
+    {
+        btaction=@"buddies";
+        [buddiesBtn setImage:[UIImage imageNamed:@"buddies_active"] forState:UIControlStateNormal];
+        [buddiesBtn setTitleColor:BUTTONCOLOR forState:UIControlStateNormal];
+
+        [topicsBtn setImage:[UIImage imageNamed:@"hot_topic"] forState:UIControlStateNormal];
+        [topicsBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [globalBtn setImage:[UIImage imageNamed:@"globe"] forState:UIControlStateNormal];
+        [globalBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [self RefreshData:@"" hashtag:@""];
+
+    }
+     self.hashtag=@"";
+    
+}
+-(void) popquestiondetail:(UITapGestureRecognizer *)recognizer{
+    //NSArray *questionInfo=[questionArray objectAtIndex:recognizer.view.tag];
+
+   // NSString   *questionidId=[questionInfo valueForKey:@"id"];
+    PostQuestionDetailViewController *postView=[[PostQuestionDetailViewController alloc]init];
+    postView.generalQuestionArray=[questionArray objectAtIndex:recognizer.view.tag];
+    postView.generalViewValue=9;
+    [self.navigationController pushViewController:postView animated:NO];
+
+}
+-(void) popAnswerImageViewProfile:(UITapGestureRecognizer *)recognizer
+
+{
+    // UserDetailViewController *userProfile=[[UserDetailViewController alloc]init];
+     NSArray *questionInfo=[questionArray objectAtIndex:recognizer.view.tag];
+     NSString   *userId=[questionInfo valueForKey:@"userid"];
+    //NSString   *userId=userIdGeneral;
+    
+    
+    //NSString *userId=[[filteredResults valueForKey:@"userid"]objectAtIndex:recognizer.view.tag];
+    //userProfile.messageValue=2;
+    //userProfile.user_id=userId;
+    //[self.navigationController pushViewController:userProfile animated:NO];
+    AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+    addFriend.friendUserId=userId;
+    [self.navigationController pushViewController:addFriend animated:NO];
+}
+
+-(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView==reportadminAlert)
+    {
+        if (buttonIndex==1)
+        {
+            //            [self showActivity:self.view];
+            //            postValue=4;
+            //            [self activityDidAppear];
+            
+            [[AppDelegate sharedDelegate]showActivityInView:self.view withBlock:^{
+                
+                
+                [ProgressHUD show:@"Please Wait..." Interaction:NO];
+                id array=[[WebServiceSingleton sharedMySingleton]flagAnswersQuestions:questionid entity:@"1"];
+                
+                
+                
+                [[[UIAlertView alloc]initWithTitle:@"Alert!" message:@"report successfully"  delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil]show];
+                [ProgressHUD dismiss];
+                [[AppDelegate sharedDelegate]hideActivity];
+            }];
+            
+            
+            
+        }
+    }
+
+}
+
+-(void) reportadmin:(UITapGestureRecognizer *)recognizer
+
+{
+    [recognizer.view.superview removeFromSuperview];
+    // UserDetailViewController *userProfile=[[UserDetailViewController alloc]init];
+    NSArray *questionInfo=[questionArray objectAtIndex:recognizer.view.tag];
+    questionid=[questionInfo valueForKey:@"id"];
+    
+    reportadminAlert=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Do you want to report this question to admin??" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+    [reportadminAlert show];
+
+    
+    
+   
+}
+
+-(void) searchtagfriend:(NSString*)strsearch
+{
+    
+    NSString *textsearch=[strsearch stringByReplacingOccurrencesOfString:@"#"
+                                                        withString:@""];
+    issearchcategory=NO;
+    searchTextField.text=@"";
+    categoriesId=@"";
+    searchTextField.text=@"";
+
+    self.hashtag=textsearch;
+    questionArray=[self RefreshData:@"" hashtag:textsearch];
+    
+    [questionTableView reloadData];
+    //    AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+    //    addFriend.friendUserId=userId;
+    //    [self.navigationController pushViewController:addFriend animated:NO];
+    
     
     
 }
-
+-(void) ViewProfiletabfriend:(UITapGestureRecognizer*)sender
+{
+    UILabel* lable=(UILabel*)(sender.view);
+    NSString* userid=[NSString stringWithFormat:@"%d", lable.tag];
+    AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+    addFriend.friendUserId=userid;
+    [self.navigationController pushViewController:addFriend animated:NO];
+}
+-(void)profileViewQuestion:(id) sender
+{
+    NSInteger i=[sender tag];
+    NSArray *questionInfo=[questionArray objectAtIndex:i];
+    NSString   *userId=[questionInfo valueForKey:@"userid"];
+    // NSString *inStr = [NSString stringWithFormat:@"%d", i];
+    // [[AppDelegate sharedDelegate].TabBarView gotoFriendProfileScreenWithFriendID:inStr];
+    AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+    addFriend.friendUserId=userId;
+    [self.navigationController pushViewController:addFriend animated:NO];
+    /* NSString *friendId=[[postData valueForKey:@"userId"]objectAtIndex:i];
+     NSString *loginId=[[[AppDelegate sharedDelegate]userDetail]valueForKey:@"id"];
+     
+     if ([friendId isEqualToString:loginId])
+     {
+     UserDetailViewController *userDetail=[[UserDetailViewController alloc]init];
+     userDetail.messageValue=50;
+     [self.navigationController pushViewController:userDetail animated:NO];
+     }
+     else
+     {
+     //Care
+     
+     HomeViewController *homeView=[[HomeViewController alloc]init];
+     homeView.friendID=userIdGeneral;
+     [self.navigationController pushViewController:homeView animated:NO];
+     
+     
+     //        AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+     //        addFriend.friendUserId=friendId;
+     //        [self.navigationController pushViewController:addFriend animated:NO];
+     
+     [[AppDelegate sharedDelegate].TabBarView gotoFriendProfileScreenWithFriendID:friendId];
+     */
+    
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    
+  if(scrollView.contentOffset.y+scrollView.frame.size.height>scrollView.contentSize.height+50)
+  {
+      coutquestion+=15;
+      rowget=[NSString stringWithFormat:@"%d",coutquestion];
+
+     questionArray=[self RefreshData:categoriesId hashtag:self.hashtag] ;
+      NSLog([NSString stringWithFormat:@"%d",questionArray.count]);
+//    [categorySubview setHidden:YES];
+    [questionTableView reloadData];
+  }
+
+    
+    if (lastContentOffset > scrollView.contentOffset.y)
+    {
+        [[AppDelegate sharedDelegate].TabBarView  showtabar];
+    }
+        // scrollDirection = ScrollDirectionRight;
+    else if (lastContentOffset < scrollView.contentOffset.y)
+    {
+         if(lastContentOffset>10.0f)
+        [[AppDelegate sharedDelegate].TabBarView  hidetabar];
+
+    }
+        // scrollDirection = ScrollDirectionLeft;
+    //isscroll=YES;
+    lastContentOffset = scrollView.contentOffset.y;
     [pullToRefreshManager_ tableViewScrolled];
+
+
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (scrollView.contentOffset.y >=360.0f)
      {
+         int a=1;
      }
      else
-    [pullToRefreshManager_ tableViewReleased];
+     {
+         
+            // [[AppDelegate sharedDelegate].TabBarView  showtabar];
+            [pullToRefreshManager_ tableViewReleased];
+     }
 }
 
 - (void)pullToRefreshTriggered:(MNMPullToRefreshManager *)manager
@@ -108,8 +360,9 @@
     {
          [self globalQuesWebservice];
     }
-    
+    isscroll=NO;
     [pullToRefreshManager_ tableViewReloadFinishedAnimated:YES];
+    //[[AppDelegate sharedDelegate].TabBarView  showtabar];
     
 }
 
@@ -140,7 +393,7 @@
     
     
     
-    NSString *userid= [[NSUserDefaults standardUserDefaults]objectForKey:@"userid"];
+    NSString *userid=[[NSUserDefaults standardUserDefaults]objectForKey:@"userid"];
     
     NSArray *listArray=[[WebServiceSingleton sharedMySingleton]getAllCategoriesByuserId:userid];
     
@@ -176,10 +429,10 @@
     
     
     //Custom Search Field
-    searchView=[[UIView alloc]initWithFrame:CGRectMake(10,10, self.view.frame.size.width-20, 30)];
-    searchView.layer.borderColor=[UIColor whiteColor].CGColor;
-    searchView.layer.borderWidth=0.5f;
-    searchView.layer.cornerRadius=4.0f;
+    searchView=[[UIView alloc]initWithFrame:CGRectMake(15,13, self.view.frame.size.width-20, 30)];
+    //searchView.layer.borderColor=[UIColor whiteColor].CGColor;
+   // searchView.layer.borderWidth=0.5f;
+    //searchView.layer.cornerRadius=4.0f;
     [self.view addSubview:searchView];
     
     UIImageView *searchImageView=[[UIImageView alloc]init];
@@ -193,7 +446,17 @@
     searchTextField.returnKeyType=UIReturnKeySearch;
     searchTextField.font=[UIFont italicSystemFontOfSize:15.0f];
     searchTextField.textColor=[UIColor whiteColor];
-    [searchTextField setPlaceholder:@"Search Filter"];
+    //[searchTextField setPlaceholder:@"Search Filter"];
+    
+    UIColor *color = [UIColor whiteColor];
+    searchTextField.attributedPlaceholder =
+    [[NSAttributedString alloc] initWithString:@"Search Filter"
+                                    attributes:@{
+                                                 NSForegroundColorAttributeName: color
+                                                
+                                                 }
+     ];
+    
     [searchView addSubview:searchTextField];
     
     UIButton *filterButton=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -232,8 +495,8 @@
     
     //Buddies Btn
     buddiesBtn=[UIButton buttonWithType:UIButtonTypeCustom];
-    buddiesBtn.frame=CGRectMake(5,(optionsView.frame.size.height-20)/2,80,20);
-    [buddiesBtn setTitle:@"Buddy's" forState:UIControlStateNormal];
+    buddiesBtn.frame=CGRectMake(30,(optionsView.frame.size.height-20)/2,80,20);
+    [buddiesBtn setTitle:@"Buddies" forState:UIControlStateNormal];
     [buddiesBtn setImage:[UIImage imageNamed:@"buddies"] forState:UIControlStateNormal];
     buddiesBtn.titleLabel.font=[[AppDelegate sharedDelegate]fontWithName:12.0f];
     [buddiesBtn setImage:[UIImage imageNamed:@"buddies_active"] forState:UIControlStateHighlighted];
@@ -247,7 +510,7 @@
     topicsBtn.frame=CGRectMake(buddiesBtn.frame.origin.x+buddiesBtn.frame.size.width+5,(optionsView.frame.size.height-20)/2, 80,20);
     [topicsBtn setTitle:@"Hot Topics" forState:UIControlStateNormal];
     //[topicsBtn setImage:[UIImage imageNamed:@"hot_topic"] forState:UIControlStateNormal];
-    [topicsBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 5.0, 0, 5.0)];
+    //[topicsBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 5.0, 0, 5.0)];
     //[topicsBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     topicsBtn.titleLabel.font=[[AppDelegate sharedDelegate]fontWithName:12.0f];
     [topicsBtn setImage:[UIImage imageNamed:@"hot_topic_active"] forState:UIControlStateNormal];
@@ -278,7 +541,7 @@
     
     //View Contains Table View
     questionTableView=[[UITableView alloc]init];
-    questionTableView.frame=CGRectMake(10,optionsView.frame.origin.y+optionsView.frame.size.height+5,self.view.frame.size.width-20, (self.view.frame.size.height-(50+searchView.frame.size.height+12+optionsView.frame.size.height+5)));
+    questionTableView.frame=CGRectMake(10,optionsView.frame.origin.y+optionsView.frame.size.height+5,self.view.frame.size.width-20, (self.view.frame.size.height-(searchView.frame.size.height+optionsView.frame.size.height)));
     questionTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     questionTableView.bounces=YES;
     questionTableView.delegate=self;
@@ -300,8 +563,7 @@
     categoryTableView.layer.borderColor=[UIColor lightGrayColor].CGColor;
     categoryTableView.layer.cornerRadius=5.0f;
     
-    [self buddiesBtnAction:buddiesBtn ];
-}
+   }
 -(void)categorySubview
 {
     categorySubview=[[UIScrollView alloc]initWithFrame:CGRectMake(searchTextField.frame.origin.x, searchTextField.frame.origin.y+30, searchTextField.frame.size.width, self.view.frame.size.height-(searchTextField.frame.origin.y+130))];
@@ -313,10 +575,10 @@
     
     CGRect btnFrame=CGRectMake(10, 0, 120,30);
     // NSArray *titleArray=[[NSArray alloc]initWithObjects:@"All",@"Science",@"Maths",@"Arts", nil];
-    NSInteger rowCount=categoryArray.count/2;
+    NSInteger rowCount=categoryofuserArray.count/2;
     NSInteger columnCount;
     columnCount=2;
-    if (categoryArray.count%2!=0)
+    if (categoryofuserArray.count%2!=0)
     {
         rowCount=rowCount+1;
     }
@@ -328,7 +590,7 @@
         
         for (int j=0; j<columnCount; j++)
         {
-            if(a==categoryArray.count)
+            if(a==categoryofuserArray.count)
                 break;
             UIButton *categoryBtn=[UIButton buttonWithType:UIButtonTypeCustom];
             categoryBtn.frame=btnFrame;
@@ -343,13 +605,13 @@
             categoryBtn.contentHorizontalAlignment=UIControlContentHorizontalAlignmentLeft;
             
             categoryBtn.titleEdgeInsets=UIEdgeInsetsMake(0,30, 0, -10);
-            [categoryBtn setTitle:[categoryArray objectAtIndex:a] forState:UIControlStateNormal];
+            [categoryBtn setTitle:[[categoryofuserArray objectAtIndex:a] valueForKey:@"category_name" ] forState:UIControlStateNormal];
             [categoryBtn addTarget:self action:@selector(multipleCategorySelection:) forControlEvents:UIControlEventTouchUpInside];
             UIImageView *boxImageView=[[UIImageView alloc]initWithFrame:CGRectMake(10,(categoryBtn.frame.size.height-15)/2,17, 15)];
             [boxImageView setImage:[UIImage imageNamed:@"unselected_box"]];
             [categoryBtn addSubview:boxImageView];
             UILabel *categoryLabel=[[UILabel alloc]initWithFrame:CGRectMake(boxImageView.frame.origin.x+boxImageView.frame.size.width+5, 0, categoryBtn.frame.size.width-22, categoryBtn.frame.size.height)];
-            [categoryLabel setText:[categoryArray objectAtIndex:a]];
+            [categoryLabel setText:[[categoryofuserArray objectAtIndex:a] valueForKey:@"category_name" ]];
             [categoryLabel setTextColor:[UIColor lightGrayColor]];
             // [categoryBtn addSubview:categoryLabel];
             [categorySubview addSubview:categoryBtn];
@@ -407,6 +669,122 @@
 
 #pragma mark Action Methods
 
+-(void) resignImageView
+{
+    [imageScrollView removeFromSuperview];
+}
+
+-(void) popQuestionImageView:(UITapGestureRecognizer *)recognizer
+{
+    imagesQuestionViews= [[NSMutableArray alloc] init];
+    //[imagesQuestionViews addObject:@"http://54.69.127.235/question_app/question_images/1467103364_image.png" ];
+   ///  [imagesQuestionViews addObject:@"http://54.69.127.235/question_app/////question_images/1467103389_image.png" ];
+   
+    NSArray *questionInfo=[questionArray objectAtIndex:recognizer.view.tag];
+    NSString *questionId = [questionInfo valueForKey:@"questionId"];
+    
+    NSArray *listArray=[[WebServiceSingleton sharedMySingleton]getQuestionImagesByquestionId:questionId];
+    NSString *status=[[listArray valueForKey:@"status"]objectAtIndex:0];
+    if ([status isEqualToString:@"1"])
+    {
+        NSArray *mainArray=[[listArray valueForKey:@"data"]objectAtIndex:0];
+        for (id arrayFr in mainArray)
+        {
+            NSString *urlString=[arrayFr valueForKey:@"image"];
+            urlString = [NSString stringWithFormat:@"http://%@", urlString];
+            [ imagesQuestionViews addObject:urlString];
+        
+        }
+    }
+    if(imagesQuestionViews.count<=0)
+        return;
+    NSMutableArray *photos = [[NSMutableArray alloc] init];
+ 
+   //MWPhoto *photosds;
+    MWPhoto *photo;
+    BOOL displayActionButton = YES;
+    BOOL displaySelectionButtons = NO;
+    BOOL displayNavArrows = NO;
+    BOOL enableGrid = YES;
+    BOOL startOnGrid = NO;
+    BOOL autoPlayOnAppear = NO;
+    
+    for(int i=0;i<imagesQuestionViews.count;i++)
+    {
+        photo = [MWPhoto photoWithURL:[[NSURL alloc] initWithString:imagesQuestionViews[i]]];
+        
+        [photos addObject:photo];
+   }
+    _photos=photos;
+    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    browser.displayActionButton = displayActionButton;
+    browser.displayNavArrows = displayNavArrows;
+    browser.displaySelectionButtons = displaySelectionButtons;
+    browser.alwaysShowControls = displaySelectionButtons;
+    browser.zoomPhotosToFill = YES;
+    browser.enableGrid = enableGrid;
+    browser.startOnGrid = startOnGrid;
+    browser.enableSwipeToDismiss = NO;
+    browser.autoPlayOnAppear = autoPlayOnAppear;
+    [browser setCurrentPhotoIndex:0];
+    [self.navigationController pushViewController:browser animated:YES];
+    
+}
+
+#pragma mark - MWPhotoBrowserDelegate
+
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return _photos.count;
+}
+
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    if (index < _photos.count)
+        return [_photos objectAtIndex:index];
+    return nil;
+}
+
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser thumbPhotoAtIndex:(NSUInteger)index {
+   
+    return nil;
+}
+
+
+
+
+- (void)handlePinch:(UIPinchGestureRecognizer *)recognizer
+{
+    recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
+    recognizer.scale = 1;
+}
+
+- (void)handleRotate:(UIRotationGestureRecognizer *)recognizer
+{
+    recognizer.view.transform = CGAffineTransformRotate(recognizer.view.transform, recognizer.rotation);
+    recognizer.rotation = 0;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    // if the gesture recognizers are on different views, don't allow simultaneous recognition
+    if (gestureRecognizer.view != otherGestureRecognizer.view)
+        return NO;
+    
+    // if either of the gesture recognizers is the long press, don't allow simultaneous recognition
+    if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]])
+        return NO;
+    
+    return YES;
+}
+
+
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return ImagePostQuestion;
+}
+
+
+
 -(void)multipleCategorySelection:(id)sender
 {
     UIButton *btn=(UIButton*)sender;
@@ -451,6 +829,61 @@
     
 }
 
+-(NSMutableArray*)RefreshData:(NSString*) categoriesId hashtag:(NSString*) hashtag
+{
+    arrayheights=[[NSMutableArray alloc]init];
+
+    NSMutableString *mutableStringfriends = [categoriesId mutableCopy];
+    isshowsubmenu=false;
+    if (![mutableStringfriends isEqualToString:@""])
+    {
+        [mutableStringfriends deleteCharactersInRange:NSMakeRange(mutableStringfriends.length-1, 1)];
+    }
+    categoriesId=[NSString stringWithString:mutableStringfriends];
+
+    
+    
+    
+    if(btaction==@"buddies")
+    {
+       // NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        
+        // getting an NSString
+       // NSString *myString = [prefs stringForKey:@"userid"];
+        
+        NSString *userId=[prefs stringForKey:@"userid"];
+        
+        id dic= [[WebServiceSingleton sharedMySingleton]privateFriendPost:userId categoriesId:categoriesId hashtag:hashtag rowget:rowget];
+        
+       
+        questionArray=[dic objectForKey:@"questions"];
+        
+
+    }
+    else if(btaction==@"topic")
+    {
+        id dic=[[WebServiceSingleton sharedMySingleton]getHotTopicsQuestions:categoriesId hashtag:hashtag rowget:rowget];
+      questionArray=[dic objectForKey:@"data"];
+
+    }
+    else
+    {
+        // NSArray *userData=[[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil]objectAtIndex:0];
+        //NSString *userId=[userData valueForKey:@"id"];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        
+        // getting an NSString
+        // NSString *myString = [prefs stringForKey:@"userid"];
+        
+        NSString *userId=[prefs stringForKey:@"userid"];
+
+        
+        id dic= [[WebServiceSingleton sharedMySingleton]getAllQuestions:userId categoriesId:categoriesId hashtag:hashtag rowget:rowget];
+        questionArray=[dic objectForKey:@"questions"];
+    }
+    return questionArray;
+}
 -(void)filterBtnCategory:(id)sender
 {
     issearchcategory=YES;
@@ -458,21 +891,16 @@
     NSMutableString *str=[[NSMutableString alloc]init];
     questionArray=[NSMutableArray arrayWithArray:questionInfoArray];
     searchTextField.text=@"";
+    self.hashtag=@"";
+    categoriesId=@"";
     hasall=NO;
     for (int i=0; i<selectedBtnArray.count; i++)
     {
         int value = [[selectedBtnArray objectAtIndex:i] intValue];
-        if(value==0)
-            hasall=YES;
-        if(value<=3)
-            selectedCategoryStr=[NSString stringWithFormat:@"%d",value];
-        else
-            selectedCategoryStr=[self GetCategoryIdByIndex:value];
-        NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"SELF.categoryId contains[c] %@",selectedCategoryStr];
-        [filteredArrayCategory addObject:filterPredicate];
+        categoriesId=[categoriesId stringByAppendingString:[[categoryofuserArray objectAtIndex:value] valueForKey:@"id" ]];
+        categoriesId=[categoriesId stringByAppendingString:@","];
         
-        int value1 = [[selectedBtnArray objectAtIndex:i] intValue];
-        [str appendString:[categoryArray objectAtIndex:value1]];
+        [str appendString:[[categoryofuserArray objectAtIndex:value] valueForKey:@"category_name" ]];
         [str appendString:@","];
         
         
@@ -486,17 +914,7 @@
     {
         searchTextField.text=@"";
     }
-    if(filteredArrayCategory.count>0 && hasall==NO)
-    {
-        NSPredicate *predicatecategory = [NSCompoundPredicate orPredicateWithSubpredicates:filteredArrayCategory];
-        
-        questionArray=[NSMutableArray arrayWithArray:[questionInfoArray filteredArrayUsingPredicate:predicatecategory]];
-        // Creating filter condition
-    }
-    else
-    {
-        questionArray=[NSMutableArray arrayWithArray:questionInfoArray];
-    }
+    questionArray=[self RefreshData:categoriesId hashtag:@""] ;
     
     [categorySubview setHidden:YES];
     [questionTableView reloadData];
@@ -546,7 +964,20 @@
 }
 -(void)globalBtnAction:(id)sender
 {
+    coutquestion=15;
+    rowget=[NSString stringWithFormat:@"%d",coutquestion];
+    self.hashtag=@"";
+    categoriesId=@"";
+    searchTextField.text=@"";
+    
+    
+   if([btaction isEqualToString:@"global"])
+   {
+       [self globalQuesWebservice];
+       return;
+   }
     btaction=@"global";
+    [self globalQuesWebservice];
     UIButton *btn=(UIButton*)sender;
     UIImage *globalImage=[UIImage imageNamed:@"globe"];
     if ([[btn imageForState:UIControlStateNormal]isEqual:globalImage])
@@ -564,14 +995,27 @@
     [topicsBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     [buddiesBtn setImage:[UIImage imageNamed:@"buddies"] forState:UIControlStateNormal];
     [buddiesBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [self globalQuesWebservice];
+    
     
     
 }
 -(void)topicsBtnAction:(id)sender
 {
-    btaction=@"topic";
+    coutquestion=15;
+    rowget=[NSString stringWithFormat:@"%d",coutquestion];
+    self.hashtag=@"";
+    categoriesId=@"";
+    searchTextField.text=@"";
     
+    if([btaction isEqualToString:@"topic"])
+    {
+        [self hotTopicsWebservice];
+
+        return;
+    }
+    btaction=@"topic";
+    [self hotTopicsWebservice];
+
     UIButton *btn=(UIButton*)sender;
     UIImage *topicImage=[UIImage imageNamed:@"hot_topic"];
     if ([[btn imageForState:UIControlStateNormal]isEqual:topicImage])
@@ -590,15 +1034,28 @@
     [buddiesBtn setImage:[UIImage imageNamed:@"buddies"] forState:UIControlStateNormal];
     [buddiesBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     
-    [self hotTopicsWebservice];
     
     
     //WEbserVice
-    // http://108.175.148.221/question_app_test/hot_topics.php
+    // http://54.69.127.235/question_app/hot_topics.php
 }
+
 -(void)buddiesBtnAction:(id)sender
 {
+    coutquestion=15;
+    rowget=[NSString stringWithFormat:@"%d",coutquestion];
+    self.hashtag=@"";
+    categoriesId=@"";
+    searchTextField.text=@"";
+    if([btaction isEqualToString:@"buddies"])
+    {
+        [self friendsQuesWebservice];
+        
+        return;
+    }
     btaction=@"buddies";
+    [self friendsQuesWebservice];
+    //btaction=@"buddies";
     UIButton *btn=(UIButton*)sender;
     UIImage *buddiesImage=[UIImage imageNamed:@"buddies"];
     if ([[btn imageForState:UIControlStateNormal]isEqual:buddiesImage])
@@ -616,8 +1073,52 @@
     [globalBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     [topicsBtn setImage:[UIImage imageNamed:@"hot_topic"] forState:UIControlStateNormal];
     [topicsBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [self friendsQuesWebservice];
+    //[self friendsQuesWebservice];
 }
+-(void)submenuactiontab:(UITapGestureRecognizer *)sender
+{
+    [sender.view removeFromSuperview];
+}
+-(void)createsubmenuaction:(UITapGestureRecognizer *)sender
+{
+   
+    UILabel *lablelsubmenu=(UILabel*)sender.view;
+    
+    if ([lablelsubmenu.superview viewWithTag:2] !=nil) {
+        [[lablelsubmenu.superview viewWithTag:2] removeFromSuperview];
+        return;
+    }
+    
+    menuactionSubview=[[UIScrollView alloc]initWithFrame:CGRectMake(lablelsubmenu.frame.origin.x-10, lablelsubmenu.frame.origin.y+50, 40,40)];
+    
+    menuactionSubview.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]
+                                          initWithTarget:self action:@selector(createsubmenuaction:)];
+    [menuactionSubview addGestureRecognizer:tapGesture];
+    
+    
+    
+    [menuactionSubview setBackgroundColor:[UIColor whiteColor]];
+    [menuactionSubview setBackgroundColor:[UIColor whiteColor]];
+    menuactionSubview.layer.borderColor=[UIColor grayColor].CGColor;
+    menuactionSubview.layer.borderWidth=2.0f;
+    menuactionSubview.layer.cornerRadius=4.0f;
+    
+    UILabel *flagImageView=[[UILabel alloc]initWithFrame:CGRectMake(5,10, 50, 30)];
+    flagImageView.text=@"Flag";
+    UITapGestureRecognizer *tapGesture2=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(reportadmin:)];
+    flagImageView.tag=lablelsubmenu.tag;
+    [flagImageView setUserInteractionEnabled:YES];
+    [flagImageView addGestureRecognizer:tapGesture2];
+    menuactionSubview.tag=2;
+    
+    [menuactionSubview addSubview:flagImageView];
+    
+    
+    [lablelsubmenu.superview addSubview:menuactionSubview];
+     
+     }
+
 
 -(void)profileView:(id)sender
 {
@@ -630,24 +1131,23 @@
     [ProgressHUD show:@"Please Wait..." Interaction:NO];
     if ([ProjectHelper internetAvailable])
     {
-        id dic=[[WebServiceSingleton sharedMySingleton]getHotTopicsQuestions];
+        NSMutableString *mutableStringfriends = [categoriesId mutableCopy];
+        
+        
+        if (![mutableStringfriends isEqualToString:@""])
+        {
+            [mutableStringfriends deleteCharactersInRange:NSMakeRange(mutableStringfriends.length-1, 1)];
+        }
+        categoriesId=[NSString stringWithString:mutableStringfriends];
+
+        id dic=[[WebServiceSingleton sharedMySingleton]getHotTopicsQuestions:categoriesId hashtag:@"" rowget:rowget];
         if ([[dic objectForKey:@"success"]boolValue])
         {
             questionArray=[dic objectForKey:@"data"];
             questionInfoArray=questionArray;
            if(issearchcategory==YES)
             {
-                if(filteredArrayCategory.count>0 && hasall==NO)
-                {
-                    NSPredicate *predicatecategory = [NSCompoundPredicate orPredicateWithSubpredicates:filteredArrayCategory];
-                    
-                    questionArray=[NSMutableArray arrayWithArray:[questionInfoArray filteredArrayUsingPredicate:predicatecategory]];
-                    // Creating filter condition
-                }
-                else
-                {
-                    questionArray=[NSMutableArray arrayWithArray:questionInfoArray];
-                }
+             
             
             }
             else
@@ -699,12 +1199,23 @@
 -(void)globalQuesWebservice
 {
     
-    NSArray *userData=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-    NSString *userId=[[userData valueForKey:@"id"]objectAtIndex:0];
+    
+     NSString *userId= [[NSUserDefaults standardUserDefaults]objectForKey:@"userid"];
+
+    
     [ProgressHUD show:@"Please Wait..." Interaction:NO];
     if ([ProjectHelper internetAvailable])
     {
-        id dic= [[WebServiceSingleton sharedMySingleton]getAllQuestions:userId];
+        NSMutableString *mutableStringfriends = [categoriesId mutableCopy];
+        
+        
+        if (![mutableStringfriends isEqualToString:@""])
+        {
+            [mutableStringfriends deleteCharactersInRange:NSMakeRange(mutableStringfriends.length-1, 1)];
+        }
+        categoriesId=[NSString stringWithString:mutableStringfriends];
+
+        id dic= [[WebServiceSingleton sharedMySingleton]getAllQuestions:userId categoriesId:categoriesId hashtag:@"" rowget:rowget];
         if ([[dic objectForKey:@"success"]boolValue])
         {
             questionArray=[dic objectForKey:@"questions"];
@@ -712,17 +1223,7 @@
             
             if(issearchcategory==YES)
             {
-                if(filteredArrayCategory.count>0 && hasall==NO)
-                {
-                    NSPredicate *predicatecategory = [NSCompoundPredicate orPredicateWithSubpredicates:filteredArrayCategory];
-                    
-                    questionArray=[NSMutableArray arrayWithArray:[questionInfoArray filteredArrayUsingPredicate:predicatecategory]];
-                    // Creating filter condition
-                }
-                else
-                {
-                    questionArray=[NSMutableArray arrayWithArray:questionInfoArray];
-                }
+                
                 
             }
             else
@@ -756,12 +1257,22 @@
 
 -(void)friendsQuesWebservice
 {
-    NSArray *userData=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-    NSString *userId=[[userData valueForKey:@"id"]objectAtIndex:0];
+    
+    NSString *userId= [[NSUserDefaults standardUserDefaults]objectForKey:@"userid"];
+
     [ProgressHUD show:@"Please Wait..." Interaction:NO];
     if ([ProjectHelper internetAvailable])
     {
-        id dic= [[WebServiceSingleton sharedMySingleton]privateFriendPost:userId];
+        NSMutableString *mutableStringfriends = [categoriesId mutableCopy];
+        
+        
+        if (![mutableStringfriends isEqualToString:@""])
+        {
+            [mutableStringfriends deleteCharactersInRange:NSMakeRange(mutableStringfriends.length-1, 1)];
+        }
+        categoriesId=[NSString stringWithString:mutableStringfriends];
+
+        id dic= [[WebServiceSingleton sharedMySingleton]privateFriendPost:userId categoriesId:categoriesId hashtag:@"" rowget:rowget];
         
         if ([[dic objectForKey:@"success"]boolValue])
         {
@@ -771,17 +1282,6 @@
             
             if(issearchcategory==YES)
             {
-                if(filteredArrayCategory.count>0 && hasall==NO)
-                {
-                    NSPredicate *predicatecategory = [NSCompoundPredicate orPredicateWithSubpredicates:filteredArrayCategory];
-                    
-                    questionArray=[NSMutableArray arrayWithArray:[questionInfoArray filteredArrayUsingPredicate:predicatecategory]];
-                    // Creating filter condition
-                }
-                else
-                {
-                    questionArray=[NSMutableArray arrayWithArray:questionInfoArray];
-                }
                 
             }
             else
@@ -804,7 +1304,7 @@
             
             
         }
-        [questionTableView reloadData];
+      [questionTableView reloadData];
     }
     else
     {
@@ -812,7 +1312,32 @@
     }
     [ProgressHUD dismiss];
 }
-#pragma mark Delegate Methods
+#pragma mark Delegate Metdsdshods
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    return YES;
+}
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView{
+
+    return YES;
+
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView{
+
+}
+- (void)textViewDidEndEditing:(UITextView *)textView{
+
+}
+
+-(void)textViewDidChange:(UITextView *)textView
+{
+   [questionTableView beginUpdates];
+   // CGFloat paddingForTextView = 40; //Padding varies depending on your cell design
+    textView.frame = CGRectMake(textView.frame.origin.x, textView.frame.origin.y, textView.frame.size.width, textView.contentSize.height + 140);
+    
+     [questionTableView endUpdates];
+    
+}
 
 #pragma  mark TextFieldDelegate Methods
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -841,12 +1366,12 @@
     else
     {
         NSPredicate *predicate=[NSPredicate predicateWithFormat:@"SELF.question contains [c]%@",string];
-        NSPredicate  *predicate1=[NSPredicate predicateWithFormat:@"SELF.hashtag contains [c]%@",searchTextStr];
+       // NSPredicate  *predicate1=[NSPredicate predicateWithFormat:@"SELF.hashtag contains [c]%@",searchTextStr];
         
         
-        NSPredicate *predicate2 = [NSCompoundPredicate orPredicateWithSubpredicates:@[predicate1, predicate]];
+        //NSPredicate *predicate2 = [NSCompoundPredicate orPredicateWithSubpredicates:@[predicate1, predicate]];
         
-        questionArray=[NSMutableArray arrayWithArray:[questionArray filteredArrayUsingPredicate:predicate2]];
+        questionArray=[NSMutableArray arrayWithArray:[questionArray filteredArrayUsingPredicate:predicate]];
         
         
     }
@@ -855,6 +1380,16 @@
     return YES;
 }
 #pragma mark Table View Methods
+- (void)alignTop:(UILabel*) label {
+    CGSize fontSize = [label.text sizeWithFont:label.font];
+    double finalHeight = fontSize.height * label.numberOfLines;
+    double finalWidth = label.frame.size.width;    //expected width of label
+    CGSize theStringSize = [label.text sizeWithFont:label.font constrainedToSize:CGSizeMake(finalWidth, finalHeight) lineBreakMode:label.lineBreakMode];
+    int newLinesToPad = (finalHeight  - theStringSize.height) / fontSize.height;
+    for(int i=0; i<newLinesToPad; i++)
+        label.text = [label.text stringByAppendingString:@"\n "];
+}
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -871,121 +1406,671 @@
     }
     
 }
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
 
+
+}
+
+
+-(bool)Getishasimage :(NSInteger)rowindex{
+    NSArray *questionInfo=[questionArray objectAtIndex:rowindex];
+    
+    //QuestionImage
+    NSString *urlString = [questionInfo valueForKey:@"thumb"];
+    if ([urlString rangeOfString:@"http://"].location == NSNotFound)
+    {
+        urlString = [NSString stringWithFormat:@"http://%@", urlString];
+    }
+    else
+    {
+        urlString=@"";
+        
+    }
+   
+    NSRange rangeimagepng = [urlString rangeOfString:@".png" options:NSCaseInsensitiveSearch];
+    NSRange rangeimagejpg = [urlString rangeOfString:@".jpg" options:NSCaseInsensitiveSearch];
+   
+    if(rangeimagepng.location != NSNotFound || rangeimagejpg.location != NSNotFound)
+    {
+        return true;
+    }
+    else
+        return false;
+}
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
     if (tableView==questionTableView)
     {
-        static NSString *cellIdentifier = @"Cell";
-        CustomTableViewCell *cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
-        if (cell == nil)
+     
+      
+        bool ischecknoimage=[self Getishasimage: indexPath.row];
+        if(ischecknoimage)
         {
-            NSArray *nib=[[NSBundle mainBundle]loadNibNamed:@"CustomTableViewCell" owner:self options:nil];
-            cell=[nib objectAtIndex:0];
+            static NSString *cellIdentifier = @"Cell";
+            QuestionCustomTableViewCell *cell = (QuestionCustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
             
-            UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0,79.0, questionTableView.frame.size.width, 0.5f)];
+            if (cell == nil)
+            {
+                NSArray *nib=[[NSBundle mainBundle]loadNibNamed:@"QuestionCustomTableViewCell" owner:self options:nil];
+                cell=[nib objectAtIndex:0];
+                
+                
+            }
+            //cell.questionLabel.delegate=self;
+            NSArray *questionInfo=[questionArray objectAtIndex:indexPath.row];
+            
+            //QuestionImage
+            NSString *urlString = [questionInfo valueForKey:@"thumb"];
+            if ([urlString rangeOfString:@"http://"].location == NSNotFound)
+            {
+                urlString = [NSString stringWithFormat:@"http://%@", urlString];
+            }
+            else
+            {
+                urlString=@"";
+                
+            }
+            NSURL *imageUrl=[NSURL URLWithString:urlString];
+            
+            NSString *countImages = [questionInfo valueForKey:@"questionImages"];
+            if([countImages isEqualToString:@"0"])
+            {
+                [cell.lbCountPictures setHidden:true];
+            }
+            else
+            {
+                countImages = [NSString stringWithFormat:@"%@ Pictures", countImages];
+                cell.lbCountPictures.text=countImages;
+            }
+            
+            
+            NSString *hashtagquestion =[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"question"]];
+            
+            
+            
+            for(id objectvalue in [[questionArray valueForKey:@"hashtagarr"]objectAtIndex:indexPath.row])
+            {
+                NSString *hashtag=[objectvalue objectForKey:@"hashtag"];
+                if([hashtag isEqualToString:@""] || [hashtag isEqualToString:@"(null)"])
+                    continue;
+                
+                hashtagquestion =[NSString stringWithFormat:@"%@ #%@",hashtagquestion,[objectvalue objectForKey:@"hashtag"]];
+                
+                
+                
+            }
+            
+            
+            for(id objectvalue in [[questionArray valueForKey:@"tagfriends"]objectAtIndex:indexPath.row])
+            {
+                
+                hashtagquestion =[NSString stringWithFormat:@"%@ @%@",hashtagquestion,[objectvalue objectForKey:@"username"]];
+                
+            }
+            CCHLinkTextView * questiontext=nil;
+            cell.questionLabel.text=hashtagquestion;
+            
+            CGSize textViewSize = [cell.questionLabel sizeThatFits:CGSizeMake(cell.questionLabel.frame.size.width, FLT_MAX)];
+         
+            questiontext=(CCHLinkTextView*)cell.questionLabel;
+           // questiontext.userInteractionEnabled=YES;
+           // [cell.questionLabel removeFromSuperview];
+           // [questiontext setBackgroundColor:[UIColor blackColor]];
+            //cell.questionLabelNoImage.frame=CGRectMake(cell.frame.origin.x +20, 30, cell.frame.size.width - 20, 200);
+            //[cell addSubview:questiontext];
+        //[cell insertSubview:questiontext atIndex:0];
+            cell.lcquestionlabelheight.constant=textViewSize.height;
+            cell.lcviewquestion.constant=cell.lcviewquestion.constant+(textViewSize.height);
+           // cell.se
+            //add line
+            cell.selectionStyle=UITableViewCellSelectionStyleNone;
+          /*  UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0,320+ cell.questionLabel.contentSize.height, questionTableView.frame.size.width, 1.0f)];
             [lineView setBackgroundColor:[UIColor lightGrayColor]];
             [cell.contentView addSubview:lineView];
-            cell.selectionStyle=UITableViewCellSelectionStyleNone;
-        }
-        
-        NSArray *questionInfo=[questionArray objectAtIndex:indexPath.row];
-        
-        //QuestionImage
-        NSString *urlString = [questionInfo valueForKey:@"thumb"];
-        if ([urlString rangeOfString:@"http://"].location == NSNotFound)
-        {
-            urlString = [NSString stringWithFormat:@"http://%@", urlString];
-        }
-        NSURL *imageUrl=[NSURL URLWithString:urlString];
-        
-        
-        
-        
-        
-        
-        //Question Label
-        NSString *hashtagquestion=@"";
-        if(![[questionInfo valueForKey:@"hashtag"] isEqualToString:@""])
-        {
-            hashtagquestion =[NSString stringWithFormat:@"%@ (%@)",[questionInfo valueForKey:@"question"],[questionInfo valueForKey:@"hashtag"]];
+            cell.selectionStyle=UITableViewCellSelectionStyleNone;*/
             
-        }
-        else
-        {
-            hashtagquestion=[questionInfo valueForKey:@"question"];
-        }
-        
-        [cell.questionLabel setText:hashtagquestion];
-        
-        if([urlString containsString:@".png"] || [urlString containsString:@".jpg"])
-        {
-            [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"name_icon"]];
             [cell.questionLabelNoImage removeFromSuperview];
+            
+            // [cell.questionLabelNoImage removeFromSuperview];
+           
+          //  questiontext.layer.zPosition=300;
+           // cell.viewquestion.layer.zPosition=500;
+            int yquestionlable=cell.questionLabel.frame.origin.y+cell.questionLabel.frame.size.height;
+            
+            NSRange rangeimagepng = [urlString rangeOfString:@".png" options:NSCaseInsensitiveSearch];
+            NSRange rangeimagejpg = [urlString rangeOfString:@".jpg" options:NSCaseInsensitiveSearch];
+            //if (range.location != NSNotFound) {
+            
+            
+            [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"name_icon"]];
+            
+            
+            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popquestiondetail:)];
+            
+            UITapGestureRecognizer *tapGesture3=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(popQuestionImageView:)];
+            cell.questionImageView.tag=indexPath.row;
+            
+            [cell.questionImageView setBackgroundColor:[UIColor blackColor]];
+            [cell.questionImageView setUserInteractionEnabled:YES];
+            [cell.questionImageView addGestureRecognizer:tapGesture3];
+           questiontext.selectable=YES;
+           // questiontext.editable=true;
+            //questiontext.delegate=self;
+            questiontext.scrollEnabled=true;
+            questiontext.text=hashtagquestion;
+            
+            //cell.questionLabelNoImage.delegate=self;
+           // cell.questionLabelNoImage.text=hashtagquestion;
+            
+            
+            
+      
+            NSMutableAttributedString * str =  [questiontext.attributedText mutableCopy];
+            
+            for(id objectvalue in [[questionArray valueForKey:@"hashtagarr"]objectAtIndex:indexPath.row])
+            {
+                
+                
+                NSRange range = [hashtagquestion rangeOfString:[NSString stringWithFormat:@"#%@",[objectvalue objectForKey:@"hashtag"]] options:NSCaseInsensitiveSearch];
+                
+                if (range.location != NSNotFound) {
+                    
+                    [str addAttribute:CCHLinkAttributeName value:[NSString stringWithFormat:@"#%@",[objectvalue objectForKey:@"hashtag"]] range:range];
+                    
+                }
+                
+                
+            }
+            
+            
+            for(id objectvalue in [[questionArray valueForKey:@"tagfriends"]objectAtIndex:indexPath.row])
+            {
+                
+                
+                NSRange range = [hashtagquestion rangeOfString:[NSString stringWithFormat:@"@%@",[objectvalue objectForKey:@"username"]] options:NSCaseInsensitiveSearch];
+                
+                if (range.location != NSNotFound) {
+                    
+                    [str addAttribute:CCHLinkAttributeName value:[NSString stringWithFormat:@"%@",[objectvalue objectForKey:@"id"]] range:range];
+                    
+                }
+                
+            }
+            questiontext.userInteractionEnabled=YES;
+            questiontext.attributedText= str;
+            questiontext.linkDelegate = self;
+            
+            questiontext.linkTextAttributes = @{NSForegroundColorAttributeName : [UIColor blueColor]};
+            questiontext.linkTextTouchAttributes = @{NSForegroundColorAttributeName : [UIColor orangeColor],
+                                                     NSBackgroundColorAttributeName: [UIColor darkGrayColor]};
+            
+            
+            
+            
+            
+            cell.lbmenuaction.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]
+                                                  initWithTarget:self action:@selector(createsubmenuaction:)];
+            cell.lbmenuaction.tag=indexPath.row;
+            [cell.lbmenuaction addGestureRecognizer:tapGesture];
+            
+            
+            
+            
+            //categories
+            
+            //id test =[questionInfo valueForKey:@"categoiesId"];
+            // [[questionInfo valueForKey:@"categoiesId"]objectAtIndex:0]
+            // NSString* s=[[[questionInfo valueForKey:@"categoiesId"] objectAtIndex:0] objectForKey: @"category_name"];
+            
+            
+            /*  NSString *hashtagquestionview=[questionInfo valueForKey:@"hashtag"];
+             if(![hashtagquestionview isEqualToString:@""])
+             {
+             UILabel *lablehastag=[[UILabel alloc]initWithFrame:CGRectMake(xlabelhastag, yquestionlable, 70,15)];
+             xlabelhastag+=lablehastag.frame.size.width+10;
+             lablehastag.text=[NSString stringWithFormat:@"%@%@",@"#",hashtagquestionview];
+             lablehastag.textColor = [UIColor blueColor];
+             
+             [lablehastag setFont:[UIFont systemFontOfSize:12]];
+             lablehastag.userInteractionEnabled = YES;
+             UITapGestureRecognizer *tapGesture =
+             [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(searchtagfriend:)];
+             [lablehastag addGestureRecognizer:tapGesture];
+             
+             [cell.contentView addSubview:lablehastag];
+             }
+             */
+            
+            //CGRect frame = cell.questionLabel.frame;
+           // frame.size.height = cell.questionLabel.contentSize.height+100;
+           // cell.questionLabel.frame = frame;
+            //[cell.questionImageView setHidden:YES];
+            //cell.questionLabel.frame=CGRectMake(8,130, 400,400);
+            
+            //cell.lcquestionlabel.constant=frame.size.height+37;
+           // cell.questionLabel.numberOfLines=0;
+            
+            //[cell.userImageView
+            
+            cell.lbcountview.text=[questionInfo valueForKey:@"viewcount"];
+            
+            
+            NSString *urlString1 = [questionInfo valueForKey:@"userthumb"];
+            if ([urlString1 rangeOfString:@"http://"].location == NSNotFound)
+            {
+                urlString1 = [NSString stringWithFormat:@"http://%@", urlString1];
+            }
+            NSURL *imageUrl1=[NSURL URLWithString:urlString1];
+            [cell.userImageView setImageWithURL:imageUrl1 placeholderImage:[UIImage imageNamed:@"name_icon"]];
+            cell.userImageView.layer.cornerRadius=cell.userImageView.frame.size.width/2;
+            cell.userImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
+            cell.userImageView.layer.borderWidth=1.0f;
+            cell.userImageView.clipsToBounds=YES;
+            UITapGestureRecognizer *tapGesture1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(popAnswerImageViewProfile:)];
+            cell.userImageView.tag=indexPath.row;
+            [cell.userImageView setUserInteractionEnabled:YES];
+            [cell.userImageView addGestureRecognizer:tapGesture1];
+            
+            [cell.imflag setHidden:true];
+            
+            
+            UITapGestureRecognizer *tapGesture2=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(viewquestiondetail:)];
+            cell.imgComent.tag=indexPath.row;
+            [cell.imgComent setUserInteractionEnabled:YES];
+            [cell.imgComent addGestureRecognizer:tapGesture2];
+            
+            cell.imgComentborder.tag=indexPath.row;
+            [cell.imgComentborder setUserInteractionEnabled:YES];
+            [cell.imgComentborder addGestureRecognizer:tapGesture2];
+            
+            
+            UITapGestureRecognizer *tapGesturenewlike=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(questionLikeBtnActionnew:)];
+            tapGesturenewlike.numberOfTapsRequired=1;
+            cell.imggood.tag=indexPath.row;
+            [cell.imggood addGestureRecognizer:tapGesturenewlike];
+            
+            
+            [cell.imggood setUserInteractionEnabled:YES];
+            
+            
+            
+            UITapGestureRecognizer *tapGesturenewlike1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(questionLikeBtnActionnew:)];
+            tapGesturenewlike1.numberOfTapsRequired=1;
+            cell.imgbordergood.tag=indexPath.row;
+            
+            [cell.imgbordergood addGestureRecognizer:tapGesturenewlike1];
+            
+            
+            
+            [cell.imgbordergood setUserInteractionEnabled:YES];
+
+            
+            
+            [cell.ReliesLabel setText:@""];
+            //Total Answers
+            //[cell.totalAnswersLabel setText:[questionInfo valueForKey:@"answercount"]];
+            [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"answercount"]]];
+            
+            if([cell.totalAnswersLabel.text isEqualToString:@"0"])
+            {
+                [cell.totalAnswersLabel setHidden:true];
+            }
+            
+            
+            [cell.totalLikeLabel setText:[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"likecount"]]];
+            
+            if([cell.totalLikeLabel.text isEqualToString:@"0"])
+            {
+                [cell.totalLikeLabel setHidden:true];
+            }
+            
+            
+            //[cell.totalAnswersLabel
+            //User Name
+            NSString *user_name=[questionInfo valueForKey:@"name"];
+            [cell.userNameBtn setTitle:user_name forState:UIControlStateNormal];
+            [cell.userNameBtn addTarget:self action:@selector(profileView:) forControlEvents:UIControlEventTouchUpInside];
+            cell.userNameBtn.tag=indexPath.row;
+            
+            [cell.userNameBtn addTarget:self action:@selector(profileViewQuestion:) forControlEvents:UIControlEventTouchUpInside];
+            
+            //Question Date
+            NSString *timeStampString=[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"question_date"]];
+            /*NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
+             NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
+             NSString *yearString=[resultString substringWithRange:NSMakeRange(6, 4)];
+             NSString *monthString=[resultString substringWithRange:NSMakeRange(3, 2)];
+             NSString *date=[resultString substringWithRange:NSMakeRange(0, 2)];
+             resultString= [NSString stringWithFormat:@"%@/%@/%@",monthString,date,yearString];
+             [cell.dateLabel setText:resultString];
+             
+             //Time Label
+             NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];*/
+            [cell.dateLabel setText:timeStampString];
+            // [cell.timeLabel setText:resultTime];
+            
+            
+            
+            /* UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0, 78.0, cell.frame.size.width,0.5)];
+             [lineView setBackgroundColor:[UIColor lightGrayColor]];
+             [cell.contentView addSubview:lineView];*/
+            
+            return cell;
         }
         else
         {
-            [cell.questionImageView removeFromSuperview];
+            static NSString *cellIdentifier = @"Cell";
+             NoImageQuestionCustomTableViewCell *cell = (NoImageQuestionCustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
             
-            [cell.questionLabel removeFromSuperview];
+            if (cell == nil)
+            {
+                NSArray *nib=[[NSBundle mainBundle]loadNibNamed:@"NoImageQuestionCustomTableViewCell" owner:self options:nil];
+                cell=[nib objectAtIndex:0];
+                
+             
+            }
+        
+
+            //cell.questionLabel.delegate=self;
+            NSArray *questionInfo=[questionArray objectAtIndex:indexPath.row];
+            cell.lbcountview.text=[questionInfo valueForKey:@"viewcount"];
+            //QuestionImage
+            NSString *urlString = [questionInfo valueForKey:@"thumb"];
+            if ([urlString rangeOfString:@"http://"].location == NSNotFound)
+            {
+                urlString = [NSString stringWithFormat:@"http://%@", urlString];
+            }
+            else
+            {
+                urlString=@"";
+                
+            }
+            NSURL *imageUrl=[NSURL URLWithString:urlString];
             
-            [cell.questionLabelNoImage setText:hashtagquestion];
+            NSString *countImages = [questionInfo valueForKey:@"questionImages"];
+            if([countImages isEqualToString:@"0"])
+            {
+                [cell.lbCountPictures setHidden:true];
+            }
+            else
+            {
+                countImages = [NSString stringWithFormat:@"%@ Pictures", countImages];
+                cell.lbCountPictures.text=countImages;
+            }
             
+            
+            NSString *hashtagquestion =[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"question"]];
+            
+            
+            
+            for(id objectvalue in [[questionArray valueForKey:@"hashtagarr"]objectAtIndex:indexPath.row])
+            {
+                NSString *hashtag=[objectvalue objectForKey:@"hashtag"];
+                if([hashtag isEqualToString:@""] || [hashtag isEqualToString:@"(null)"])
+                    continue;
+                
+                hashtagquestion =[NSString stringWithFormat:@"%@ #%@",hashtagquestion,[objectvalue objectForKey:@"hashtag"]];
+                
+            }
+            
+            
+            for(id objectvalue in [[questionArray valueForKey:@"tagfriends"]objectAtIndex:indexPath.row])
+            {
+                
+                hashtagquestion =[NSString stringWithFormat:@"%@ @%@",hashtagquestion,[objectvalue objectForKey:@"username"]];
+                
+            }
+            CCHLinkTextView * questiontext=nil;
+            cell.questionLabel.text=hashtagquestion;
+            questiontext=(CCHLinkTextView*)cell.questionLabel;
+            CGSize textViewSize = [cell.questionLabel sizeThatFits:CGSizeMake(cell.questionLabel.frame.size.width, FLT_MAX)];
+            
+            
+           // questiontext=[[CCHLinkTextView alloc] initWithFrame:CGRectMake(cell.questionLabel.frame.origin.x, cell.questionLabel.frame.origin.y, cell.questionLabel.frame.size.width , textViewSize.height )];
+            
+            // [questiontext setBackgroundColor:[UIColor blackColor]];
+            //cell.questionLabelNoImage.frame=CGRectMake(cell.frame.origin.x +20, 30, cell.frame.size.width - 20, 200);
+           
+            //[cell insertSubview:questiontext atIndex:0];
+            cell.lcquestionlabelheight.constant=textViewSize.height;
+            cell.lcviewquestion.constant=cell.lcviewquestion.constant+(textViewSize.height);
+            
+            //add line
+            
+            /*  UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0,320+ cell.questionLabel.contentSize.height, questionTableView.frame.size.width, 1.0f)];
+             [lineView setBackgroundColor:[UIColor lightGrayColor]];
+             [cell.contentView addSubview:lineView];
+             cell.selectionStyle=UITableViewCellSelectionStyleNone;*/
+            
+            cell.selectionStyle=UITableViewCellSelectionStyleNone;
+            
+            // [cell.questionLabelNoImage removeFromSuperview];
+            //[cell.questionLabel removeFromSuperview];
+            //  questiontext.layer.zPosition=300;
+            // cell.viewquestion.layer.zPosition=500;
+            int yquestionlable=cell.questionLabel.frame.origin.y+cell.questionLabel.frame.size.height;
+            
+            NSRange rangeimagepng = [urlString rangeOfString:@".png" options:NSCaseInsensitiveSearch];
+            NSRange rangeimagejpg = [urlString rangeOfString:@".jpg" options:NSCaseInsensitiveSearch];
+            //if (range.location != NSNotFound) {
+            
+            
+            [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"name_icon"]];
+            [cell.questionImageView setHidden:YES];
+            
+            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popquestiondetail:)];
+            
+            UITapGestureRecognizer *tapGesture3=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(popQuestionImageView:)];
+            cell.questionImageView.tag=indexPath.row;
+            
+            [cell.questionImageView setBackgroundColor:[UIColor blackColor]];
+            [cell.questionImageView setUserInteractionEnabled:YES];
+            [cell.questionImageView addGestureRecognizer:tapGesture3];
+            cell.questionLabel.selectable=YES;
+            
+            
+            questiontext.scrollEnabled=true;
+            questiontext.text=hashtagquestion;
+            
+            //cell.questionLabelNoImage.delegate=self;
+            // cell.questionLabelNoImage.text=hashtagquestion;
+            
+            
+            
+            
+            NSMutableAttributedString * str =  [questiontext.attributedText mutableCopy];
+            
+            for(id objectvalue in [[questionArray valueForKey:@"hashtagarr"]objectAtIndex:indexPath.row])
+            {
+                
+                
+                NSRange range = [hashtagquestion rangeOfString:[NSString stringWithFormat:@"#%@",[objectvalue objectForKey:@"hashtag"]] options:NSCaseInsensitiveSearch];
+                
+                if (range.location != NSNotFound) {
+                    
+                    [str addAttribute:CCHLinkAttributeName value:[NSString stringWithFormat:@"#%@",[objectvalue objectForKey:@"hashtag"]] range:range];
+                    
+                }
+                
+                
+            }
+            
+            
+            for(id objectvalue in [[questionArray valueForKey:@"tagfriends"]objectAtIndex:indexPath.row])
+            {
+                
+                
+                NSRange range = [hashtagquestion rangeOfString:[NSString stringWithFormat:@"@%@",[objectvalue objectForKey:@"username"]] options:NSCaseInsensitiveSearch];
+                
+                if (range.location != NSNotFound) {
+                    
+                    [str addAttribute:CCHLinkAttributeName value:[NSString stringWithFormat:@"%@",[objectvalue objectForKey:@"id"]] range:range];
+                    
+                }
+                
+            }
+            questiontext.attributedText= str;
+            questiontext.linkDelegate = self;
+            
+            questiontext.linkTextAttributes = @{NSForegroundColorAttributeName : [UIColor blueColor]};
+            questiontext.linkTextTouchAttributes = @{NSForegroundColorAttributeName : [UIColor orangeColor],
+                                                     NSBackgroundColorAttributeName: [UIColor darkGrayColor]};
+            
+            
+            
+            
+            
+            cell.lbmenuaction.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]
+                                                  initWithTarget:self action:@selector(createsubmenuaction:)];
+            cell.lbmenuaction.tag=indexPath.row;
+            [cell.lbmenuaction addGestureRecognizer:tapGesture];
+            
+            
+            
+            
+            //categories
+            
+            //id test =[questionInfo valueForKey:@"categoiesId"];
+            // [[questionInfo valueForKey:@"categoiesId"]objectAtIndex:0]
+            // NSString* s=[[[questionInfo valueForKey:@"categoiesId"] objectAtIndex:0] objectForKey: @"category_name"];
+            
+            
+            /*  NSString *hashtagquestionview=[questionInfo valueForKey:@"hashtag"];
+             if(![hashtagquestionview isEqualToString:@""])
+             {
+             UILabel *lablehastag=[[UILabel alloc]initWithFrame:CGRectMake(xlabelhastag, yquestionlable, 70,15)];
+             xlabelhastag+=lablehastag.frame.size.width+10;
+             lablehastag.text=[NSString stringWithFormat:@"%@%@",@"#",hashtagquestionview];
+             lablehastag.textColor = [UIColor blueColor];
+             
+             [lablehastag setFont:[UIFont systemFontOfSize:12]];
+             lablehastag.userInteractionEnabled = YES;
+             UITapGestureRecognizer *tapGesture =
+             [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(searchtagfriend:)];
+             [lablehastag addGestureRecognizer:tapGesture];
+             
+             [cell.contentView addSubview:lablehastag];
+             }
+             */
+            
+            //CGRect frame = cell.questionLabel.frame;
+            // frame.size.height = cell.questionLabel.contentSize.height+100;
+            // cell.questionLabel.frame = frame;
+            //[cell.questionImageView setHidden:YES];
+            //cell.questionLabel.frame=CGRectMake(8,130, 400,400);
+            
+            //cell.lcquestionlabel.constant=frame.size.height+37;
+            // cell.questionLabel.numberOfLines=0;
+            
+            //[cell.userImageView
+            
+            NSString *urlString1 = [questionInfo valueForKey:@"userthumb"];
+            if ([urlString1 rangeOfString:@"http://"].location == NSNotFound)
+            {
+                urlString1 = [NSString stringWithFormat:@"http://%@", urlString1];
+            }
+            NSURL *imageUrl1=[NSURL URLWithString:urlString1];
+            [cell.userImageView setImageWithURL:imageUrl1 placeholderImage:[UIImage imageNamed:@"name_icon"]];
+            cell.userImageView.layer.cornerRadius=cell.userImageView.frame.size.width/2;
+            cell.userImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
+            cell.userImageView.layer.borderWidth=1.0f;
+            cell.userImageView.clipsToBounds=YES;
+            UITapGestureRecognizer *tapGesture1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(popAnswerImageViewProfile:)];
+            cell.userImageView.tag=indexPath.row;
+            [cell.userImageView setUserInteractionEnabled:YES];
+            [cell.userImageView addGestureRecognizer:tapGesture1];
+            
+            [cell.imflag setHidden:true];
+            
+            
+            UITapGestureRecognizer *tapGesture2=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(viewquestiondetail:)];
+            cell.imgComent.tag=indexPath.row;
+            [cell.imgComent setUserInteractionEnabled:YES];
+            [cell.imgComent addGestureRecognizer:tapGesture2];
+            
+            cell.imgComentborder.tag=indexPath.row;
+            [cell.imgComentborder setUserInteractionEnabled:YES];
+            [cell.imgComentborder addGestureRecognizer:tapGesture2];
+            
+            
+            UITapGestureRecognizer *tapGesturenewlike=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(questionLikeBtnActionnew:)];
+            tapGesturenewlike.numberOfTapsRequired=1;
+            cell.imggood.tag=indexPath.row;
+            [cell.imggood addGestureRecognizer:tapGesturenewlike];
+            
+            
+            [cell.imggood setUserInteractionEnabled:YES];
+            
+            
+            
+            UITapGestureRecognizer *tapGesturenewlike1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(questionLikeBtnActionnew:)];
+            tapGesturenewlike1.numberOfTapsRequired=1;
+            cell.imgbordergood.tag=indexPath.row;
+            
+            [cell.imgbordergood addGestureRecognizer:tapGesturenewlike1];
+            
+            
+            
+            [cell.imgbordergood setUserInteractionEnabled:YES];
+            
+            
+            
+            [cell.ReliesLabel setText:@""];
+            //Total Answers
+            //[cell.totalAnswersLabel setText:[questionInfo valueForKey:@"answercount"]];
+            [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"answercount"]]];
+            
+            if([cell.totalAnswersLabel.text isEqualToString:@"0"])
+            {
+                [cell.totalAnswersLabel setHidden:true];
+            }
+            
+            
+            [cell.totalLikeLabel setText:[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"likecount"]]];
+            
+            if([cell.totalLikeLabel.text isEqualToString:@"0"])
+            {
+                [cell.totalLikeLabel setHidden:true];
+            }
+            
+            
+            //[cell.totalAnswersLabel
+            //User Name
+            NSString *user_name=[questionInfo valueForKey:@"name"];
+            [cell.userNameBtn setTitle:user_name forState:UIControlStateNormal];
+            [cell.userNameBtn addTarget:self action:@selector(profileView:) forControlEvents:UIControlEventTouchUpInside];
+            cell.userNameBtn.tag=indexPath.row;
+            
+            [cell.userNameBtn addTarget:self action:@selector(profileViewQuestion:) forControlEvents:UIControlEventTouchUpInside];
+            
+            //Question Date
+            NSString *timeStampString=[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"question_date"]];
+            /*NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
+             NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
+             NSString *yearString=[resultString substringWithRange:NSMakeRange(6, 4)];
+             NSString *monthString=[resultString substringWithRange:NSMakeRange(3, 2)];
+             NSString *date=[resultString substringWithRange:NSMakeRange(0, 2)];
+             resultString= [NSString stringWithFormat:@"%@/%@/%@",monthString,date,yearString];
+             [cell.dateLabel setText:resultString];
+             
+             //Time Label
+             NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];*/
+            [cell.dateLabel setText:timeStampString];
+            // [cell.timeLabel setText:resultTime];
+            
+            
+            
+            /* UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0, 78.0, cell.frame.size.width,0.5)];
+             [lineView setBackgroundColor:[UIColor lightGrayColor]];
+             [cell.contentView addSubview:lineView];*/
+            
+            return cell;
         }
         
         
-        //[cell.userImageView
-        
-        NSString *urlString1 = [questionInfo valueForKey:@"userthumb"];
-        if ([urlString1 rangeOfString:@"http://"].location == NSNotFound)
-        {
-            urlString1 = [NSString stringWithFormat:@"http://%@", urlString1];
-        }
-        NSURL *imageUrl1=[NSURL URLWithString:urlString1];
-        [cell.userImageView setImageWithURL:imageUrl1 placeholderImage:[UIImage imageNamed:@"name_icon"]];
-        cell.userImageView.layer.cornerRadius=cell.userImageView.frame.size.width/2;
-        cell.userImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
-        cell.userImageView.layer.borderWidth=1.0f;
-        cell.userImageView.clipsToBounds=YES;
-        
-        
-        
-        
-        [cell.ReliesLabel setText:@"Replies"];
-        //Total Answers
-        //[cell.totalAnswersLabel setText:[questionInfo valueForKey:@"answercount"]];
-        [cell.totalAnswersLabel setText:[NSString stringWithFormat:@"[%@]",[questionInfo valueForKey:@"answercount"]]];
-        //[cell.totalAnswersLabel
-        //User Name
-        NSString *user_name=[questionInfo valueForKey:@"name"];
-        [cell.userNameBtn setTitle:user_name forState:UIControlStateNormal];
-        [cell.userNameBtn addTarget:self action:@selector(profileView:) forControlEvents:UIControlEventTouchUpInside];
-        cell.userNameBtn.tag=indexPath.row;
-        
-        //Question Date
-        NSString *timeStampString=[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"question_date"]];
-        /*NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
-        NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
-        NSString *yearString=[resultString substringWithRange:NSMakeRange(6, 4)];
-        NSString *monthString=[resultString substringWithRange:NSMakeRange(3, 2)];
-        NSString *date=[resultString substringWithRange:NSMakeRange(0, 2)];
-        resultString= [NSString stringWithFormat:@"%@/%@/%@",monthString,date,yearString];
-        [cell.dateLabel setText:resultString];
-        
-        //Time Label
-        NSString *resultTime=[dateStr substringWithRange:NSMakeRange(11, dateStr.length-11)];*/
-          [cell.dateLabel setText:timeStampString];
-       // [cell.timeLabel setText:resultTime];
-        
-        
-        
-       /* UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0, 78.0, cell.frame.size.width,0.5)];
-        [lineView setBackgroundColor:[UIColor lightGrayColor]];
-        [cell.contentView addSubview:lineView];*/
-        
-        return cell;
     }
     else
     {
@@ -1006,6 +2091,82 @@
     }
     
 }
+
+-(void) questionLikeBtnActionnew:(UIGestureRecognizer*)recognizer
+{
+    [self questionLikeBtnAction:recognizer.view];
+}
+
+-(void)questionLikeBtnAction:(UIView*)sender
+{
+    
+    NSArray *questionInfo=[questionArray objectAtIndex:sender.tag];
+    NSString * likecount=[questionInfo valueForKey:@"likecount"];    //QuestionImage
+   // NSString *urlString = [questionInfo valueForKey:@"thumb"];
+    
+    NSString *likeDislikeStatus=[questionInfo valueForKey:@"like_dislike_status"];
+    //Dislike
+    if ([likeDislikeStatus isEqualToString:@"0"])
+    {
+        //        [queslikeBtn setImage:[UIImage imageNamed:@"like"] forState:UIControlStateNormal];
+        //        [quesDislikeBtn setImage:[UIImage imageNamed:@"dislike_active"] forState:UIControlStateNormal];
+        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"You already disliked this question" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alertView show];
+    }
+    //Like
+    else if ([likeDislikeStatus isEqualToString:@"1"])
+    {
+        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"You already liked this question" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alertView show];
+        //        [queslikeBtn setImage:[UIImage imageNamed:@"like"] forState:UIControlStateNormal];
+        //        [quesDislikeBtn setImage:[UIImage imageNamed:@"dislike_active"] forState:UIControlStateNormal];
+    }
+    
+    //None
+    else if ([likeDislikeStatus isEqualToString:@"2"])
+    {
+        //        [queslikeBtn setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+        //        [quesDislikeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
+        
+        //  UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Do you want to like this question?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+        //alertView.tag=300;
+        //[alertView show];
+        [ProgressHUD show:@"Please Wait..." Interaction:NO];
+        NSString *quesIddd=[questionInfo valueForKey:@"questionId"];
+        id array=[[WebServiceSingleton sharedMySingleton]likeAndDislikeQuestions:quesIddd andDislikeValue:@"1"];
+        
+        [self RefreshData:categoriesId hashtag: self.hashtag ];
+        
+        
+        
+        [questionTableView reloadData];
+        //[self postFetchData];
+        // [[[UIAlertView alloc]initWithTitle:@"Alert!" message:[array valueForKey:@"message"]  delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil]show];
+        [ProgressHUD dismiss];
+        
+    }
+    
+    
+    // NSInteger i=[sender tag];
+    
+    
+    //    NSString *likes=[generalQuestionArray valueForKey:@"likes"];
+    //    if ([likes isEqualToString:@"0"])
+    //    {
+    //
+    //        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert!!" message:@"Do you want to like this question?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+    //        alertView.tag=100;
+    //        [alertView show];
+    //    }
+    //    else
+    //    {
+    //        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"You already liked this question" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+    //        [alertView show];
+    //    }
+    //  
+}
+
+
 -(NSString*) GetCategoryIdByIndex:(NSInteger) index
 {
     NSString *categoryname=[categoryArray objectAtIndex:index];
@@ -1105,12 +2266,103 @@
         [self.navigationController pushViewController:postView animated:NO];
     }
 }
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+-(void)viewquestiondetail:(UITapGestureRecognizer *)sender
 {
-    if (tableView==questionTableView)
+    PostQuestionDetailViewController *postView=[[PostQuestionDetailViewController alloc]init];
+    postView.generalQuestionArray=[questionArray objectAtIndex:sender.view.tag];
+    postView.generalViewValue=9;
+    if ([sender.view.superview viewWithTag:2] !=nil) {
+        [[sender.view.superview viewWithTag:2] removeFromSuperview];
+        
+    }
+    [self.navigationController pushViewController:postView animated:NO];
+    
+}
+- (void)linkTextView:(CCHLinkTextView *)linkTextView didTapLinkWithValue:(id)value
+{
+    NSString *strurl= value;
+    
+    NSRange range = [strurl rangeOfString:@"#" options:NSCaseInsensitiveSearch];
+    
+    if (range.location != NSNotFound) {
+        [self searchtagfriend:strurl];
+        
+    }
+    else
     {
-        return 80.0f;
+        AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+        addFriend.friendUserId=strurl;
+        [self.navigationController pushViewController:addFriend animated:NO];
+
+    }
+    
+    
+    
+
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)url inRange:(NSRange)characterRange
+{
+
+    NSString *strurl= [url absoluteString];;
+    
+    NSRange range = [strurl rangeOfString:@"#" options:NSCaseInsensitiveSearch];
+    
+    if (range.location != NSNotFound) {
+        [self searchtagfriend:strurl];
+        
+    }
+    else
+    {
+        AddFriendViewController *addFriend=[[AddFriendViewController alloc]init];
+        addFriend.friendUserId=strurl;
+        [self.navigationController pushViewController:addFriend animated:NO];
+        
+    }
+    
+    
+    
+    
+    //[[[UIAlertView alloc]initWithTitle:@"Alert" message:@"" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil]show];
+    return YES;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{   if (tableView==questionTableView)
+    {
+        
+        NSArray *questionInfo=[questionArray objectAtIndex:indexPath.row];
+        
+        NSString *hashtagquestion =[NSString stringWithFormat:@"%@",[questionInfo valueForKey:@"question"]];
+        
+        for(id objectvalue in [[questionArray valueForKey:@"hashtagarr"]objectAtIndex:indexPath.row])
+        {
+            NSString *hashtag=[objectvalue objectForKey:@"hashtag"];
+            if([hashtag isEqualToString:@""] || [hashtag isEqualToString:@"(null)"])
+                continue;
+            
+            hashtagquestion =[NSString stringWithFormat:@"%@ #%@",hashtagquestion,[objectvalue objectForKey:@"hashtag"]];
+            
+            
+        }
+        
+        
+        for(id objectvalue in [[questionArray valueForKey:@"tagfriends"]objectAtIndex:indexPath.row])
+        {
+            
+            hashtagquestion =[NSString stringWithFormat:@"%@ @%@",hashtagquestion,[objectvalue objectForKey:@"username"]];
+            
+        }
+        CCHLinkTextView *questiontext=[[CCHLinkTextView alloc] initWithFrame:CGRectMake(0, 0, 300, 20 )];
+        questiontext.text=hashtagquestion;
+        CGSize textViewSize = [questiontext sizeThatFits:CGSizeMake(questiontext.frame.size.width, FLT_MAX)];
+        if([self Getishasimage:indexPath.row])
+        {
+            return 330.0f +textViewSize.height;
+        }
+        else
+        {
+            return 80.0f +textViewSize.height;
+        }
     }
     else
     {

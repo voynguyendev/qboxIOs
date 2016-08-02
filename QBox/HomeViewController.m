@@ -192,7 +192,7 @@
 
 -(void)updateUserDetail
 {
-    //http://108.175.148.221/question_app_test/getUserInfoById.php?mobile=155&friend_id=84
+    //http://54.69.127.235/question_app/getUserInfoById.php?mobile=155&friend_id=84
     [WebServiceSingleton sharedMySingleton].homeViewDelegate=self;
     id userDetail=[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"];
     NSString *userID=[userDetail valueForKey:@"id"];
@@ -1095,7 +1095,7 @@
 {
     [[AppDelegate sharedDelegate] setPushNotificationFetching:YES];
     NSArray *userData=[[NSArray alloc]initWithObjects:[[NSUserDefaults standardUserDefaults]objectForKey:@"userDetail"],nil];
-    NSString *userId=[[userData valueForKey:@"id"]objectAtIndex:0];
+    NSString *userId=[userData valueForKey:@"id"];
     id pushNotificationData =[[WebServiceSingleton sharedMySingleton]pushNotificationData:userId];
     
     NSString *success=[[pushNotificationData valueForKey:@"success"] objectAtIndex:0];
@@ -1631,7 +1631,7 @@
 
 -(BOOL) prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -1727,7 +1727,7 @@
         }
         else
         {
-            cell.textLabel.text=[NSString stringWithFormat:@"%@ [%@]",[tableArray objectAtIndex:indexPath.row],[totalQuestionCount objectAtIndex:indexPath.row]];
+            cell.textLabel.text=[NSString stringWithFormat:@"%@ %@",[tableArray objectAtIndex:indexPath.row],[totalQuestionCount objectAtIndex:indexPath.row]];
         }
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }

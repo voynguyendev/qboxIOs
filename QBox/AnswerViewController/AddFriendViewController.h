@@ -25,7 +25,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *btmessage;
 
 @property (weak, nonatomic) IBOutlet UIButton *btfollow;
+@property (strong, nonatomic) IBOutlet UIButton *aboutButton;
+
 
 @property(strong,nonatomic) NSString *friendUserId;
+@property (strong, nonatomic) IBOutlet UILabel *lbltitle;
 
 @end

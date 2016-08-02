@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:QBox.xcodeproj">
+      location = "self:/Users/admin/Documents/QProject/iOSv2/Qbox.xcodeproj">
    </FileRef>
 </Workspace>

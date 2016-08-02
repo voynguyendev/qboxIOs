@@ -11,17 +11,17 @@
 
 #import <CoreData/CoreData.h>
 
-#import <RevMobAds/RevMobAds.h>
+#import "CustomnavigationController.h"
 #import <RevMobAds/RevMobAdsDelegate.h>
 @class FirstScreenViewController;
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate,RevMobAdsDelegate>
-
+@property () BOOL restrictRotation;
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) TaBBarViewController *TabBarView;
-@property (strong, nonatomic) UINavigationController *navController;
+@property (strong, nonatomic) CustomnavigationController *navController;
 @property (strong, nonatomic) FirstScreenViewController *_firstScreen;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;

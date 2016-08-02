@@ -280,7 +280,7 @@
     
     CGRect frame = [self frame];
     frame.size.height = height;
-    frame.origin.y = yOrigin;    
+    //frame.origin.y = yOrigin;
     [self setFrame:frame];
     
     [self setNeedsLayout];
