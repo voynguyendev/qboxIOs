@@ -63,9 +63,6 @@
                     <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z9h-0T-FJi">
                         <rect key="frame" x="0.0" y="30" width="382" height="30"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="borderaction.png" translatesAutoresizingMaskIntoConstraints="NO" id="U2G-bJ-yyn">
-                                <rect key="frame" x="220" y="1" width="62" height="29"/>
-                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="borderaction.png" translatesAutoresizingMaskIntoConstraints="NO" id="h1t-dW-Rfa">
                                 <rect key="frame" x="10" y="0.0" width="62" height="29"/>
                             </imageView>

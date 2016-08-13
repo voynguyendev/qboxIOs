@@ -14,9 +14,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="79"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gx9-9k-Vj6">
-                        <rect key="frame" x="0.0" y="5" width="60" height="70"/>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BCz-qd-uXB">
                         <rect key="frame" x="65" y="6" width="246" height="37"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
@@ -35,6 +32,9 @@
                         <color key="textColor" red="0.37647058823529411" green="0.37647058823529411" blue="0.37647058823529411" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="adminreport.png" translatesAutoresizingMaskIntoConstraints="NO" id="Gx9-9k-Vj6">
+                        <rect key="frame" x="0.0" y="5" width="60" height="70"/>
+                    </imageView>
                 </subviews>
             </tableViewCellContentView>
             <connections>
@@ -51,4 +51,7 @@
             <point key="canvasLocation" x="449.5" y="400.5"/>
         </imageView>
     </objects>
+    <resources>
+        <image name="adminreport.png" width="195" height="182"/>
+    </resources>
 </document>

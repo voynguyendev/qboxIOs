@@ -369,9 +369,15 @@
                  ||
                  
                  [pushnotifycationtype isEqualToString:@"tagged post"]
+                 
+                 ||
+                 
+                 [pushnotifycationtype isEqualToString:@"admin repot question"]
+                 
+                 ||
+                 
+                 [pushnotifycationtype isEqualToString:@"admin repot comment"]
 
-                 
-                 
                 )
        {
            NotifycationCustomTableViewCell *cell=(NotifycationCustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -389,21 +395,25 @@
            
            cell.questionLabel.text=[questionArray valueForKey:@"Message"];
            
-           NSMutableString *imageUrlStr=[questionArray valueForKey:@"picturesender"];
-           
-           if ([imageUrlStr rangeOfString:@"http://"].location == NSNotFound)
+            if([pushnotifycationtype isEqualToString:@"admin repot question"]==false && [pushnotifycationtype isEqualToString:@"admin repot comment"]==false)
            {
-               imageUrlStr=[NSMutableString stringWithFormat:@"http://%@",imageUrlStr];
-           }
-           NSURL *imageUrl=[NSURL URLWithString:imageUrlStr];
-           cell.questionImageView.layer.cornerRadius=cell.questionImageView.frame.size.width/2;
-           cell.questionImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
-           cell.questionImageView.layer.borderWidth=1.0f;
-           cell.questionImageView.clipsToBounds=YES;
+               
+               cell.questionImageView.layer.cornerRadius=cell.questionImageView.frame.size.width/2;
+               cell.questionImageView.layer.borderColor=[UIColor lightGrayColor].CGColor;
+               cell.questionImageView.layer.borderWidth=1.0f;
+               cell.questionImageView.clipsToBounds=YES;
 
-           [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"placeholder"]];
+               NSMutableString *imageUrlStr=[questionArray valueForKey:@"picturesender"];
+               
+               if ([imageUrlStr rangeOfString:@"http://"].location == NSNotFound)
+               {
+                   imageUrlStr=[NSMutableString stringWithFormat:@"http://%@",imageUrlStr];
+               }
+               NSURL *imageUrl=[NSURL URLWithString:imageUrlStr];
+
+               [cell.questionImageView setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"placeholder"]];
     
-           
+           }
            NSString *timeStampString=[NSString stringWithFormat:@"%@",[questionArray valueForKey:@"DateCreate"]];
            // NSString *dateStr=[[AppDelegate sharedDelegate]localDateFromDate:timeStampString];
            // NSString *resultString=[dateStr substringWithRange:NSMakeRange(0, 10)];
@@ -481,9 +491,15 @@
            ||
            
            [pushnotifycationtype isEqualToString:@"tagged post"]
-           //like question
            
-           )
+           ||
+           
+           [pushnotifycationtype isEqualToString:@"admin repot question"]
+           
+           ||
+           
+           [pushnotifycationtype isEqualToString:@"admin repot comment"]
+         )
         {
             
             NSArray *detailArray;

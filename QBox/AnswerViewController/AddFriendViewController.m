@@ -425,7 +425,7 @@
     
     // NSArray *questionInfo=[questionArray objectAtIndex:recognizer.view.tag];
     NSArray *imagesuserinfor=[imagesuser objectAtIndex:(recognizer.view.tag)];
-    NSString *urlString = [imagesuserinfor valueForKey:@"thumb"];
+    NSString *urlString = [imagesuserinfor valueForKey:@"attachment"];
     if ([urlString rangeOfString:@"http://"].location == NSNotFound)
     {
         urlString = [NSString stringWithFormat:@"http://%@", urlString];

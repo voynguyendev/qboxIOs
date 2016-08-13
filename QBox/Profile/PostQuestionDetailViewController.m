@@ -684,7 +684,7 @@
         convertedImage=[self resizeimage:convertedImage];
         
         
-        convertedImage = [UIImage imageWithData:UIImageJPEGRepresentation(convertedImage, 0)];
+        convertedImage = [UIImage imageWithData:UIImagePNGRepresentation(convertedImage)];
         
         imageString=[self encodeToBase64String:convertedImage];
        
@@ -4677,7 +4677,6 @@
 
 -(UIImage *) resizeimage :(UIImage *)originalImage
 {
-    
     CGSize newSize;
     UIGraphicsBeginImageContext(newSize);
     newSize.width=originalImage.size.width;
@@ -4687,21 +4686,22 @@
     {
         newSize.width = 1920;
         newSize.height = (1920 * originalImage.size.height) / originalImage.size.width;
+        return [self imageWithImage :originalImage scaledToSize:newSize] ;
         
     }
     
-    if (originalImage.size.height > 1080)
+    if (originalImage.size.height > 2001)
     {
         
-        newSize.width = (1080 * originalImage.size.width) / originalImage.size.height;
-        newSize.height = 1080;
+        newSize.width = (2001 * originalImage.size.width) / originalImage.size.height;
+        newSize.height = 2001;
+        return [self imageWithImage :originalImage scaledToSize:newSize] ;
+        
         
         
     }
     
-    
-    
-    return [self imageWithImage :originalImage scaledToSize:newSize] ;
+    return originalImage;
     
     
 }
